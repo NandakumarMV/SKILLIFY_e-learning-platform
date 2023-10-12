@@ -33,7 +33,6 @@ const SignupPage = () => {
 
         const res = await register({ name, email, password }).unwrap();
 
-        console.log(res);
         dispatch(
           setCredentials({
             ...res,

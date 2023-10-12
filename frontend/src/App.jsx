@@ -1,12 +1,14 @@
 import React from "react";
 import Header from "./components/userComponents/Header.jsx";
-import LoginPage from "./components/userComponents/LoginPage.jsx";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 const App = () => {
+  const location = useLocation();
+
+  const isLoginAdmin = location.pathname.includes("admin");
   return (
     <>
-      <Header />
+      <Header isLoginAdmin={isLoginAdmin} />
       <Outlet />
     </>
   );
