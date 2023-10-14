@@ -3,7 +3,7 @@ import React from "react";
 const AdminHomePage = () => {
   return (
     <div>
-      <div>admin home</div>
+      <h1 className="text-lg">Skillify DashBoard</h1>
     </div>
   );
 };

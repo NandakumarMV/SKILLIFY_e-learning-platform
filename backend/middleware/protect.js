@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import Admin from "../models/adminModel.js";
-// import Tutor from "../models/tutorModel.js";
+import Tutor from "../models/tutorModel.js";
 
 const protect = (role = "user") => {
   return asyncHandler(async (req, res, next) => {
@@ -15,7 +15,7 @@ const protect = (role = "user") => {
         token = req.cookies.tutorJwt;
         break;
       default:
-        token = req.cookies.jwt;
+        token = req.cookies.userJwt;
     }
     if (token) {
       try {

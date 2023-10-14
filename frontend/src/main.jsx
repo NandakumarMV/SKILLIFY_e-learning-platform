@@ -15,6 +15,9 @@ import SignupPage from "./components/userComponents/SignupPage.jsx";
 import HomePage from "./components/userComponents/HomePage.jsx";
 import AdminLoginPage from "./components/adminComponents/adminLoginPage.jsx";
 import AdminHomePage from "./components/adminComponents/adminHomePage.jsx";
+import TutorLoginPage from "./components/tutorComponents/TutorLoginPage.jsx";
+import TutorHome from "./components/tutorComponents/TutorHome.jsx";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,6 +32,11 @@ const router = createBrowserRouter(
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route index={true} path="/admin" element={<AdminHomePage />} />
       <Route path="/admin/logout" element={<AdminLoginPage />} />
+
+      {/************tutor side routes ***************/}
+
+      <Route path="/tutor/login" element={<TutorLoginPage />} />
+      <Route path="/tutor/home" element={<TutorHome />} />
     </Route>
   )
 );
@@ -36,7 +44,9 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <GoogleOAuthProvider clientId="646376613853-opi07m71f0glecaf3lhj5iet07c27aff.apps.googleusercontent.com">
+        <RouterProvider router={router} />
+      </GoogleOAuthProvider>
     </React.StrictMode>
   </Provider>
 );

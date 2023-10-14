@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../../slices/userApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../../slices/userAuthSlice";
+import { GoogleLogin } from "@react-oauth/google";
 
 const SignupPage = () => {
   const [name, setName] = useState("");
@@ -22,15 +23,26 @@ const SignupPage = () => {
       navigate("/");
     }
   }, [navigate, userInfo]);
+  const googleSubmitHandler = async () => {
+    try {
+      const res = await register({ name, email, password }).unwrap();
 
+      dispatch(
+        setCredentials({
+          ...res,
+        })
+      );
+      navigate("/");
+    } catch (error) {
+      setError(error?.data?.message || error.error);
+    }
+  };
   const submitHandler = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setError("Password not matching");
     } else {
       try {
-        console.log("reached here");
-
         const res = await register({ name, email, password }).unwrap();
 
         dispatch(
@@ -131,6 +143,23 @@ const SignupPage = () => {
             Sign Up
           </button>
         </form>
+        <div className="p-1 mb-3 justify-center ">
+          <GoogleLogin
+            clientId="646376613853-opi07m71f0glecaf3lhj5iet07c27aff.apps.googleusercontent.com"
+            onSuccess={googleSubmitHandler}
+            onFailure={(error) => console.log("Google login failed", error)}
+            render={(renderProps) => (
+              <button
+                type="button"
+                onClick={renderProps.onClick}
+                disabled={renderProps.disabled}
+                className="bg-blue-700 text-white py-2 px-4 hover:bg-blue-600 hover:text-white hover:border-2 hover:border-blue-700 transition duration-300 justify-center"
+              >
+                Login with Google
+              </button>
+            )}
+          />
+        </div>
         {error !== "Password not matching" && (
           <div className="text-red-500 text-right mb-4">{error}</div>
         )}

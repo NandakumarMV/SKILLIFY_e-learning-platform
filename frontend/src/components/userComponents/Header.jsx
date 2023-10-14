@@ -4,22 +4,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { AiFillHeart } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "./DropDown";
-import { useAdminLogoutMutation } from "../../slices/adminApiSlice";
-import { adminLogout } from "../../slices/adminAuthSlice";
 
-const Header = ({ isLoginAdmin }) => {
+import { useTutorlogoutMutation } from "../../slices/tutorApiSlice";
+import { tutorLogout } from "../../slices/tutorAuthSlice";
+import TutorDropdown from "../tutorComponents/TutorDropdown";
+
+const Header = ({ isLoginTutor }) => {
   const { userInfo } = useSelector((state) => state.auth);
 
-  const { adminInfo } = useSelector((state) => state.adminAuth);
-  const [LogoutAdmin] = useAdminLogoutMutation();
+  const { tutorInfo } = useSelector((state) => state.tutorAuth);
+
+  const [logoutTutor] = useTutorlogoutMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = async (e) => {
     try {
-      await LogoutAdmin().unwrap();
-      dispatch(adminLogout());
-      navigate("/admin/login");
+      await logoutTutor().unwrap();
+      dispatch(tutorLogout);
+      navigate("/tutor/home");
     } catch (error) {
       console.log(error);
     }
@@ -34,41 +37,38 @@ const Header = ({ isLoginAdmin }) => {
               <RiLightbulbFlashLine className="text-black text-2xl mb-2" />
               <div className="text-black font-semibold text-xl pb-2">
                 SKILLIFY
-                {isLoginAdmin && (
+                {isLoginTutor && (
                   <span className="text-gray-600 font-normal text-sm ml-2">
-                    Admin Login
+                    Lets teach with Us!
                   </span>
                 )}
               </div>
             </div>
             <div className="mr-2">
               <div className="text-sm">
-                {isLoginAdmin ? (
-                  ""
+                {isLoginTutor ? (
+                  <p>Welcome {tutorInfo?.name}</p>
                 ) : userInfo ? (
                   <p>Welcome {userInfo?.name}</p>
                 ) : null}
               </div>
             </div>
             <ul className="flex space-x-10">
-              {isLoginAdmin ? (
+              {isLoginTutor ? (
                 <>
-                  {adminInfo && (
+                  {tutorInfo && (
                     <>
                       <li className="text-black hover:text-blue-600 cursor-pointer">
-                        <Link>Users</Link>
+                        <Link> Add courses</Link>
                       </li>
                       <li className="text-black hover:text-blue-600 cursor-pointer">
-                        <a href="">Tutors</a>
+                        <a href=""></a>
                       </li>
                       <li className="text-black hover:text-blue-600 cursor-pointer">
-                        <a href="">courses</a>
+                        <a href="">Dashboard</a>
                       </li>
-                      <li
-                        className="text-black hover:text-red-600 cursor-pointer"
-                        onClick={handleLogout}
-                      >
-                        Logout
+                      <li>
+                        <TutorDropdown />
                       </li>
                     </>
                   )}
@@ -78,10 +78,10 @@ const Header = ({ isLoginAdmin }) => {
                   {userInfo ? (
                     <>
                       {" "}
-                      {!isLoginAdmin && (
+                      {!isLoginTutor && (
                         <>
                           <li className="text-black hover:text-blue-600 cursor-pointer">
-                            <Link>Teach with US</Link>
+                            <Link to="/tutor/login">Teach with US</Link>
                           </li>
                           <li className="text-black hover:text-blue-600 cursor-pointer">
                             <Link>Courses</Link>
@@ -102,10 +102,10 @@ const Header = ({ isLoginAdmin }) => {
                     </>
                   ) : (
                     <>
-                      {!isLoginAdmin && (
+                      {!isLoginTutor && (
                         <>
                           <li className="text-black hover:text-blue-600 cursor-pointer">
-                            <Link>Teach with US</Link>
+                            <Link to="/tutor/login">Teach with US</Link>
                           </li>
                           <li className="text-black hover:text-blue-600 cursor-pointer">
                             <Link>Courses</Link>

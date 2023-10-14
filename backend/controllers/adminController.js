@@ -1,13 +1,13 @@
 import asyncHandler from "express-async-handler";
 import Admin from "../models/adminModel.js";
-import genAdminToken from "../utils/genAdminToken.js";
+import generateToken from "../utils/genJwtToken.js";
 
 const authAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const admin = await Admin.findOne({ email: email });
 
   if (admin && (await admin.matchPassword(password))) {
-    genAdminToken(res, admin._id);
+    generateToken(res, admin._id, "admin");
     res.status(201).json({
       _id: admin._id,
       name: admin.name,
@@ -29,7 +29,7 @@ const registerAdmin = asyncHandler(async (req, res) => {
   });
 
   if (admin) {
-    genAdminToken(res, admin._id);
+    generateToken(res, admin._id, "admin");
     res.status(201).json({
       _id: admin._id,
       name: admin.name,

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useLoginMutation } from "../../slices/userApiSlice";
-import { setCredentials } from "../../slices/userAuthSlice";
-import { GoogleLogin } from "@react-oauth/google";
-const LoginPage = () => {
+import { Link, useNavigate } from "react-router-dom";
+import { useTutorLoginMutation } from "../../slices/tutorApiSlice";
+import { setTutorCredentials } from "../../slices/tutorAuthSlice";
+
+const TutorLoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -12,40 +12,26 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [login] = useLoginMutation();
+  const [tutorLogin] = useTutorLoginMutation();
 
-  const { userInfo } = useSelector((state) => state.auth);
+  const { tutorInfo } = useSelector((state) => state.tutorAuth);
 
   useEffect(() => {
-    if (userInfo) {
-      navigate("/");
+    if (tutorInfo) {
+      navigate("/tutor/home");
     }
-  }, [navigate, userInfo]);
-
-  const googleSubmitHandler = async () => {
-    try {
-      const res = await login({ email, password }).unwrap();
-      dispatch(
-        setCredentials({
-          ...res,
-        })
-      );
-      navigate("/");
-    } catch (err) {
-      setError("Invalid email or password");
-    }
-  };
+  }, [navigate, tutorInfo]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await login({ email, password }).unwrap();
+      const res = await tutorLogin({ email, password }).unwrap();
       dispatch(
-        setCredentials({
+        setTutorCredentials({
           ...res,
         })
       );
-      navigate("/");
+      navigate("/tutor/home");
     } catch (err) {
       setError("Invalid email or password");
     }
@@ -54,9 +40,9 @@ const LoginPage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen ">
       <div className="mb-36">
         <div className="text-black text-center mb-4 text-2xl font-semibold">
-          Login with your Skillify account
+          let's Teach with Skillify,Login to your account
         </div>
-        <form className="p-6  w-96 " onSubmit={(e) => submitHandler(e)}>
+        <form className="p-6  w-96 " onSubmit={submitHandler}>
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -98,28 +84,12 @@ const LoginPage = () => {
             Login
           </button>
         </form>
-        <div className="p-1 mb-3 justify-center ">
-          <GoogleLogin
-            clientId="646376613853-opi07m71f0glecaf3lhj5iet07c27aff.apps.googleusercontent.com"
-            onSuccess={googleSubmitHandler}
-            onFailure={(error) => console.log("Google login failed", error)}
-            render={(renderProps) => (
-              <button
-                type="button"
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
-                className="bg-blue-700 text-white py-2 px-4 hover:bg-blue-600 hover:text-white hover:border-2 hover:border-blue-700 transition duration-300 justify-center"
-              >
-                Login with Google
-              </button>
-            )}
-          />
-        </div>
+
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
         <p className="ml-32">
           don't have an account?
-          <Link to="/signup" className="text-blue-600">
+          <Link to="/tutor/signup" className="text-blue-600">
             Sign Up
           </Link>
         </p>
@@ -128,4 +98,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default TutorLoginPage;
