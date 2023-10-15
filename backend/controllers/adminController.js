@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import Admin from "../models/adminModel.js";
 import generateToken from "../utils/genJwtToken.js";
+import User from "../models/userModel.js";
 
 const authAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -49,4 +50,44 @@ const logoutAdmin = asyncHandler(async (req, res) => {
   res.status(200).json({ message: " admin logout" });
 });
 
-export { authAdmin, logoutAdmin, registerAdmin };
+const userList = asyncHandler(async (req, res) => {
+  const users = await User.find();
+  console.log(users, "suuuuiii");
+  res.status(200).json(users);
+});
+
+const blockUser = asyncHandler(async (req, res) => {
+  const userId = req.body.userId;
+  const blockTrue = {
+    isBlocked: true,
+  };
+
+  const blockUser = await User.findByIdAndUpdate(userId, blockTrue);
+  if (blockUser) {
+    res.status(200).json({ message: "user blocked sucessfully" });
+  } else {
+    res.status(404).json({ message: "user not found" });
+  }
+});
+
+const unblockUser = asyncHandler(async (req, res) => {
+  const userId = req.body.userId;
+  const unblockFalse = {
+    isBlocked: false,
+  };
+  const blockUser = await User.findByIdAndUpdate(userId, unblockFalse);
+
+  if (blockUser) {
+    res.status(200).json({ message: "user unblocked sucessfully" });
+  } else {
+    res.status(404).json({ message: "user not found" });
+  }
+});
+export {
+  authAdmin,
+  logoutAdmin,
+  registerAdmin,
+  userList,
+  blockUser,
+  unblockUser,
+};

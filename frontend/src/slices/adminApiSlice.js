@@ -1,3 +1,4 @@
+import { data } from "autoprefixer";
 import { apiSlice } from "./apiSlice";
 const ADMIN_URL = "/api/admin";
 
@@ -16,20 +17,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
-    adminUpdateUser: builder.mutation({
-      query: (data) => ({
-        url: `${ADMIN_URL}/edit-user`,
-        method: "PUT",
-        body: data,
-      }),
-    }),
-    userDataDelete: builder.mutation({
-      query: (data) => ({
-        url: `${ADMIN_URL}/delete-user`,
-        method: "POST",
-        body: data,
-      }),
-    }),
+
     blockUser: builder.mutation({
       query: (data) => ({
         url: `${ADMIN_URL}/block-user`,
@@ -50,8 +38,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
 export const {
   useAdminLoginMutation,
   useAdminLogoutMutation,
-  useAdminUpdateUserMutation,
-  useUserDataDeleteMutation,
+
   useBlockUserMutation,
   useUnblockUserMutation,
 } = adminApiSlice;

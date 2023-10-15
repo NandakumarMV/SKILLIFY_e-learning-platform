@@ -78,4 +78,5 @@ const googleLogin = asyncHandler(async (req, res) => {
   const email = payload.email;
   const userExists = await User.findOne({ email: email });
 });
+
 export { authUser, registerUser, logOutUser };

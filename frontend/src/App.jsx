@@ -7,11 +7,16 @@ const App = () => {
   const location = useLocation();
 
   const isAdminRoute = location.pathname.startsWith("/admin");
-
+  const isAdminlogin = location.pathname.includes("/admin/login");
   const isLoginTutor = location.pathname.includes("tutor");
   return (
     <>
-      {isAdminRoute ? <AdminHeader /> : <Header isLoginTutor={isLoginTutor} />}
+      {!isAdminlogin &&
+        (isAdminRoute ? (
+          <AdminHeader />
+        ) : (
+          <Header isLoginTutor={isLoginTutor} />
+        ))}
 
       <Outlet />
     </>
