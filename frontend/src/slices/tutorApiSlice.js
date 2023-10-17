@@ -18,7 +18,7 @@ export const tutorApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     tutorlogout: builder.mutation({
-      query: (data) => ({
+      query: () => ({
         url: `${TUTOR_URL}/logout`,
         method: "post",
       }),

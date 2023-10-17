@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import Admin from "../models/adminModel.js";
 import generateToken from "../utils/genJwtToken.js";
 import User from "../models/userModel.js";
+import Tutor from "../models/tutorModel.js";
 
 const authAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -55,6 +56,11 @@ const userList = asyncHandler(async (req, res) => {
   console.log(users, "suuuuiii");
   res.status(200).json(users);
 });
+const tutorList = asyncHandler(async (req, res) => {
+  const tutors = await Tutor.find();
+  console.log(tutors, "sssssssss");
+  res.status(200).json(tutors);
+});
 
 const blockUser = asyncHandler(async (req, res) => {
   const userId = req.body.userId;
@@ -90,4 +96,5 @@ export {
   userList,
   blockUser,
   unblockUser,
+  tutorList,
 };

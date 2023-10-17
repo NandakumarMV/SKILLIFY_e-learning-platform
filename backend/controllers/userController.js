@@ -79,4 +79,46 @@ const googleLogin = asyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email: email });
 });
 
-export { authUser, registerUser, logOutUser };
+const getUserProfile = asyncHandler(async (req, res) => {
+  console.log("get user profile");
+  const user = {
+    _id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+  };
+  res.status(200).json(user);
+});
+
+const updateUserProfile = asyncHandler(async (req, res) => {
+  console.log("reached updateUserProfile here");
+
+  const user = await User.findById(req.user._id);
+
+  console.log(user, "user");
+  if (user) {
+    (user.email = req.body.email || user.email),
+      (user.name = req.body.name || user.name);
+    if (req.file) {
+      user.userImage = req.file.filename || user.userImage;
+    }
+
+    const updatedUser = await user.save();
+    console.log(updatedUser, "updated user");
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      image: updatedUser.userImage,
+    });
+  } else {
+    res.status(404);
+    throw new Error("user not find");
+  }
+});
+export {
+  authUser,
+  registerUser,
+  logOutUser,
+  getUserProfile,
+  updateUserProfile,
+};

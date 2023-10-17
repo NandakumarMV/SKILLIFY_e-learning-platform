@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./components/userComponents/Header.jsx";
 import { Outlet, useLocation } from "react-router-dom";
-import AdminHeader from "./components/adminComponents/AdminHeader.jsx";
+import Footer from "./components/userComponents/Footer.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -12,13 +12,10 @@ const App = () => {
   return (
     <>
       {!isAdminlogin &&
-        (isAdminRoute ? (
-          <AdminHeader />
-        ) : (
-          <Header isLoginTutor={isLoginTutor} />
-        ))}
+        (isAdminRoute ? "" : <Header isLoginTutor={isLoginTutor} />)}
 
       <Outlet />
+      <Footer />
     </>
   );
 };

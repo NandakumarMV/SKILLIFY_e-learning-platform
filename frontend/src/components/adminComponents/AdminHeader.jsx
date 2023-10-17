@@ -2,10 +2,30 @@ import React, { useState } from "react";
 import { RiLightbulbFlashLine } from "react-icons/ri";
 import AdminHomePage from "./adminHomePage";
 import UsersList from "./UsersList";
+import TutorList from "./TutorList";
+import { useAdminLogoutMutation } from "../../slices/adminApiSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { adminLogout } from "../../slices/adminAuthSlice";
 
 const AdminHeader = () => {
   const [content, setContent] = useState("Dashboard");
   const [activeMenuItem, setActiveMenuItem] = useState("Dashboard");
+
+  const [logout] = useAdminLogoutMutation();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+      dispatch(adminLogout());
+      navigate("/admin/login");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const changeContent = (newContent) => {
     setActiveMenuItem(newContent);
@@ -50,9 +70,15 @@ const AdminHeader = () => {
                 className={`py-2 hover:bg-gray-700 block pl-4  ${
                   activeMenuItem === "tutor" ? "bg-gray-700" : ""
                 }`}
-                onClick={() => changeContent("tutor")}
+                onClick={() => changeContent("tutors")}
               >
                 Tutors
+              </li>
+              <li
+                className="py-2 hover:bg-gray-700 block pl-4  "
+                onClick={handleLogout}
+              >
+                Logout
               </li>
             </ul>
           </div>
@@ -61,6 +87,7 @@ const AdminHeader = () => {
           <div className="p-4">
             {content === "Dashboard" && <AdminHomePage />}
             {content === "users" && <UsersList />}
+            {content === "tutors" && <TutorList />}
           </div>
         </div>
       </div>

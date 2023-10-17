@@ -25,11 +25,14 @@ const authTutor = asyncHandler(async (req, res) => {
 });
 
 const registerTutor = asyncHandler(async (req, res) => {
-  const { name, email, password, qualification, experience } = req.body;
+  const { name, email, password, qualifications, experience } = req.body;
 
-  console.log(name, email, password, qualification, experience, "req body");
+  console.log(name, email, password, qualifications, experience, "req body");
   const tutorExists = await Tutor.findOne({ email: email });
+  // console.log(req.file, "tutor?");
 
+  // const qualificationPdf = req.file.originalname;
+  // console.log(qualificationPdf, "kkkkkkkk");
   if (tutorExists) {
     res.status(400);
     throw new Error("user email already exists");
@@ -38,18 +41,21 @@ const registerTutor = asyncHandler(async (req, res) => {
   const tutor = await Tutor.create({
     name,
     email,
-    qualification,
+    qualifications,
     experience,
     password,
   });
+  console.log(tutor, "tutor");
 
   if (tutor) {
     generateToken(res, tutor._id, "tutor");
+    console.log("enterd");
     res.status(201).json({
       _id: tutor._id,
       name: tutor.name,
       email: tutor.email,
-      qualification: tutor.qualification,
+      qualifications: tutor.qualifications,
+      // qualificationPdf: qualificationPdf,
       experience: tutor.experience,
     });
   } else {

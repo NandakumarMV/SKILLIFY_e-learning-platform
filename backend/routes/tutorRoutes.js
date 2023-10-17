@@ -2,6 +2,7 @@ import express from "express";
 
 const router = express.Router();
 import { protect } from "../middleware/protect.js";
+import { multerPDF } from "../config/multerConfig.js";
 
 import {
   authTutor,

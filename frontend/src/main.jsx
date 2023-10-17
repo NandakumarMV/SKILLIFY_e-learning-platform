@@ -18,6 +18,10 @@ import AdminHomePage from "./components/adminComponents/adminHomePage.jsx";
 import TutorLoginPage from "./components/tutorComponents/TutorLoginPage.jsx";
 import TutorHome from "./components/tutorComponents/TutorHome.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import AdminHeader from "./components/adminComponents/AdminHeader.jsx";
+import AdminPrivateRoute from "./components/adminComponents/AdminPrivateRoute.jsx";
+import TutorSignupPage from "./components/tutorComponents/TutorSignupPage.jsx";
+import UserProfile from "./components/userComponents/UserProfile.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,15 +31,18 @@ const router = createBrowserRouter(
       <Route index={true} path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/profile" element={<UserProfile />} />
 
       {/************Admin side routes ***************/}
       <Route path="/admin/login" element={<AdminLoginPage />} />
-      <Route index={true} path="/admin" element={<AdminHomePage />} />
-      <Route path="/admin/logout" element={<AdminLoginPage />} />
+      <Route path="" element={<AdminPrivateRoute />}>
+        <Route index={true} path="/admin" element={<AdminHeader />} />
+      </Route>
 
       {/************tutor side routes ***************/}
 
       <Route path="/tutor/login" element={<TutorLoginPage />} />
+      <Route path="/tutor/signup" element={<TutorSignupPage />} />
       <Route path="/tutor/home" element={<TutorHome />} />
     </Route>
   )
