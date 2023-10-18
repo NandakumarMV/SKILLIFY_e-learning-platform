@@ -41,7 +41,7 @@ const TutorDropdown = () => {
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
-            <Link to="/profile">
+            <Link to="/tutor/profile">
               <button
                 className="block px-2 py-2 text-base text-black hover:text-blue-600"
                 role="menuitem"

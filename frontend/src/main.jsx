@@ -22,6 +22,7 @@ import AdminHeader from "./components/adminComponents/AdminHeader.jsx";
 import AdminPrivateRoute from "./components/adminComponents/AdminPrivateRoute.jsx";
 import TutorSignupPage from "./components/tutorComponents/TutorSignupPage.jsx";
 import UserProfile from "./components/userComponents/UserProfile.jsx";
+import TutorProfile from "./components/tutorComponents/TutorProfile.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -44,6 +45,7 @@ const router = createBrowserRouter(
       <Route path="/tutor/login" element={<TutorLoginPage />} />
       <Route path="/tutor/signup" element={<TutorSignupPage />} />
       <Route path="/tutor/home" element={<TutorHome />} />
+      <Route path="/tutor/profile" element={<TutorProfile />} />
     </Route>
   )
 );

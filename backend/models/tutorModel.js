@@ -18,7 +18,7 @@ const tutorSchema = mongoose.Schema(
       required: true,
     },
     qualifications: {
-      type: [String],
+      type: String,
       required: true,
     },
     qualificationPdf: {

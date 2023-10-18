@@ -27,7 +27,7 @@ const TutorSignupPage = () => {
   // const handleFileChange = (e) => {
   //   const file = e.target.files[0];
   //   if (file) {
-  //     console.log(file, "kkkkkkkkkkkkkkkk");
+  //     // console.log(file, "kkkkkkkkkkkkkkkk");
   //     setQualificationsPdf(file);
   //   }
   // };
@@ -45,7 +45,7 @@ const TutorSignupPage = () => {
           // qualificationsPdf,
           qualifications,
           experience,
-        });
+        }).unwrap();
         console.log(res, "respnnnnnn");
         dispatch(
           setTutorCredentials({

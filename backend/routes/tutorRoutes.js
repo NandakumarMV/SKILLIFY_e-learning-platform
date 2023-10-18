@@ -2,16 +2,28 @@ import express from "express";
 
 const router = express.Router();
 import { protect } from "../middleware/protect.js";
-import { multerPDF } from "../config/multerConfig.js";
+import { multerImage, multerPDF } from "../config/multerConfig.js";
 
 import {
   authTutor,
   logoutTutor,
   registerTutor,
+  updateTutorProfile,
+  getTutorProfile,
 } from "../controllers/tutorController.js";
 
 router.post("/login", authTutor);
 router.post("/register", registerTutor);
 router.post("/logout", logoutTutor);
+// router.put(
+//   "/profile",
+//   protect("tutor"),
+//   multerImage.single("image"),
+//   updateTutorProfile
+// );
+router
+  .route("/profile")
+  .get(protect("tutor"), getTutorProfile)
+  .put(protect("tutor"), multerImage.single("image"), updateTutorProfile);
 
 export default router;

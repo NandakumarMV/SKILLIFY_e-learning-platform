@@ -1,33 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { BiSolidEdit } from "react-icons/bi";
+import { useUpdateTutorProfileMutation } from "../../slices/tutorApiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useUpdateProfileMutation } from "../../slices/userApiSlice";
-import { setCredentials } from "../../slices/userAuthSlice";
+import { setTutorCredentials } from "../../slices/tutorAuthSlice";
+import { BiSolidEdit } from "react-icons/bi";
 import { FaUserCircle } from "react-icons/fa";
 const PROFILE_URL = "http://localhost:5000/images/";
 
-const UserProfile = () => {
+const TutorProfile = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [image, setImage] = useState(null);
+  const [qualifications, setQualifications] = useState("");
+  const [experience, setExperience] = useState("");
+  const [about, setAbout] = useState("");
+
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-
   const dispatch = useDispatch();
 
-  const { userInfo } = useSelector((state) => state.auth);
-  const [updateProfile] = useUpdateProfileMutation();
+  const { tutorInfo } = useSelector((state) => state.tutorAuth);
+  const [updateTutorProfile] = useUpdateTutorProfileMutation();
 
   useEffect(() => {
-    setName(userInfo.name);
-    setEmail(userInfo.email);
-  }, [userInfo.name, userInfo.email]);
+    setName(tutorInfo.name);
+    setEmail(tutorInfo.email);
+    setQualifications(tutorInfo.qualifications);
+    setExperience(tutorInfo.experience);
+    setAbout(tutorInfo.about);
+  }, [
+    tutorInfo.name,
+    tutorInfo.email,
+    tutorInfo.qualifications,
+    tutorInfo.experience,
+    tutorInfo.about,
+  ]);
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
     setImage(selectedImage);
   };
+
+  console.log(about, "abouttttt");
 
   const sumbmitHandler = async (e) => {
     e.preventDefault();
@@ -35,13 +48,19 @@ const UserProfile = () => {
       const formData = new FormData();
 
       formData.append("image", image);
-      formData.append("_id", userInfo._id);
+      formData.append("_id", tutorInfo._id);
       formData.append("name", name);
       formData.append("email", email);
+      formData.append("qualifications", qualifications);
+      formData.append("about", about);
+      formData.append("experience", experience);
 
-      const res = await updateProfile(formData).unwrap("");
+      for (const [key, value] of formData.entries()) {
+        console.log(`Key: ${key}, Value: ${value}`);
+      }
+      const res = await updateTutorProfile(formData).unwrap("");
       console.log(res, "resssssssssssssssssssssssssss");
-      dispatch(setCredentials({ ...res }));
+      dispatch(setTutorCredentials({ ...res }));
       console.log("profile updated");
       setSuccess("Profile Updated");
     } catch (error) {
@@ -68,10 +87,10 @@ const UserProfile = () => {
                   alt="User Profile"
                   className="w-40 h-40  border-gray-700  mx-auto shadow-xl inline-block"
                 />
-              ) : userInfo.image ? (
+              ) : tutorInfo.image ? (
                 <img
-                  src={PROFILE_URL + userInfo.image.toLowerCase()}
-                  alt={userInfo.name}
+                  src={PROFILE_URL + tutorInfo.image.toLowerCase()}
+                  alt={tutorInfo.name}
                   className="w-40 h-40   mx-auto shadow-xl inline-block"
                 />
               ) : (
@@ -97,7 +116,7 @@ const UserProfile = () => {
             <input
               type="text"
               id="name"
-              value={name.toUpperCase()}
+              value={name?.toUpperCase()}
               onChange={(e) => setName(e.target.value)}
               name="name"
               className="w-full border border-gray-600 px-3 py-2"
@@ -117,6 +136,77 @@ const UserProfile = () => {
               onChange={(e) => setEmail(e.target.value)}
               name="email"
               className="w-full border border-gray-600 px-3 py-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="qualifications"
+              className="block text-blue-900- font-semibold"
+            >
+              Highest Qualifications
+            </label>
+            <select
+              id="qualifications"
+              name="qualifications"
+              value={qualifications}
+              onChange={(e) => setQualifications(e.target.value)}
+              className="w-full border border-gray-600 px-3 py-2"
+            >
+              <option value="">Select Qualifications</option>
+              <option value="Bachelors">Bachelor's degree</option>
+              <option value="Masters">Masters</option>
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="about"
+              className="block text-blue-900 font-semibold"
+            >
+              About
+            </label>
+            <textarea
+              id="about"
+              value={about}
+              onChange={(e) => setAbout(e.target.value)}
+              name="about"
+              placeholder="Write about you"
+              className="w-full border border-gray-600 px-3 py-2"
+              style={{ width: "100%", minHeight: "150px" }}
+            />
+          </div>
+
+          {/* <div className="mb-4">
+            <label
+              htmlFor="uploadqualifications"
+              className="block text-blue-900- font-semibold"
+            >
+              Upload Qualifications (PDF only)
+            </label>
+            <input
+              type="file"
+              id="qualificationsPdf"
+              name="qualificationsPdf"
+              accept=".pdf"
+              onChange={handleFileChange}
+              className="w-full border border-gray-600 px-3 py-2"
+            />
+          </div> */}
+          <div className="mb-4">
+            <label
+              htmlFor="experience"
+              className="block text-blue-900- font-semibold"
+            >
+              Work Experience
+            </label>
+            <input
+              type="text"
+              id="experience"
+              name="experience"
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+              className="w-full border border-gray-600  px-3 py-2"
+              placeholder="Explain about our Experience"
             />
           </div>
           <div>
@@ -151,4 +241,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default TutorProfile;

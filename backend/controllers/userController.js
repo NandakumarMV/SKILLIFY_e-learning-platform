@@ -18,6 +18,7 @@ const authUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      image: user.userImage,
     });
   } else if (user.isBlocked) {
     res.status(400);
@@ -90,11 +91,17 @@ const getUserProfile = asyncHandler(async (req, res) => {
 });
 
 const updateUserProfile = asyncHandler(async (req, res) => {
-  console.log("reached updateUserProfile here");
-
   const user = await User.findById(req.user._id);
+  const email = req.body.email;
+  if (email !== user.email) {
+    const userExists = await User.findOne({ email: email });
 
-  console.log(user, "user");
+    if (userExists) {
+      res.status(400);
+      throw new Error("email already exists");
+    }
+  }
+
   if (user) {
     (user.email = req.body.email || user.email),
       (user.name = req.body.name || user.name);
@@ -103,7 +110,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     }
 
     const updatedUser = await user.save();
-    console.log(updatedUser, "updated user");
+    console.log(updatedUser.userImage, "updatedUser.userImage");
     res.status(200).json({
       _id: updatedUser._id,
       name: updatedUser.name,
