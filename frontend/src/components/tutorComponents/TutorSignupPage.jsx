@@ -11,7 +11,7 @@ const TutorSignupPage = () => {
   const [confirmPassword, setConfrimPassword] = useState("");
   const [qualifications, setQualifications] = useState("");
   const [qualificationsPdf, setQualificationsPdf] = useState();
-
+  const [passwordError, setPasswordError] = useState("");
   const [experience, setExperience] = useState("");
   const [error, setError] = useState("");
 
@@ -37,6 +37,15 @@ const TutorSignupPage = () => {
     if (password !== confirmPassword) {
       setError("Password not matching");
     } else {
+      // if (
+      //   !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+      //     password
+      //   )
+      // ) {
+      //   setPasswordError(
+      //     "Password must contain at least 8 characters,  one number, and one special character"
+      //   );
+      // } else {
       try {
         const res = await tutorRegister({
           name,
@@ -56,6 +65,7 @@ const TutorSignupPage = () => {
       } catch (error) {
         setError(err?.data?.message || err.error);
       }
+      // }
     }
   };
   return (
@@ -115,16 +125,21 @@ const TutorSignupPage = () => {
               type="password"
               id="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setPasswordError("");
+              }}
               name="password"
               className="w-full border border-gray-600  px-3 py-2"
               placeholder="Enter your password"
             />
-          </div>
+          </div>{" "}
+          {passwordError && (
+            <div className="text-red-500 text-right mb-4">{passwordError}</div>
+          )}
           {error === "Password not matching" && (
             <div className="text-red-500 text-right mb-4">{error}</div>
           )}
-
           <div className="mb-4">
             <label
               htmlFor="confirmPassword"
@@ -142,7 +157,6 @@ const TutorSignupPage = () => {
               placeholder="Confrim your password"
             />
           </div>
-
           <div>
             <div className="mb-4">
               <label

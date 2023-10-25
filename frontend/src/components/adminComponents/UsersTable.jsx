@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useBlockUserMutation,
   useUnblockUserMutation,
 } from "../../slices/adminApiSlice";
+import Modal from "./Modal";
 
 const UsersTable = ({ users }) => {
   const [search, setSearch] = useState("");
@@ -14,14 +15,43 @@ const UsersTable = ({ users }) => {
   });
   const [blockUser] = useBlockUserMutation();
   const [unblockUser] = useUnblockUserMutation();
+  const [userList, setUserList] = useState(users);
+
+  useEffect(() => {
+    setUserList(users);
+  }, [users]);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
   };
   const handleBlockuser = async (userId) => {
-    await blockUser({ userId });
+    const response = await blockUser({ userId });
+    if (response.status === 200) {
+      // Update the user's status in the local state
+      setUserList((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === userId ? { ...user, isBlocked: true } : user
+        )
+      );
+      setShowModal(true);
+    }
+  };
 
-    window.location.reload();
+  const handleUnBlockuser = async (userId) => {
+    const response = await unblockUser({ userId });
+    if (response.status === 200) {
+      // Update the user's status in the local state
+      setUserList(
+        (prevUsers) => console.log("entered"),
+        prevUsers.map((user) =>
+          user._id === userId ? { ...user, isBlocked: false } : user
+        )
+      );
+      setShowModal(true);
+    }
+  };
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   const userfilter = users.filter(
@@ -61,11 +91,17 @@ const UsersTable = ({ users }) => {
 
               <td className="border px-4 py-2">
                 {user.isBlocked ? (
-                  <button className=" bg-green-600 w-16 rounded text-white ml-2">
+                  <button
+                    className=" bg-green-600 w-16 rounded text-white ml-2 "
+                    onClick={() => handleUnBlockuser(user._id)}
+                  >
                     UnBlock
                   </button>
                 ) : (
-                  <button className=" bg-red-600 w-16 rounded text-white ml-2">
+                  <button
+                    className=" bg-red-600 w-16 rounded text-white ml-2"
+                    onClick={() => handleBlockuser(user._id)}
+                  >
                     Block
                   </button>
                 )}
@@ -74,6 +110,9 @@ const UsersTable = ({ users }) => {
           ))}
         </tbody>
       </table>
+      {showModal && (
+        <Modal user={selectedUser} showModal={showModal} onClose={closeModal} />
+      )}
     </>
   );
 };

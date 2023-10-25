@@ -32,13 +32,28 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    tutorBlock: builder.mutation({
+      query: (data) => ({
+        url: `${ADMIN_URL}/block-tutor`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    tutorUnblock: builder.mutation({
+      query: (data) => ({
+        url: `${ADMIN_URL}/unblock-tutor`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
 export const {
   useAdminLoginMutation,
   useAdminLogoutMutation,
-
+  useTutorBlockMutation,
+  useTutorUnblockMutation,
   useBlockUserMutation,
   useUnblockUserMutation,
 } = adminApiSlice;

@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useLoginMutation } from "../../slices/userApiSlice";
+import {
+  useGoogleLoginMutation,
+  useLoginMutation,
+} from "../../slices/userApiSlice";
 import { setCredentials } from "../../slices/userAuthSlice";
 import { GoogleLogin } from "@react-oauth/google";
-const LoginPage = () => {
+
+const UserLoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,6 +17,7 @@ const LoginPage = () => {
   const dispatch = useDispatch();
 
   const [login] = useLoginMutation();
+  const [googleLogin] = useGoogleLoginMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -22,9 +27,9 @@ const LoginPage = () => {
     }
   }, [navigate, userInfo]);
 
-  const googleSubmitHandler = async () => {
+  const googleSubmitHandler = async (value) => {
     try {
-      const res = await login({ email, password }).unwrap();
+      const res = await googleLogin({ token: value }).unwrap();
       dispatch(
         setCredentials({
           ...res,
@@ -98,22 +103,26 @@ const LoginPage = () => {
             Login
           </button>
         </form>
-        <div className="p-1 mb-3 justify-center ">
-          <GoogleLogin
-            clientId="646376613853-opi07m71f0glecaf3lhj5iet07c27aff.apps.googleusercontent.com"
-            onSuccess={googleSubmitHandler}
-            onFailure={(error) => console.log("Google login failed", error)}
-            render={(renderProps) => (
-              <button
-                type="button"
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
-                className="bg-blue-700 text-white py-2 px-4 hover:bg-blue-600 hover:text-white hover:border-2 hover:border-blue-700 transition duration-300 justify-center"
-              >
-                Login with Google
-              </button>
-            )}
-          />
+        <div className="border-t-[1px] border-black p-5">
+          <div className="flex  justify-center items-center">
+            <GoogleLogin
+              clientId="646376613853-opi07m71f0glecaf3lhj5iet07c27aff.apps.googleusercontent.com"
+              onSuccess={(response) => {
+                googleSubmitHandler(response.credential);
+              }}
+              onFailure={(error) => console.log("Google login failed", error)}
+              render={(renderProps) => (
+                <button
+                  type="button"
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                  className="bg-blue-700 text-white py-2 px-4 hover:bg-blue-600 hover:text-white hover:border-2 hover:border-blue-700 transition duration-300"
+                >
+                  Login with Google
+                </button>
+              )}
+            />
+          </div>
         </div>
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
@@ -128,4 +137,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default UserLoginPage;

@@ -30,7 +30,7 @@ const Header = ({ isLoginTutor }) => {
 
   return (
     <header className="relative">
-      <div className="bg-white-500 p-4 shadow-2xl sticky top-0">
+      <div className="bg-white-500 p-4 shadow-2xl sticky top-0 ">
         <div className="container mx-auto">
           <div className="flex justify-between items-center p-1">
             <div className="flex items-center space-x-.5">

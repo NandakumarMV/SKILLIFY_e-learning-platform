@@ -23,7 +23,6 @@ const authAdmin = asyncHandler(async (req, res) => {
 
 const registerAdmin = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  console.log("bbbbbbbbbbbbbbbbbbbb");
   const admin = await Admin.create({
     name,
     email,
@@ -53,12 +52,12 @@ const logoutAdmin = asyncHandler(async (req, res) => {
 
 const userList = asyncHandler(async (req, res) => {
   const users = await User.find();
-  console.log(users, "suuuuiii");
+
   res.status(200).json(users);
 });
 const tutorList = asyncHandler(async (req, res) => {
   const tutors = await Tutor.find();
-  console.log(tutors, "sssssssss");
+
   res.status(200).json(tutors);
 });
 
@@ -89,6 +88,33 @@ const unblockUser = asyncHandler(async (req, res) => {
     res.status(404).json({ message: "user not found" });
   }
 });
+const tutorblockUser = asyncHandler(async (req, res) => {
+  const tutorId = req.body.tutorId;
+  const blockTrue = {
+    isBlocked: true,
+  };
+
+  const blockUser = await Tutor.findByIdAndUpdate(tutorId, blockTrue);
+  if (blockUser) {
+    res.status(200).json({ message: "user blocked sucessfully" });
+  } else {
+    res.status(404).json({ message: "user not found" });
+  }
+});
+
+const tutorunblockUser = asyncHandler(async (req, res) => {
+  const tutorId = req.body.tutorId;
+  const unblockFalse = {
+    isBlocked: false,
+  };
+  const blockUser = await Tutor.findByIdAndUpdate(tutorId, unblockFalse);
+
+  if (blockUser) {
+    res.status(200).json({ message: "user unblocked sucessfully" });
+  } else {
+    res.status(404).json({ message: "user not found" });
+  }
+});
 export {
   authAdmin,
   logoutAdmin,
@@ -97,4 +123,6 @@ export {
   blockUser,
   unblockUser,
   tutorList,
+  tutorblockUser,
+  tutorunblockUser,
 };

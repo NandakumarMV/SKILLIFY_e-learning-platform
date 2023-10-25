@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import {
+  useTutorBlockMutation,
+  useTutorUnblockMutation,
+} from "../../slices/adminApiSlice";
+import Modal from "./Modal";
 
 const TutorTable = ({ tutor }) => {
   const [search, setSearch] = useState("");
@@ -8,11 +13,25 @@ const TutorTable = ({ tutor }) => {
     name: "",
     email: "",
   });
-
+  const [blockTutor] = useTutorBlockMutation();
+  const [unblockTutor] = useTutorUnblockMutation();
   const handleSearch = (e) => {
     setSearch(e.target.value);
   };
+  const handleBlockuser = async (tutorId) => {
+    const response = await blockTutor({ tutorId });
 
+    setShowModal(true);
+  };
+
+  const handleUnBlockuser = async (tutorId) => {
+    const response = await unblockTutor({ tutorId });
+
+    setShowModal(true);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+  };
   const tutorfilter = tutor.filter(
     (tutor) =>
       tutor.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -54,11 +73,17 @@ const TutorTable = ({ tutor }) => {
 
               <td className="border px-4 py-2">
                 {tutor.isBlocked ? (
-                  <button className=" bg-green-600 w-16 rounded text-white ml-2">
+                  <button
+                    className=" bg-green-600 w-16 rounded text-white ml-2"
+                    onClick={() => handleUnBlockuser(tutor._id)}
+                  >
                     UnBlock
                   </button>
                 ) : (
-                  <button className=" bg-red-600 w-16 rounded text-white ml-2">
+                  <button
+                    className=" bg-red-600 w-16 rounded text-white ml-2"
+                    onClick={() => handleBlockuser(tutor._id)}
+                  >
                     Block
                   </button>
                 )}
@@ -67,6 +92,13 @@ const TutorTable = ({ tutor }) => {
           ))}
         </tbody>
       </table>
+      {showModal && (
+        <Modal
+          user={selectedTutor}
+          showModal={showModal}
+          onClose={closeModal}
+        />
+      )}
     </>
   );
 };

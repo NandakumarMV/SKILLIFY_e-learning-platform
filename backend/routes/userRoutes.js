@@ -5,6 +5,7 @@ import { protect } from "../middleware/protect.js";
 import {
   authUser,
   getUserProfile,
+  googleLogin,
   logOutUser,
   registerUser,
   updateUserProfile,
@@ -18,5 +19,5 @@ router
   .route("/profile")
   .get(protect, getUserProfile)
   .put(protect("user"), multerImage.single("image"), updateUserProfile);
-
+router.post("/google-login", googleLogin);
 export default router;

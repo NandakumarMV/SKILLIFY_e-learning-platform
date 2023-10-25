@@ -15,13 +15,13 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
     },
     isBlocked: {
       type: Boolean,
       default: false,
     },
-    userImage: {
+    userImageUrl: {
       type: String,
     },
   },

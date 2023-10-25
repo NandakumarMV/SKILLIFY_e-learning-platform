@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTutorCredentials } from "../../slices/tutorAuthSlice";
 import { BiSolidEdit } from "react-icons/bi";
 import { FaUserCircle } from "react-icons/fa";
-const PROFILE_URL = "http://localhost:5000/images/";
 
 const TutorProfile = () => {
   const [name, setName] = useState("");
@@ -40,8 +39,6 @@ const TutorProfile = () => {
     setImage(selectedImage);
   };
 
-  console.log(about, "abouttttt");
-
   const sumbmitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -59,9 +56,9 @@ const TutorProfile = () => {
         console.log(`Key: ${key}, Value: ${value}`);
       }
       const res = await updateTutorProfile(formData).unwrap("");
-      console.log(res, "resssssssssssssssssssssssssss");
+
       dispatch(setTutorCredentials({ ...res }));
-      console.log("profile updated");
+
       setSuccess("Profile Updated");
     } catch (error) {
       setError(error?.data?.message || error.error);
@@ -89,7 +86,7 @@ const TutorProfile = () => {
                 />
               ) : tutorInfo.image ? (
                 <img
-                  src={PROFILE_URL + tutorInfo.image.toLowerCase()}
+                  src={tutorInfo.image}
                   alt={tutorInfo.name}
                   className="w-40 h-40   mx-auto shadow-xl inline-block"
                 />

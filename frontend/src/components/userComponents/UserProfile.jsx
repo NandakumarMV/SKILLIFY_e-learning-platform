@@ -18,7 +18,7 @@ const UserProfile = () => {
 
   const { userInfo } = useSelector((state) => state.auth);
   const [updateProfile] = useUpdateProfileMutation();
-
+  console.log(userInfo.image);
   useEffect(() => {
     setName(userInfo.name);
     setEmail(userInfo.email);
@@ -40,9 +40,9 @@ const UserProfile = () => {
       formData.append("email", email);
 
       const res = await updateProfile(formData).unwrap("");
-      console.log(res, "resssssssssssssssssssssssssss");
+
       dispatch(setCredentials({ ...res }));
-      console.log("profile updated");
+
       setSuccess("Profile Updated");
     } catch (error) {
       setError(error?.data?.message || error.error);
@@ -70,7 +70,7 @@ const UserProfile = () => {
                 />
               ) : userInfo.image ? (
                 <img
-                  src={PROFILE_URL + userInfo.image.toLowerCase()}
+                  src={userInfo.image}
                   alt={userInfo.name}
                   className="w-40 h-40   mx-auto shadow-xl inline-block"
                 />

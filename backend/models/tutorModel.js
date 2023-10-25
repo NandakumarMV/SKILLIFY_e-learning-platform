@@ -38,7 +38,7 @@ const tutorSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    tutorImage: {
+    tutorImageUrl: {
       type: String,
     },
   },

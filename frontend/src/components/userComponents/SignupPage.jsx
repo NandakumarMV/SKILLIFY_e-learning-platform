@@ -11,6 +11,7 @@ const SignupPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfrimPassword] = useState("");
   const [error, setError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const [register] = useRegisterMutation();
 
@@ -42,6 +43,15 @@ const SignupPage = () => {
     if (password !== confirmPassword) {
       setError("Password not matching");
     } else {
+      // if (
+      //   !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+      //     password
+      //   )
+      // ) {
+      //   setPasswordError(
+      //     "Password must contain at least 8 characters,  one number, and one special character"
+      //   );
+      // } else {
       try {
         const res = await register({ name, email, password }).unwrap();
 
@@ -54,6 +64,7 @@ const SignupPage = () => {
       } catch (error) {
         setError(error?.data?.message || error.error);
       }
+      // }
     }
   };
 
@@ -115,6 +126,9 @@ const SignupPage = () => {
               placeholder="Enter your password"
             />
           </div>
+          {passwordError && (
+            <div className="text-red-500 text-right mb-4">{passwordError}</div>
+          )}
           {error === "Password not matching" && (
             <div className="text-red-500 text-right mb-4">{error}</div>
           )}
@@ -143,23 +157,7 @@ const SignupPage = () => {
             Sign Up
           </button>
         </form>
-        <div className="p-1 mb-3 justify-center ">
-          <GoogleLogin
-            clientId="646376613853-opi07m71f0glecaf3lhj5iet07c27aff.apps.googleusercontent.com"
-            onSuccess={googleSubmitHandler}
-            onFailure={(error) => console.log("Google login failed", error)}
-            render={(renderProps) => (
-              <button
-                type="button"
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
-                className="bg-blue-700 text-white py-2 px-4 hover:bg-blue-600 hover:text-white hover:border-2 hover:border-blue-700 transition duration-300 justify-center"
-              >
-                Login with Google
-              </button>
-            )}
-          />
-        </div>
+
         {error !== "Password not matching" && (
           <div className="text-red-500 text-right mb-4">{error}</div>
         )}

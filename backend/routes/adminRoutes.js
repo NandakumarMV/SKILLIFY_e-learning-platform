@@ -9,6 +9,8 @@ import {
   userList,
   unblockUser,
   tutorList,
+  tutorunblockUser,
+  tutorblockUser,
 } from "../controllers/adminController.js";
 
 router.post("/", authAdmin);
@@ -18,5 +20,7 @@ router.get("/users", protect("admin"), userList);
 router.get("/tutors", protect("admin"), tutorList);
 router.post("/block-user", blockUser);
 router.post("/unblock-user", unblockUser);
+router.post("/unblock-tutor", tutorunblockUser);
+router.post("/block-tutor", tutorblockUser);
 
 export default router;

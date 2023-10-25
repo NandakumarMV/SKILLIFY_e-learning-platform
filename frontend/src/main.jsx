@@ -10,11 +10,11 @@ import store from "./store.js";
 import { Provider } from "react-redux";
 import App from "./App.jsx";
 import "./index.css";
-import LoginPage from "./components/userComponents/LoginPage.jsx";
+import UserLoginPage from "./components/userComponents/UserLoginPage.jsx";
 import SignupPage from "./components/userComponents/SignupPage.jsx";
 import HomePage from "./components/userComponents/HomePage.jsx";
 import AdminLoginPage from "./components/adminComponents/adminLoginPage.jsx";
-import AdminHomePage from "./components/adminComponents/adminHomePage.jsx";
+
 import TutorLoginPage from "./components/tutorComponents/TutorLoginPage.jsx";
 import TutorHome from "./components/tutorComponents/TutorHome.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -30,7 +30,11 @@ const router = createBrowserRouter(
       {/************User side routes ***************/}
 
       <Route index={true} path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/login"
+        element={<UserLoginPage />}
+        errorElement={<UserLoginPage />}
+      />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/profile" element={<UserProfile />} />
 

@@ -1,6 +1,11 @@
 import asyncHandler from "express-async-handler";
 import Tutor from "../models/tutorModel.js";
 import generateToken from "../utils/genJwtToken.js";
+import { s3 } from "../config/s3BucketConfig.js";
+import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import crypto from "crypto";
+const randomImgName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 
 const authTutor = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -8,7 +13,6 @@ const authTutor = asyncHandler(async (req, res) => {
   const tutor = await Tutor.findOne({ email });
   if (tutor && !tutor.isBlocked && (await tutor.matchPassword(password))) {
     generateToken(res, tutor._id, "tutor");
-    console.log(tutor._id, tutor.name, tutor.email);
     res.status(201).json({
       _id: tutor._id,
       name: tutor.name,
@@ -16,13 +20,12 @@ const authTutor = asyncHandler(async (req, res) => {
       qualifications: tutor.qualifications,
       experience: tutor.experience,
       about: tutor.about,
-      image: tutor.tutorImage,
+      image: tutor.tutorImageUrl,
     });
   } else if (tutor.isBlocked) {
     res.status(400);
     throw new Error("You have been blocked");
   } else {
-    console.log("invalid email or password");
     res.status(400);
     throw new Error("invalid email or password");
   }
@@ -45,11 +48,9 @@ const registerTutor = asyncHandler(async (req, res) => {
     experience,
     password,
   });
-  console.log(tutor, "tutor");
 
   if (tutor) {
     generateToken(res, tutor._id, "tutor");
-    console.log("enterd");
     res.status(201).json({
       _id: tutor._id,
       name: tutor.name,
@@ -73,17 +74,12 @@ const getTutorProfile = asyncHandler(async (req, res) => {
     qualifications: tutor.qualifications,
     experience: tutor.experience,
     about: tutor.about,
-    image: tutor.tutorImage,
   };
   res.status(200).json(tutorData);
 });
 const updateTutorProfile = asyncHandler(async (req, res) => {
   const tutor = await Tutor.findById(req.tutor._id);
-  console.log(tutor, "tutor");
-  console.log(req.body);
-  console.log(req.body.email, req.body.name);
   const email = req.body.email;
-  console.log(req.body.about, "dfdsfdsfdsf");
   if (email !== tutor.email) {
     const tutorExists = await Tutor.findOne({ email: email });
 
@@ -100,12 +96,26 @@ const updateTutorProfile = asyncHandler(async (req, res) => {
       (tutor.experience = req.body.experience || tutor.experience),
       (tutor.about = req.body.about || tutor.about);
     if (req.file) {
-      console.log("jjjjjjjj");
-      tutor.tutorImage = req.file.filename || tutor.tutorImage;
+      const tutorImg = randomImgName();
+      const params = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: tutorImg,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+      };
+      const command = new PutObjectCommand(params);
+
+      await s3.send(command);
+      const getObjectParams = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: tutorImg,
+      };
+      const getCommand = new GetObjectCommand(getObjectParams);
+      const url = await getSignedUrl(s3, getCommand, { expiresIn: 3600 });
+      tutor.tutorImageUrl = url;
     }
 
     const updatedtutor = await tutor.save();
-    console.log(updatedtutor.tutorImage, "updatedtutor");
     res.status(200).json({
       _id: updatedtutor._id,
       name: updatedtutor.name,
@@ -113,7 +123,7 @@ const updateTutorProfile = asyncHandler(async (req, res) => {
       qualifications: updatedtutor.qualifications,
       about: updatedtutor.about,
       experience: updatedtutor.experience,
-      image: updatedtutor.tutorImage,
+      image: updatedtutor.tutorImageUrl,
     });
   } else {
     res.status(404);
