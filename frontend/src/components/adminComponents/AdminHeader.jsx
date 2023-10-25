@@ -7,6 +7,7 @@ import { useAdminLogoutMutation } from "../../slices/adminApiSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { adminLogout } from "../../slices/adminAuthSlice";
+import DomainList from "./DomainList";
 
 const AdminHeader = () => {
   const [content, setContent] = useState("Dashboard");
@@ -75,6 +76,14 @@ const AdminHeader = () => {
                 Tutors
               </li>
               <li
+                className={`py-2 hover:bg-gray-700 block pl-4  ${
+                  activeMenuItem === "domain" ? "bg-gray-700" : ""
+                }`}
+                onClick={() => changeContent("domain")}
+              >
+                Domains
+              </li>
+              <li
                 className="py-2 hover:bg-gray-700 block pl-4  "
                 onClick={handleLogout}
               >
@@ -88,6 +97,7 @@ const AdminHeader = () => {
             {content === "Dashboard" && <AdminHomePage />}
             {content === "users" && <UsersList />}
             {content === "tutors" && <TutorList />}
+            {content === "domain" && <DomainList />}
           </div>
         </div>
       </div>

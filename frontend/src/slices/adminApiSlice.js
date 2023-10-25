@@ -46,6 +46,13 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    addDomain: builder.mutation({
+      query: (data) => ({
+        url: `${ADMIN_URL}/add-domain`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -56,4 +63,5 @@ export const {
   useTutorUnblockMutation,
   useBlockUserMutation,
   useUnblockUserMutation,
+  useAddDomainMutation,
 } = adminApiSlice;

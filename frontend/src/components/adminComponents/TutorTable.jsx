@@ -50,7 +50,7 @@ const TutorTable = ({ tutor }) => {
           />
         </div>
       </div>
-      <table className="min-w-full table-auto">
+      <table className="min-w-full mx-auto border-collapse table-auto">
         <thead className="bg-slate-400">
           <tr>
             <th className="px-4 py-2 ">Index</th>

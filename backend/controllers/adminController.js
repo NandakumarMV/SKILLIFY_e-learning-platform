@@ -3,6 +3,7 @@ import Admin from "../models/adminModel.js";
 import generateToken from "../utils/genJwtToken.js";
 import User from "../models/userModel.js";
 import Tutor from "../models/tutorModel.js";
+import Domain from "../models/domainModel.js";
 
 const authAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -115,6 +116,29 @@ const tutorunblockUser = asyncHandler(async (req, res) => {
     res.status(404).json({ message: "user not found" });
   }
 });
+const getDomains = asyncHandler(async (req, res) => {
+  const domains = await Domain.find();
+  console.log(domains);
+  res.status(200).json(domains);
+});
+const addDomain = asyncHandler(async (req, res) => {
+  console.log("entered addd doamain");
+  const domainName = req.body.domainName;
+  console.log(req.body, "kkkkkkkkkkkkkk");
+  console.log(domainName);
+  if (Domain.domainName !== domainName) {
+    console.log("enter conditions");
+    const domain = await Domain.create({
+      domainName,
+    });
+    res.status(200).json({ domain: domain.domainName });
+  } else {
+    console.log("enter else conditions");
+
+    res.status(400).json({ message: "domain already exits" });
+  }
+});
+
 export {
   authAdmin,
   logoutAdmin,
@@ -125,4 +149,6 @@ export {
   tutorList,
   tutorblockUser,
   tutorunblockUser,
+  addDomain,
+  getDomains,
 };
