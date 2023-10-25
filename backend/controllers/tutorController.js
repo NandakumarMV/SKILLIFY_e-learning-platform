@@ -2,7 +2,11 @@ import asyncHandler from "express-async-handler";
 import Tutor from "../models/tutorModel.js";
 import generateToken from "../utils/genJwtToken.js";
 import { s3 } from "../config/s3BucketConfig.js";
-import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 const randomImgName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
@@ -96,6 +100,14 @@ const updateTutorProfile = asyncHandler(async (req, res) => {
       (tutor.experience = req.body.experience || tutor.experience),
       (tutor.about = req.body.about || tutor.about);
     if (req.file) {
+      if (tutor.tutorImageName) {
+        const params = {
+          Bucket: process.env.BUCKET_NAME,
+          Key: tutor.tutorImageName,
+        };
+        const command = new DeleteObjectCommand(params);
+        await s3.send(command);
+      }
       const tutorImg = randomImgName();
       const params = {
         Bucket: process.env.BUCKET_NAME,
@@ -112,6 +124,7 @@ const updateTutorProfile = asyncHandler(async (req, res) => {
       };
       const getCommand = new GetObjectCommand(getObjectParams);
       const url = await getSignedUrl(s3, getCommand, { expiresIn: 3600 });
+      tutor.tutorImageName = tutorImg;
       tutor.tutorImageUrl = url;
     }
 

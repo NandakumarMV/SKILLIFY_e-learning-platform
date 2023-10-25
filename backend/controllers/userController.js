@@ -4,7 +4,11 @@ import User from "../models/userModel.js";
 import { OAuth2Client } from "google-auth-library";
 import generateToken from "../utils/genJwtToken.js";
 import { s3 } from "../config/s3BucketConfig.js";
-import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 /////////////////////////////////
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
@@ -146,6 +150,14 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     (user.email = req.body.email || user.email),
       (user.name = req.body.name || user.name);
     if (req.file) {
+      if (user.userImageName) {
+        const params = {
+          Bucket: process.env.BUCKET_NAME,
+          Key: user.userImageName,
+        };
+        const command = new DeleteObjectCommand(params);
+        const buk = await s3.send(command);
+      }
       const userImg = randomImgName();
       const params = {
         Bucket: process.env.BUCKET_NAME,
@@ -156,12 +168,15 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       const command = new PutObjectCommand(params);
 
       await s3.send(command);
+
+      //////////////////get the image url///////
       const getObjectParams = {
         Bucket: process.env.BUCKET_NAME,
         Key: userImg,
       };
       const getCommand = new GetObjectCommand(getObjectParams);
       const url = await getSignedUrl(s3, getCommand, { expiresIn: 3600 });
+      user.userImageName = userImg;
       user.userImageUrl = url;
     }
 

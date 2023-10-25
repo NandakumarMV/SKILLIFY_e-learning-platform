@@ -41,6 +41,9 @@ const tutorSchema = mongoose.Schema(
     tutorImageUrl: {
       type: String,
     },
+    tutorImageName: {
+      type: String,
+    },
   },
   {
     timestamps: true,
