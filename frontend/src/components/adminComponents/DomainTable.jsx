@@ -1,15 +1,21 @@
 import React, { useState } from "react";
-import { useAddDomainMutation } from "../../slices/adminApiSlice";
-import { useDispatch } from "react-redux";
-import { addDomain } from "../../slices/adminAuthSlice";
-const DomainTable = ({ domain }) => {
+import {
+  useAddDomainMutation,
+  useDeleteDomainMutation,
+} from "../../slices/adminApiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setDomain } from "../../slices/adminAuthSlice";
+
+const DomainTable = () => {
   const [domainName, setDomainName] = useState("");
   const [seletedDomain, setSelectedDomain] = useState({});
   const [deleteDomain, setDeleteDomain] = useState("");
   const [editdomain, setEditDomain] = useState();
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
-
+  const [deleteDomainMutation] = useDeleteDomainMutation();
+  const domains = useSelector((state) => state.adminAuth.domains);
+  // console.log(domains, "domains in tableeeeeeeee");
   const openModal = () => {
     setShowModal(true);
   };
@@ -21,10 +27,19 @@ const DomainTable = ({ domain }) => {
   const [addDomain] = useAddDomainMutation();
   const handleAddDomain = async () => {
     const res = await addDomain({ domainName }).unwrap();
+    console.log(res.domain, "responsee");
 
+    dispatch(setDomain([...domains, res.domain]));
     closeModal();
   };
+  const handleDeleteDomain = async (domainToDelete) => {
+    const res = await deleteDomainMutation(domainToDelete).unwrap();
 
+    const updatedDomains = domains.filter(
+      (domain) => domain !== domainToDelete
+    );
+    dispatch(setDomain(updatedDomains));
+  };
   return (
     <>
       <div>
@@ -47,19 +62,20 @@ const DomainTable = ({ domain }) => {
             </tr>
           </thead>
           <tbody>
-            {domain.map((domain, index) => (
+            {domains.map((domain, index) => (
               <tr key={index} className="hover:bg-slate-400">
                 <td className="border px-4 py-2 text-center">{index + 1}</td>
+                <td className="border px-4 py-2 text-center">{domain}</td>
                 <td className="border px-4 py-2 text-center">
-                  {domain?.domainName}
-                </td>
-                <td className="border px-4 py-2 text-center">
-                  <button className="bg-red-600 w-16 rounded text-white ml-2">
+                  <button
+                    className="bg-red-600 w-16 rounded text-white ml-2"
+                    onClick={() => handleDeleteDomain(domain)}
+                  >
                     Delete
                   </button>
-                  <button className="bg-blue-600 w-16 rounded text-white ml-2">
+                  {/* <button className="bg-blue-600 w-16 rounded text-white ml-2">
                     Edit
-                  </button>
+                  </button> */}
                 </td>
               </tr>
             ))}

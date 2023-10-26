@@ -10,6 +10,7 @@ import {
   registerTutor,
   updateTutorProfile,
   getTutorProfile,
+  addCourse,
 } from "../controllers/tutorController.js";
 
 router.post("/login", authTutor);
@@ -25,5 +26,5 @@ router
   .route("/profile")
   .get(protect("tutor"), getTutorProfile)
   .put(protect("tutor"), multerImage.single("image"), updateTutorProfile);
-
+router.post("/add-course", protect("tutor"), addCourse);
 export default router;

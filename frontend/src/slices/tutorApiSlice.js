@@ -30,6 +30,13 @@ export const tutorApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    addCourse: builder.mutation({
+      query: (data) => ({
+        url: `${TUTOR_URL}/add-course`,
+        method: "post",
+        body: data,
+      }),
+    }),
   }),
 });
 

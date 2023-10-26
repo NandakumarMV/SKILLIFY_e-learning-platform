@@ -11,7 +11,6 @@ import TutorDropdown from "../tutorComponents/TutorDropdown";
 
 const Header = ({ isLoginTutor }) => {
   const { userInfo } = useSelector((state) => state.auth);
-
   const { tutorInfo } = useSelector((state) => state.tutorAuth);
 
   const [logoutTutor] = useTutorlogoutMutation();
@@ -30,22 +29,24 @@ const Header = ({ isLoginTutor }) => {
 
   return (
     <header className="relative">
-      <div className="bg-white-500 p-4 shadow-2xl sticky top-0 ">
+      <div className="bg-white-500 p-4 sm:p-2 shadow-2xl">
         <div className="container mx-auto">
-          <div className="flex justify-between items-center p-1">
-            <div className="flex items-center space-x-.5">
-              <RiLightbulbFlashLine className="text-black text-2xl mb-2" />
-              <div className="text-black font-semibold text-xl pb-2">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-0.5">
+              <RiLightbulbFlashLine className="text-2xl mb-2 sm:text-3xl" />
+              <div className="text-xl pb-2 sm:text-2xl">
                 SKILLIFY
                 {isLoginTutor && (
-                  <span className="text-gray-600 font-normal text-sm ml-2">
-                    Lets teach with Us!
-                  </span>
+                  <Link to="/tutor/home">
+                    <span className="text-gray-600 font-normal text-sm ml-2">
+                      Lets teach with Us!
+                    </span>
+                  </Link>
                 )}
               </div>
             </div>
             <div className="mr-2">
-              <div className="text-sm">
+              <div className="text-sm sm:text-base">
                 {isLoginTutor ? (
                   <p>Welcome {tutorInfo?.name}</p>
                 ) : userInfo ? (
@@ -53,18 +54,18 @@ const Header = ({ isLoginTutor }) => {
                 ) : null}
               </div>
             </div>
-            <ul className="flex space-x-10">
+            <ul className="flex space-x-2 sm:space-x-10">
               {isLoginTutor ? (
                 <>
                   {tutorInfo && (
                     <>
-                      <li className="text-black hover:text-blue-600 cursor-pointer">
-                        <Link> Add courses</Link>
+                      <li className="text-sm sm:text-base">
+                        <Link to="/tutor/add-course"> Add courses</Link>
                       </li>
-                      <li className="text-black hover:text-blue-600 cursor-pointer">
+                      <li className="text-sm sm:text-base">
                         <a href=""></a>
                       </li>
-                      <li className="text-black hover:text-blue-600 cursor-pointer">
+                      <li className="text-sm sm:text-base">
                         <a href="">Dashboard</a>
                       </li>
                       <li>
@@ -80,21 +81,21 @@ const Header = ({ isLoginTutor }) => {
                       {" "}
                       {!isLoginTutor && (
                         <>
-                          <li className="text-black hover:text-blue-600 cursor-pointer">
+                          <li className="text-sm sm:text-base">
                             <Link to="/tutor/login">Teach with US</Link>
                           </li>
-                          <li className="text-black hover:text-blue-600 cursor-pointer">
+                          <li className="text-sm sm:text-base">
                             <Link>Courses</Link>
                           </li>
-                          <li className="text-black hover:text-blue-600 cursor-pointer">
+                          <li className="text-sm sm:text-base">
                             <a href="">My Courses</a>
                           </li>
-                          <li className="text-black hover:text-blue-600 cursor-pointer">
+                          <li className="text-sm sm:text-base">
                             <a href="">
                               <AiFillHeart className="h-9 w-6 pb-2" />
                             </a>
                           </li>
-                          <li className="text-black hover:text-blue-600 cursor-pointer">
+                          <li className="text-sm sm:text-base">
                             <Dropdown />
                           </li>
                         </>
@@ -104,22 +105,22 @@ const Header = ({ isLoginTutor }) => {
                     <>
                       {!isLoginTutor && (
                         <>
-                          <li className="text-black hover:text-blue-600 cursor-pointer">
+                          <li className="text-sm sm:text-base">
                             <Link to="/tutor/login">Teach with US</Link>
                           </li>
-                          <li className="text-black hover:text-blue-600 cursor-pointer">
+                          <li className="text-sm sm:text-base">
                             <Link>Courses</Link>
                           </li>
                           <li>
                             <Link to="/login">
-                              <button className="border-2 border-black text-black text-sm p-1 px-2 ml-1 hover:bg-black hover:text-white">
+                              <button className="border-2 border-black text-sm sm:text-base p-1 px-2 ml-1 hover:bg-black hover:text-white">
                                 Login
                               </button>
                             </Link>
                           </li>
                           <li>
                             <Link to="/signup">
-                              <button className="border-2 border-black text-black text-sm p-1 px-2 ml-1 hover:bg-black hover:text-white">
+                              <button className="border-2 border-black text-sm sm:text-base p-1 px-2 ml-1 hover:bg-black hover:text-white">
                                 Sign Up
                               </button>
                             </Link>

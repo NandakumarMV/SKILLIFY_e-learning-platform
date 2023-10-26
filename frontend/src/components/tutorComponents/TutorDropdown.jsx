@@ -26,7 +26,7 @@ const TutorDropdown = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <button
         onClick={toggleDropdown}
         className="text-black hover:text-blue-600 cursor-pointer"

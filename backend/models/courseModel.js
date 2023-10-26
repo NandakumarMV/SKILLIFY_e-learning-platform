@@ -1,0 +1,45 @@
+import mongoose from "mongoose";
+const videoSchema = new mongoose.Schema({
+  videoUrl: {
+    type: String,
+  },
+  videoName: {
+    type: String,
+  },
+  duration: {
+    type: Number,
+  },
+});
+const courseSchema = mongoose.Schema(
+  {
+    tutorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tutor",
+    },
+    domain: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Domain",
+    },
+    courseName: {
+      type: String,
+    },
+    description: {
+      type: String,
+    },
+    price: {
+      type: Number,
+    },
+    rating: {
+      type: String,
+    },
+    thumbnail: {
+      type: String,
+    },
+    videos: [videoSchema],
+  },
+  {
+    timestamps: true,
+  }
+);
+const Courses = mongoose.model("Courses", courseSchema);
+export default Courses;

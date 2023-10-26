@@ -15,15 +15,16 @@ const AdminAuthSlice = createSlice({
       state.adminInfo = action.payload;
       localStorage.setItem("adminInfo", JSON.stringify(action.payload));
     },
-    addDomain: (state, action) => {
-      state.domains.push(action.payload);
+    setDomain: (state, action) => {
+      state.domains = action.payload;
     },
+
     adminLogout: (state, action) => {
       (state.adminInfo = null), localStorage.removeItem("adminInfo");
     },
   },
 });
 
-export const { setAdminCredentials, adminLogout, addDomain } =
+export const { setAdminCredentials, adminLogout, setDomain, deleteDomain } =
   AdminAuthSlice.actions;
 export default AdminAuthSlice.reducer;

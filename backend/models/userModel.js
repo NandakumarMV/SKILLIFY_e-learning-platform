@@ -27,6 +27,12 @@ const userSchema = mongoose.Schema(
     userImageName: {
       type: String,
     },
+    purchasedCourses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Courses",
+      },
+    ],
   },
   {
     timestamps: true,

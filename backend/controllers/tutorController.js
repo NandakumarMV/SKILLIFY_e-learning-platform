@@ -9,6 +9,8 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
+import Domain from "../models/domainModel.js";
+import Courses from "../models/courseModel.js";
 const randomImgName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 
 const authTutor = asyncHandler(async (req, res) => {
@@ -143,6 +145,14 @@ const updateTutorProfile = asyncHandler(async (req, res) => {
     throw new Error("tutor not find");
   }
 });
+const addCourse = asyncHandler(async (req, res) => {
+  const tutorId = req.tutor._id;
+  const domainName = req.body.domain;
+  const domain = await Domain.findOne({ domainName });
+  const { courseName, description, price } = req.body;
+  const createdCourse = await Courses.save();
+  res.status(201).json(createdCourse);
+});
 const logoutTutor = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
@@ -157,4 +167,5 @@ export {
   authTutor,
   logoutTutor,
   updateTutorProfile,
+  addCourse,
 };

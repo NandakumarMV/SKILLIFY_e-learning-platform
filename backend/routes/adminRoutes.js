@@ -13,6 +13,7 @@ import {
   tutorblockUser,
   addDomain,
   getDomains,
+  deleteDomain,
 } from "../controllers/adminController.js";
 
 router.post("/", authAdmin);
@@ -27,5 +28,6 @@ router.post("/unblock-tutor", tutorunblockUser);
 router.post("/block-tutor", tutorblockUser);
 
 router.post("/add-domain", addDomain);
+router.delete("/domains/:domainName", protect("admin"), deleteDomain);
 
 export default router;

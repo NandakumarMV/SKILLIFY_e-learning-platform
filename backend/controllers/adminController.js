@@ -138,6 +138,15 @@ const addDomain = asyncHandler(async (req, res) => {
     res.status(400).json({ message: "domain already exits" });
   }
 });
+const deleteDomain = asyncHandler(async (req, res) => {
+  const domainName = req.params.domainName;
+  const deleteDomain = await Domain.findOneAndDelete({ domainName });
+  if (deleteDomain) {
+    res.status(200).json({ message: "domain deleted Successfully" });
+  } else {
+    res.status(404).json({ message: "domain not found" });
+  }
+});
 
 export {
   authAdmin,
@@ -151,4 +160,5 @@ export {
   tutorunblockUser,
   addDomain,
   getDomains,
+  deleteDomain,
 };
