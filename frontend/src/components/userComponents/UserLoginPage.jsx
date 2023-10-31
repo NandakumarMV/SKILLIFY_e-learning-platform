@@ -111,16 +111,16 @@ const UserLoginPage = () => {
                 googleSubmitHandler(response.credential);
               }}
               onFailure={(error) => console.log("Google login failed", error)}
-              render={(renderProps) => (
-                <button
-                  type="button"
-                  onClick={renderProps.onClick}
-                  disabled={renderProps.disabled}
-                  className="bg-blue-700 text-white py-2 px-4 hover:bg-blue-600 hover:text-white hover:border-2 hover:border-blue-700 transition duration-300"
-                >
-                  Login with Google
-                </button>
-              )}
+              // render={(renderProps) => (
+              //   <button
+              //     type="button"
+              //     onClick={renderProps.onClick}
+              //     disabled={renderProps.disabled}
+              //     className="bg-blue-700 text-white py-2 px-4 hover:bg-blue-600 hover:text-white hover:border-2 hover:border-blue-700 transition duration-300"
+              //   >
+              //     Login with Google
+              //   </button>
+              // )}
             />
           </div>
         </div>

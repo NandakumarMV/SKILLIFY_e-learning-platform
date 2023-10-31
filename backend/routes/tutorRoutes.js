@@ -16,12 +16,7 @@ import {
 router.post("/login", authTutor);
 router.post("/register", registerTutor);
 router.post("/logout", logoutTutor);
-// router.put(
-//   "/profile",
-//   protect("tutor"),
-//   multerImage.single("image"),
-//   updateTutorProfile
-// );
+
 router
   .route("/profile")
   .get(protect("tutor"), getTutorProfile)

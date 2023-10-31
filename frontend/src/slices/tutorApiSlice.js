@@ -44,5 +44,5 @@ export const {
   useTutorLoginMutation,
   useTutorRegisterMutation,
   useTutorlogoutMutation,
-  useUpdateTutorProfileMutation,
+  useUpdateTutorProfileMutation,useAddCourseMutation
 } = tutorApiSlice;

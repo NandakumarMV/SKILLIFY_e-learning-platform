@@ -4,7 +4,7 @@ import {
   useDeleteDomainMutation,
 } from "../../slices/adminApiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { setDomain } from "../../slices/adminAuthSlice";
+import { setDomains } from "../../slices/domainSlice";
 
 const DomainTable = () => {
   const [domainName, setDomainName] = useState("");
@@ -14,8 +14,8 @@ const DomainTable = () => {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const [deleteDomainMutation] = useDeleteDomainMutation();
-  const domains = useSelector((state) => state.adminAuth.domains);
-  // console.log(domains, "domains in tableeeeeeeee");
+  const domains = useSelector((state) => state.domains.domains);
+  console.log(domains, "domains in tableeeeeeeee");
   const openModal = () => {
     setShowModal(true);
   };
@@ -29,7 +29,7 @@ const DomainTable = () => {
     const res = await addDomain({ domainName }).unwrap();
     console.log(res.domain, "responsee");
 
-    dispatch(setDomain([...domains, res.domain]));
+    dispatch(setDomains([...domains, res.domain]));
     closeModal();
   };
   const handleDeleteDomain = async (domainToDelete) => {
@@ -38,7 +38,7 @@ const DomainTable = () => {
     const updatedDomains = domains.filter(
       (domain) => domain !== domainToDelete
     );
-    dispatch(setDomain(updatedDomains));
+    dispatch(setDomains(updatedDomains));
   };
   return (
     <>

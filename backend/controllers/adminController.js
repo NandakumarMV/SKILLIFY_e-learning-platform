@@ -118,22 +118,16 @@ const tutorunblockUser = asyncHandler(async (req, res) => {
 });
 const getDomains = asyncHandler(async (req, res) => {
   const domains = await Domain.find();
-  console.log(domains);
   res.status(200).json(domains);
 });
 const addDomain = asyncHandler(async (req, res) => {
-  console.log("entered addd doamain");
   const domainName = req.body.domainName;
-  console.log(req.body, "kkkkkkkkkkkkkk");
-  console.log(domainName);
   if (Domain.domainName !== domainName) {
-    console.log("enter conditions");
     const domain = await Domain.create({
       domainName,
     });
     res.status(200).json({ domain: domain.domainName });
   } else {
-    console.log("enter else conditions");
 
     res.status(400).json({ message: "domain already exits" });
   }

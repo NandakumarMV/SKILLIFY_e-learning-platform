@@ -29,7 +29,7 @@ const Header = ({ isLoginTutor }) => {
 
   return (
     <header className="relative">
-      <div className="bg-white-500 p-4 sm:p-2 shadow-2xl">
+      <div className="bg-white-500 p-4 sm:p-2 shadow-2xl w-screen">
         <div className="container mx-auto">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-0.5">
@@ -48,9 +48,9 @@ const Header = ({ isLoginTutor }) => {
             <div className="mr-2">
               <div className="text-sm sm:text-base">
                 {isLoginTutor ? (
-                  <p>Welcome {tutorInfo?.name}</p>
+                  <p>Welcome {tutorInfo?.name.toUpperCase()}</p>
                 ) : userInfo ? (
-                  <p>Welcome {userInfo?.name}</p>
+                  <p>Welcome {userInfo?.name.toUpperCase()}</p>
                 ) : null}
               </div>
             </div>

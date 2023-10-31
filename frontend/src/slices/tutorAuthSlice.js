@@ -4,6 +4,7 @@ const initialState = {
   tutorInfo: localStorage.getItem("tutorInfo")
     ? JSON.parse(localStorage.getItem("tutorInfo"))
     : null,
+  courses: [],
 };
 
 const tutorAuthSlice = createSlice({
@@ -14,6 +15,7 @@ const tutorAuthSlice = createSlice({
       state.tutorInfo = action.payload;
       localStorage.setItem("tutorInfo", JSON.stringify(action.payload));
     },
+
     tutorLogout: (state, action) => {
       (state.tutorInfo = null), localStorage.removeItem("tutorInfo");
     },

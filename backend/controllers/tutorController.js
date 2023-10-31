@@ -147,12 +147,21 @@ const updateTutorProfile = asyncHandler(async (req, res) => {
 });
 const addCourse = asyncHandler(async (req, res) => {
   const tutorId = req.tutor._id;
-  const domainName = req.body.domain;
+  const domainName = req.body.domainName;
   const domain = await Domain.findOne({ domainName });
-  const { courseName, description, price } = req.body;
-  const createdCourse = await Courses.save();
+  const { courseName, description, price, requiredSkill } = req.body;
+  const createdCourse = await Courses.create({
+    domain: domain._id,
+    tutorId: tutorId,
+    courseName,
+    description,
+    requiredSkill,
+    price,
+  });
   res.status(201).json(createdCourse);
 });
+
+const addVideo = asyncHandler(async (req, res) => {});
 const logoutTutor = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,

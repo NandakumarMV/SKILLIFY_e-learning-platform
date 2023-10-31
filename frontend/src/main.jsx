@@ -24,6 +24,7 @@ import TutorSignupPage from "./components/tutorComponents/TutorSignupPage.jsx";
 import UserProfile from "./components/userComponents/UserProfile.jsx";
 import TutorProfile from "./components/tutorComponents/TutorProfile.jsx";
 import AddCourse from "./components/tutorComponents/AddCourse.jsx";
+import AddVideos from "./components/tutorComponents/AddVideos.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -52,6 +53,7 @@ const router = createBrowserRouter(
       <Route path="/tutor/home" element={<TutorHome />} />
       <Route path="/tutor/add-course" element={<AddCourse />} />
       <Route path="/tutor/profile" element={<TutorProfile />} />
+      <Route path="/tutor/add-videos" element={<AddVideos />} />
     </Route>
   )
 );

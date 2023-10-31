@@ -25,19 +25,14 @@ const AdminLoginPage = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      console.log("tryyyyyyy");
       const res = await adminLogin({ email, password }).unwrap();
-      console.log(res, "response");
       dispatch(
         setAdminCredentials({
           ...res,
         })
       );
-      console.log(dispatch, "dispppppppp");
       navigate("/admin");
-    } catch (err) {
-      setError("Invalid email or password");
-    }
+    } catch (err) {}
   };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen ">

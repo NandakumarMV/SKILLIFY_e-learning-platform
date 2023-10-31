@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import DomainTable from "./DomainTable";
 import axios from "axios";
-import { setDomain } from "../../slices/adminAuthSlice";
-import { useDispatch, useSelector } from "react-redux";
+
+import { useDispatch } from "react-redux";
+import { setDomains } from "../../slices/domainSlice";
 
 const DomainList = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ const DomainList = () => {
       const domains = res.data;
       const domainNames = domains.map((domain) => domain.domainName);
       console.log(domainNames, "dsagfggdfhk");
-      dispatch(setDomain(domainNames));
+      dispatch(setDomains(domainNames));
     } catch (err) {
       console.error("Error fetching user data:", err);
     }
@@ -24,8 +25,7 @@ const DomainList = () => {
   useEffect(() => {
     getDomain();
   }, []);
-  const domainsStore = useSelector((state) => state.adminAuth.domains);
-  console.log(domainsStore, "domains in tableeeeeeeee");
+
   return (
     <div>
       <h1 className="mb-5 font-semibold">Domains in Skillify</h1>

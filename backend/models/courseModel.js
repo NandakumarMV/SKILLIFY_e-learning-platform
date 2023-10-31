@@ -26,11 +26,18 @@ const courseSchema = mongoose.Schema(
     description: {
       type: String,
     },
+    requiredSkills: {
+      type: String,
+    },
     price: {
       type: Number,
     },
     rating: {
       type: String,
+    },
+    approved: {
+      type: Boolean,
+      default: false,
     },
     thumbnail: {
       type: String,
