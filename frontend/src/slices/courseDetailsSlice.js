@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   courses: [],
+  videos: [],
 };
 
 const coursesSlice = createSlice({
@@ -13,11 +14,12 @@ const coursesSlice = createSlice({
     setCourses: (state, action) => {
       state.courses = action.payload;
     },
-    addCourse: (state, action) => {
-      state.courses.push(action.payload);
+    addVideoToCourse: (state, action) => {
+      console.log(action.payload.video,"action ");
+      state.videos.push(action.payload.video);
     },
   },
 });
 
-export const { setCourses, addCourse } = coursesSlice.actions;
+export const { setCourses, addVideoToCourse } = coursesSlice.actions;
 export default coursesSlice.reducer;

@@ -37,6 +37,13 @@ export const tutorApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    addVideo: builder.mutation({
+      query: (data) => ({
+        url: `${TUTOR_URL}/add-video`,
+        method: "post",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -44,5 +51,7 @@ export const {
   useTutorLoginMutation,
   useTutorRegisterMutation,
   useTutorlogoutMutation,
-  useUpdateTutorProfileMutation,useAddCourseMutation
+  useUpdateTutorProfileMutation,
+  useAddCourseMutation,
+  useAddVideoMutation,
 } = tutorApiSlice;

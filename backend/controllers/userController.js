@@ -144,7 +144,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       throw new Error("email already exists");
     }
   }
-  s3.destroy();
+
 
   if (user) {
     (user.email = req.body.email || user.email),

@@ -60,10 +60,10 @@ const Header = ({ isLoginTutor }) => {
                   {tutorInfo && (
                     <>
                       <li className="text-sm sm:text-base">
-                        <Link to="/tutor/add-course"> Add courses</Link>
+                        <Link to="/tutor/add-course"> Add New Course</Link>
                       </li>
                       <li className="text-sm sm:text-base">
-                        <a href=""></a>
+                        <Link to="/tutor/courses">My Courses</Link>
                       </li>
                       <li className="text-sm sm:text-base">
                         <a href="">Dashboard</a>

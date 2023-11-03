@@ -11,6 +11,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 import Domain from "../models/domainModel.js";
 import Courses from "../models/courseModel.js";
+import { log } from "console";
 const randomImgName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 
 const authTutor = asyncHandler(async (req, res) => {
@@ -147,21 +148,85 @@ const updateTutorProfile = asyncHandler(async (req, res) => {
 });
 const addCourse = asyncHandler(async (req, res) => {
   const tutorId = req.tutor._id;
-  const domainName = req.body.domainName;
+  const domainName = req.body.domain;
+
   const domain = await Domain.findOne({ domainName });
-  const { courseName, description, price, requiredSkill } = req.body;
+
+  const { courseName, description, price, requiredSkill, caption } = req.body;
+  const thumbnail = randomImgName();
+  const params = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: thumbnail,
+    Body: req.file.buffer,
+    ContentType: req.file.mimetype,
+  };
+
+  const command = new PutObjectCommand(params);
+
+  await s3.send(command);
+  const getObjectParams = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: thumbnail,
+  };
+  const getCommand = new GetObjectCommand(getObjectParams);
+  const url = await getSignedUrl(s3, getCommand, { expiresIn: 3600 });
   const createdCourse = await Courses.create({
     domain: domain._id,
     tutorId: tutorId,
     courseName,
     description,
     requiredSkill,
+    caption,
     price,
+    thumbnail: url,
   });
   res.status(201).json(createdCourse);
 });
 
-const addVideo = asyncHandler(async (req, res) => {});
+const addVideo = asyncHandler(async (req, res) => {
+  const { videoName, courseId } = req.body;
+  const course = await Courses.findById(courseId);
+  const randomVideo = randomImgName();
+  const params = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: randomVideo,
+    Body: req.file.buffer,
+    ContentType: req.file.mimetype,
+  };
+  const command = new PutObjectCommand(params);
+
+  await s3.send(command);
+  const getObjectParams = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: randomVideo,
+  };
+  const getCommand = new GetObjectCommand(getObjectParams);
+  const url = await getSignedUrl(s3, getCommand, { expiresIn: 3600 });
+  console.log(url);
+
+  const newVideo = {
+    videoName: videoName,
+    videoUrl: url,
+  };
+  course.videos.push(newVideo);
+  await course.save();
+  res.status(201).json({ url, videoName, courseId });
+});
+const getAllCourses = asyncHandler(async (req, res) => {
+  const tutorId = req.tutor._id;
+  try {
+    const courses = await Courses.find({ tutorId: tutorId });
+
+    if (courses) {
+      res.status(200).json(courses);
+    } else {
+      res.status(404).json({ message: "No courses found for this tutor." });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 const logoutTutor = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
@@ -177,4 +242,6 @@ export {
   logoutTutor,
   updateTutorProfile,
   addCourse,
+  addVideo,
+  getAllCourses,
 };

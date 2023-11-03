@@ -6,9 +6,6 @@ const videoSchema = new mongoose.Schema({
   videoName: {
     type: String,
   },
-  duration: {
-    type: Number,
-  },
 });
 const courseSchema = mongoose.Schema(
   {
@@ -40,6 +37,9 @@ const courseSchema = mongoose.Schema(
       default: false,
     },
     thumbnail: {
+      type: String,
+    },
+    caption: {
       type: String,
     },
     videos: [videoSchema],
