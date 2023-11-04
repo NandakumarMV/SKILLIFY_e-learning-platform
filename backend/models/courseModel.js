@@ -6,6 +6,9 @@ const videoSchema = new mongoose.Schema({
   videoName: {
     type: String,
   },
+  videoUniqueId: {
+    type: String,
+  },
 });
 const courseSchema = mongoose.Schema(
   {

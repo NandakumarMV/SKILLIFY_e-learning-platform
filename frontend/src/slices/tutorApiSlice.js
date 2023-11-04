@@ -44,6 +44,20 @@ export const tutorApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    deleteCourseVideo: builder.mutation({
+      query: (data) => ({
+        url: `${TUTOR_URL}/delete-video`,
+        method: "delete",
+        body: data,
+      }),
+    }),
+    deleteCourse: builder.mutation({
+      query: (data) => ({
+        url: `${TUTOR_URL}/delete-course`,
+        method: "delete",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -53,5 +67,6 @@ export const {
   useTutorlogoutMutation,
   useUpdateTutorProfileMutation,
   useAddCourseMutation,
-  useAddVideoMutation,
+  useDeleteCourseVideoMutation,
+  useAddVideoMutation,useDeleteCourseMutation
 } = tutorApiSlice;

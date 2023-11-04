@@ -13,6 +13,8 @@ import {
   addCourse,
   addVideo,
   getAllCourses,
+  videoDelete,
+  courseDelete,
 } from "../controllers/tutorController.js";
 
 router.post("/login", authTutor);
@@ -37,4 +39,6 @@ router.post(
   addVideo
 );
 router.get("/get-courses", protect("tutor"), getAllCourses);
+router.delete("/delete-video", protect("tutor"), videoDelete);
+router.delete("/delete-course", protect("tutor"), courseDelete);
 export default router;

@@ -187,6 +187,7 @@ const addVideo = asyncHandler(async (req, res) => {
   const { videoName, courseId } = req.body;
   const course = await Courses.findById(courseId);
   const randomVideo = randomImgName();
+  console.log(randomVideo);
   const params = {
     Bucket: process.env.BUCKET_NAME,
     Key: randomVideo,
@@ -202,11 +203,11 @@ const addVideo = asyncHandler(async (req, res) => {
   };
   const getCommand = new GetObjectCommand(getObjectParams);
   const url = await getSignedUrl(s3, getCommand, { expiresIn: 3600 });
-  console.log(url);
 
   const newVideo = {
     videoName: videoName,
     videoUrl: url,
+    videoUniqueId: randomVideo,
   };
   course.videos.push(newVideo);
   await course.save();
@@ -224,6 +225,82 @@ const getAllCourses = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+const videoDelete = asyncHandler(async (req, res) => {
+  const { videoId, courseId } = req.body;
+  console.log(videoId, courseId);
+
+  try {
+    // Find the course by its ID
+    const course = await Courses.findById(courseId);
+    console.log(course.videos.length);
+    if (course) {
+      if (course.videos.length === 1) {
+        res.status(400).json({ message: "Course must have atleast one Video" });
+      } else {
+        const specificVideo = course.videos.find(
+          (video) => video.videoUniqueId === videoId
+        );
+
+        if (specificVideo) {
+          const params = {
+            Bucket: process.env.BUCKET_NAME,
+            Key: videoId,
+          };
+
+          // Delete the video from the S3 bucket
+          const command = new DeleteObjectCommand(params);
+          await s3.send(command);
+
+          // Remove the video from the videos array
+          course.videos = course.videos.filter(
+            (video) => video.videoUniqueId !== videoId
+          );
+
+          // Save the updated course document
+          await course.save();
+
+          res.status(200).json({ message: "Video deleted successfully" });
+        } else {
+          res.status(404).json({ error: "Video not found in course" });
+        }
+      }
+    } else {
+      res.status(404).json({ error: "Course not found" });
+    }
+  } catch (error) {
+    console.error("Error deleting video from S3:", error);
+    res.status(500).json({ error: "Video deletion failed" });
+  }
+});
+const courseDelete = asyncHandler(async (req, res) => {
+  const { courseId } = req.body;
+
+  const course = await Courses.findById(courseId);
+
+  if (course) {
+    try {
+      for (const video of course.videos) {
+        const params = {
+          Bucket: process.env.BUCKET_NAME,
+          Key: video.videoUniqueId,
+        };
+        const command = new DeleteObjectCommand(params);
+        const buk = await s3.send(command);
+      }
+
+      const result = await Courses.deleteOne({ _id: courseId });
+
+      res
+        .status(200)
+        .json({ message: "Course and associated videos deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting course and associated videos:", error);
+      res.status(500).json({ error: "Course and video deletion failed" });
+    }
+  } else {
+    res.status(404).json({ error: "Course not found" });
   }
 });
 
@@ -244,4 +321,6 @@ export {
   addCourse,
   addVideo,
   getAllCourses,
+  videoDelete,
+  courseDelete,
 };
