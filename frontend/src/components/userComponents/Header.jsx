@@ -28,14 +28,14 @@ const Header = ({ isLoginTutor }) => {
   };
 
   return (
-    <header className="relative">
+    <header className="relative w-screen">
       <div className="bg-white-500 p-4 sm:p-2 shadow-2xl w-screen">
         <div className="container mx-auto">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-0.5">
               <RiLightbulbFlashLine className="text-2xl mb-2 sm:text-3xl" />
               <div className="text-xl pb-2 sm:text-2xl">
-                SKILLIFY
+                {userInfo ? <Link to="/">SKILLIFY</Link> : "Skillify"}
                 {isLoginTutor && (
                   <Link to="/tutor/home">
                     <span className="text-gray-600 font-normal text-sm ml-2">

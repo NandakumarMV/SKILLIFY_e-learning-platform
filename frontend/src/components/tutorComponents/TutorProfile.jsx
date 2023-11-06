@@ -52,9 +52,6 @@ const TutorProfile = () => {
       formData.append("about", about);
       formData.append("experience", experience);
 
-      for (const [key, value] of formData.entries()) {
-        console.log(`Key: ${key}, Value: ${value}`);
-      }
       const res = await updateTutorProfile(formData).unwrap("");
 
       dispatch(setTutorCredentials({ ...res }));

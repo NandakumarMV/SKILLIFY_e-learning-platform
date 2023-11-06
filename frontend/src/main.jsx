@@ -12,7 +12,7 @@ import App from "./App.jsx";
 import "./index.css";
 import UserLoginPage from "./components/userComponents/UserLoginPage.jsx";
 import SignupPage from "./components/userComponents/SignupPage.jsx";
-import HomePage from "./components/userComponents/HomePage.jsx";
+import HomePage from "./components/userComponents/HomePage.jsx";0
 import AdminLoginPage from "./components/adminComponents/adminLoginPage.jsx";
 
 import TutorLoginPage from "./components/tutorComponents/TutorLoginPage.jsx";

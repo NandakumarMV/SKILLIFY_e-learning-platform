@@ -39,6 +39,14 @@ const courseSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isEdited: {
+      type: Boolean,
+      default: false,
+    },
+    rejected: {
+      type: Boolean,
+      default: false,
+    },
     thumbnail: {
       type: String,
     },

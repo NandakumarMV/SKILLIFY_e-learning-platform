@@ -73,7 +73,6 @@ const AddCourse = () => {
   const [video, setVideo] = useState(null);
   const [videoName, setVideoName] = useState("");
   const course = useSelector((state) => state.courses);
-  console.log(course.courses._id);
   const courseId = course.courses._id;
   const courseinfo = course.courses;
 
@@ -108,8 +107,6 @@ const AddCourse = () => {
     } catch (error) {}
   };
   const videos = useSelector((state) => state.courses.videos);
-
-  console.log(videos, "viddddddd");
 
   return (
     <>

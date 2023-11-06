@@ -31,7 +31,6 @@ const TutorSignupPage = () => {
   //     setQualificationsPdf(file);
   //   }
   // };
-  console.log(qualificationsPdf, "qualificationsPdF");
   const sumbmitHandler = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -55,7 +54,6 @@ const TutorSignupPage = () => {
           qualifications,
           experience,
         }).unwrap();
-        console.log(res, "respnnnnnn");
         dispatch(
           setTutorCredentials({
             ...res,

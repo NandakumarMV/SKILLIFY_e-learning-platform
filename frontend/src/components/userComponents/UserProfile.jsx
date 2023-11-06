@@ -38,9 +38,7 @@ const UserProfile = () => {
       formData.append("_id", userInfo._id);
       formData.append("name", name);
       formData.append("email", email);
-      for (const key of formData.keys()) {
-        console.log(`${key}:`, formData.get(key));
-      }
+
       const res = await updateProfile(formData).unwrap("");
 
       dispatch(setCredentials({ ...res }));

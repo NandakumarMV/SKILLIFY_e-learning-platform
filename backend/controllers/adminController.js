@@ -4,6 +4,7 @@ import generateToken from "../utils/genJwtToken.js";
 import User from "../models/userModel.js";
 import Tutor from "../models/tutorModel.js";
 import Domain from "../models/domainModel.js";
+import Courses from "../models/courseModel.js";
 
 const authAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -128,7 +129,6 @@ const addDomain = asyncHandler(async (req, res) => {
     });
     res.status(200).json({ domain: domain.domainName });
   } else {
-
     res.status(400).json({ message: "domain already exits" });
   }
 });
@@ -141,7 +141,32 @@ const deleteDomain = asyncHandler(async (req, res) => {
     res.status(404).json({ message: "domain not found" });
   }
 });
-
+const allCourses = asyncHandler(async (req, res) => {
+  const courses = await Courses.find()
+    .populate("tutorId", "name")
+    .populate("domain", "domainName");
+  res.status(200).json(courses);
+});
+const approveCourse = asyncHandler(async (req, res) => {
+  const { courseId } = req.body;
+  const approve = { approved: true, rejected: false };
+  const course = await Courses.findByIdAndUpdate(courseId, approve);
+  if (course) {
+    res.status(200).json({ message: "successfully updated the course" });
+  } else {
+    res.status(404).json({ Error: "Course not found" });
+  }
+});
+const rejectCourse = asyncHandler(async (req, res) => {
+  const { courseId } = req.body;
+  const reject = { approved: false, rejected: true };
+  const course = await Courses.findByIdAndUpdate(courseId, reject);
+  if (course) {
+    res.status(200).json({ message: "successfully updated the course" });
+  } else {
+    res.status(404).json({ Error: "Course not found" });
+  }
+});
 export {
   authAdmin,
   logoutAdmin,
@@ -155,4 +180,7 @@ export {
   addDomain,
   getDomains,
   deleteDomain,
+  allCourses,
+  approveCourse,
+  rejectCourse,
 };

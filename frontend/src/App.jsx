@@ -17,7 +17,7 @@ const App = () => {
         <div className="flex-grow">
           <Outlet />
         </div>
-        <Footer />
+        {isAdminRoute ? "" : <Footer />}
       </div>
     </>
   );

@@ -145,7 +145,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     }
   }
 
-
   if (user) {
     (user.email = req.body.email || user.email),
       (user.name = req.body.name || user.name);
@@ -175,7 +174,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         Key: userImg,
       };
       const getCommand = new GetObjectCommand(getObjectParams);
-      const url = await getSignedUrl(s3, getCommand, { expiresIn: 3600 });
+      const url = await getSignedUrl(s3, getCommand, { expiresIn: 604800 });
       user.userImageName = userImg;
       user.userImageUrl = url;
     }

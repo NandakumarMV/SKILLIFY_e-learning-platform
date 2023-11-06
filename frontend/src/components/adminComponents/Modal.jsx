@@ -1,7 +1,6 @@
 import React from "react";
 
 const Modal = ({ user, showModal, onClose }) => {
-  console.log(user.name);
   return (
     showModal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

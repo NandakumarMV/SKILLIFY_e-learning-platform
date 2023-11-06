@@ -126,7 +126,7 @@ const updateTutorProfile = asyncHandler(async (req, res) => {
         Key: tutorImg,
       };
       const getCommand = new GetObjectCommand(getObjectParams);
-      const url = await getSignedUrl(s3, getCommand, { expiresIn: 3600 });
+      const url = await getSignedUrl(s3, getCommand, { expiresIn: 604800 });
       tutor.tutorImageName = tutorImg;
       tutor.tutorImageUrl = url;
     }
@@ -169,7 +169,7 @@ const addCourse = asyncHandler(async (req, res) => {
     Key: thumbnail,
   };
   const getCommand = new GetObjectCommand(getObjectParams);
-  const url = await getSignedUrl(s3, getCommand, { expiresIn: 3600 });
+  const url = await getSignedUrl(s3, getCommand, { expiresIn: 604800 });
   const createdCourse = await Courses.create({
     domain: domain._id,
     tutorId: tutorId,
@@ -187,7 +187,6 @@ const addVideo = asyncHandler(async (req, res) => {
   const { videoName, courseId } = req.body;
   const course = await Courses.findById(courseId);
   const randomVideo = randomImgName();
-  console.log(randomVideo);
   const params = {
     Bucket: process.env.BUCKET_NAME,
     Key: randomVideo,
@@ -202,7 +201,7 @@ const addVideo = asyncHandler(async (req, res) => {
     Key: randomVideo,
   };
   const getCommand = new GetObjectCommand(getObjectParams);
-  const url = await getSignedUrl(s3, getCommand, { expiresIn: 3600 });
+  const url = await getSignedUrl(s3, getCommand, { expiresIn: 604800 });
 
   const newVideo = {
     videoName: videoName,
@@ -229,12 +228,10 @@ const getAllCourses = asyncHandler(async (req, res) => {
 });
 const videoDelete = asyncHandler(async (req, res) => {
   const { videoId, courseId } = req.body;
-  console.log(videoId, courseId);
 
   try {
     // Find the course by its ID
     const course = await Courses.findById(courseId);
-    console.log(course.videos.length);
     if (course) {
       if (course.videos.length === 1) {
         res.status(400).json({ message: "Course must have atleast one Video" });

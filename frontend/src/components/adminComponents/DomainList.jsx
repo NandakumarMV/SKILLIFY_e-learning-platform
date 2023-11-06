@@ -12,10 +12,8 @@ const DomainList = () => {
       const res = await axios.get("http://localhost:5000/api/admin/domains", {
         withCredentials: true,
       });
-      console.log(res.data, "dataaaaaaaaaaa");
       const domains = res.data;
       const domainNames = domains.map((domain) => domain.domainName);
-      console.log(domainNames, "dsagfggdfhk");
       dispatch(setDomains(domainNames));
     } catch (err) {
       console.error("Error fetching user data:", err);

@@ -10,7 +10,6 @@ const TutorList = () => {
       const res = await axios.get("http://localhost:5000/api/admin/tutors", {
         withCredentials: true,
       });
-      console.log(res.data);
       setTutor(res.data);
     } catch (err) {
       console.error("Error fetching user data:", err);

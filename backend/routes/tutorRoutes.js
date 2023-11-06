@@ -41,4 +41,5 @@ router.post(
 router.get("/get-courses", protect("tutor"), getAllCourses);
 router.delete("/delete-video", protect("tutor"), videoDelete);
 router.delete("/delete-course", protect("tutor"), courseDelete);
+
 export default router;

@@ -15,7 +15,6 @@ const DomainTable = () => {
   const dispatch = useDispatch();
   const [deleteDomainMutation] = useDeleteDomainMutation();
   const domains = useSelector((state) => state.domains.domains);
-  console.log(domains, "domains in tableeeeeeeee");
   const openModal = () => {
     setShowModal(true);
   };
@@ -27,7 +26,6 @@ const DomainTable = () => {
   const [addDomain] = useAddDomainMutation();
   const handleAddDomain = async () => {
     const res = await addDomain({ domainName }).unwrap();
-    console.log(res.domain, "responsee");
 
     dispatch(setDomains([...domains, res.domain]));
     closeModal();

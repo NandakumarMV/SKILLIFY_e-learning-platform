@@ -7,10 +7,14 @@ import {
   useDeleteCourseMutation,
   useDeleteCourseVideoMutation,
 } from "../../slices/tutorApiSlice.js";
+import AddVideoModal from "./AddVideoModal.jsx";
+import { FcApproval } from "react-icons/fc";
+import { IoMdCloseCircleOutline } from "react-icons/io";
+import { BsClockHistory } from "react-icons/bs";
 
 const AllCoursesPage = () => {
   const [courses, setCourses] = useState([]);
-  const [err, setErr] = useState("");
+  const [err, setErr] = useState({});
   const getCourse = async () => {
     try {
       const res = await axios.get(getCoursesUrl, {
@@ -21,7 +25,6 @@ const AllCoursesPage = () => {
       console.error("Error fetching courses:", error);
     }
   };
-  console.log(courses);
   useEffect(() => {
     getCourse();
   }, []);
@@ -34,15 +37,30 @@ const AllCoursesPage = () => {
     window.location.reload();
   };
   const handleVideoDelete = async (videoId, courseId) => {
-    console.log(videoId, courseId);
     const res = await deleteVideos({ videoId, courseId });
 
-    if (res.error.data.message === "Course must have atleast one Video") {
-      setErr("Course must have atleast one Video");
+    if (res.error) {
+      setErr((prevErrors) => ({
+        ...prevErrors,
+        [courseId]: "Course must have at least one Video",
+      }));
     } else {
       window.location.reload();
     }
   };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentCourseId, setCurrentCourseId] = useState(null);
+
+  const openModal = (courseId) => {
+    setCurrentCourseId(courseId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div>
       {courses.length > 0 ? (
@@ -70,19 +88,25 @@ const AllCoursesPage = () => {
                     </p>
                   </div>
                 </div>
-                {course.approved === false ? (
-                  <div className="bg-slate-400 text-lg font-semibold p-2 flex items-center justify-center">
-                    {" "}
-                    Waiting For Approval!
+                {course.approved === true ? (
+                  <div className="bg-green-400 text-lg font-semibold p-2 flex items-center justify-center">
+                    Course Approved <FcApproval />
+                  </div>
+                ) : course.rejected === true ? (
+                  <div className="bg-red-400 text-lg font-semibold p-2 flex items-center justify-center">
+                    Course Rejected
+                    <IoMdCloseCircleOutline />
                   </div>
                 ) : (
-                  <div className="bg-green-400 text-lg font-semibold flex items-center justify-center">
-                    Course Approved
+                  <div className="bg-slate-100 text-lg font-semibold p-2 flex items-center justify-center">
+                    Waiting for Verification from Admin <BsClockHistory />
                   </div>
                 )}
                 <div>
                   <div className="font-bold mb-2">Course Videos</div>
-                  <div className="text-red-500 text-base mt-1">{err}</div>
+                  <div className="text-red-500 text-base mt-1">
+                    {err[course._id]}
+                  </div>
                   <div className="mt-1">
                     {course?.videos.map((video, index) => (
                       <a
@@ -107,6 +131,20 @@ const AllCoursesPage = () => {
                         </div>
                       </a>
                     ))}
+                  </div>
+                  <div className="mt-4 ">
+                    <button
+                      className="bg-amber-300 p-1 text-sm font-medium"
+                      onClick={() => openModal(course._id)}
+                    >
+                      Add new video
+                    </button>
+
+                    <AddVideoModal
+                      isOpen={isModalOpen}
+                      onClose={closeModal}
+                      courseId={currentCourseId}
+                    />
                   </div>
                 </div>
                 <div className="flex justify-center mt-6">
