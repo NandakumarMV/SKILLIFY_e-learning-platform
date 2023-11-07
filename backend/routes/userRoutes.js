@@ -9,15 +9,17 @@ import {
   logOutUser,
   registerUser,
   updateUserProfile,
+  getApprovedCourses,
 } from "../controllers/userController.js";
 import { multerImage } from "../config/multerConfig.js";
 
 router.post("/login", authUser);
 router.post("/signup", registerUser);
 router.post("/logout", logOutUser);
+router.post("/google-login", googleLogin);
 router
   .route("/profile")
   .get(protect, getUserProfile)
   .put(protect("user"), multerImage.single("image"), updateUserProfile);
-router.post("/google-login", googleLogin);
+router.get("/get-approvedCourses", protect("user"), getApprovedCourses);
 export default router;

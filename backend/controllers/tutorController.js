@@ -175,7 +175,7 @@ const addCourse = asyncHandler(async (req, res) => {
     tutorId: tutorId,
     courseName,
     description,
-    requiredSkill,
+    requiredSkills: requiredSkill,
     caption,
     price,
     thumbnail: url,

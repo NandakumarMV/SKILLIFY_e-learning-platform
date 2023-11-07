@@ -13,6 +13,7 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import crypto from "crypto";
+import Courses from "../models/courseModel.js";
 const randomImgName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 const googleClient = new OAuth2Client(
   "646376613853-opi07m71f0glecaf3lhj5iet07c27aff.apps.googleusercontent.com"
@@ -191,7 +192,16 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     throw new Error("user not find");
   }
 });
-
+const getApprovedCourses = asyncHandler(async (req, res) => {
+  const courses = await Courses.find({ approved: true })
+    .populate("tutorId", "name")
+    .populate("domain", "domainName");
+  if (courses) {
+    res.status(200).json(courses);
+  } else {
+    res.status(200).json({ message: "There is no approved course" });
+  }
+});
 export {
   authUser,
   registerUser,
@@ -199,4 +209,5 @@ export {
   getUserProfile,
   updateUserProfile,
   googleLogin,
+  getApprovedCourses,
 };

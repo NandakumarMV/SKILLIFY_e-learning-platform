@@ -29,7 +29,7 @@ const Header = ({ isLoginTutor }) => {
 
   return (
     <header className="relative w-screen">
-      <div className="bg-white-500 p-4 sm:p-2 shadow-2xl w-screen">
+      <div className="bg-white-500 p-4 sm:p-2 shadow-2xl ">
         <div className="container mx-auto">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-0.5">

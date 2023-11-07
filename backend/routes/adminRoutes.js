@@ -33,6 +33,7 @@ router.post("/block-tutor", tutorblockUser);
 router.post("/add-domain", addDomain);
 router.delete("/domains/:domainName", protect("admin"), deleteDomain);
 router.get("/get-courses", protect("admin"), allCourses);
+
 router.post("/approve-course", protect("admin"), approveCourse);
 router.post("/reject-course", protect("admin"), rejectCourse);
 

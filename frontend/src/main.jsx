@@ -12,7 +12,8 @@ import App from "./App.jsx";
 import "./index.css";
 import UserLoginPage from "./components/userComponents/UserLoginPage.jsx";
 import SignupPage from "./components/userComponents/SignupPage.jsx";
-import HomePage from "./components/userComponents/HomePage.jsx";0
+import HomePage from "./components/userComponents/HomePage.jsx";
+0;
 import AdminLoginPage from "./components/adminComponents/adminLoginPage.jsx";
 
 import TutorLoginPage from "./components/tutorComponents/TutorLoginPage.jsx";
@@ -25,6 +26,7 @@ import UserProfile from "./components/userComponents/UserProfile.jsx";
 import TutorProfile from "./components/tutorComponents/TutorProfile.jsx";
 import AddCourse from "./components/tutorComponents/AddCourse.jsx";
 import AllCoursesPage from "./components/tutorComponents/AllCoursesPage.jsx";
+import SingleCourse from "./components/userComponents/SingleCourse.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,6 +41,7 @@ const router = createBrowserRouter(
       />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/profile" element={<UserProfile />} />
+      <Route path="/course/:courseId" element={<SingleCourse />} />
 
       {/************Admin side routes ***************/}
       <Route path="/admin/login" element={<AdminLoginPage />} />
