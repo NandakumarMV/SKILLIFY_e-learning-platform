@@ -31,7 +31,7 @@ router.post("/unblock-tutor", tutorunblockUser);
 router.post("/block-tutor", tutorblockUser);
 
 router.post("/add-domain", addDomain);
-router.delete("/domains/:domainName", protect("admin"), deleteDomain);
+router.delete("/domains/:domainId", protect("admin"), deleteDomain);
 router.get("/get-courses", protect("admin"), allCourses);
 
 router.post("/approve-course", protect("admin"), approveCourse);

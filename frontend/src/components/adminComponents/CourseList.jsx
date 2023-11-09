@@ -70,13 +70,14 @@ const CourseList = () => {
   const courseFilter = courses.filter(
     (course) =>
       course.courseName.toUpperCase().includes(search.toUpperCase()) ||
-      course.domain.domainName.toUpperCase().includes(search.toUpperCase()) ||
+      course.domain?.domainName.toUpperCase().includes(search.toUpperCase()) ||
       course.courseName.toUpperCase().includes(search.toUpperCase()) ||
       course.tutorId.name.toUpperCase().includes(search.toUpperCase())
   );
+
   return (
     <div>
-      {courses ? (
+      {courseFilter.length > 0 ? (
         <div className="ml-6">
           <div className="flex ">
             <div className="text-2xl font-bold mb-4">My Courses</div>
@@ -111,133 +112,142 @@ const CourseList = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-            {courseFilter.map((course, index) => (
-              <div key={index} className="bg-gray-50 p-4 rounded shadow-lg">
-                <div className="flex mb-4">
-                  <div className="w-1/4 bg-slate-50 h-50">
-                    <img src={course.thumbnail} alt="thumbnail" className="" />
-                    <div className="text-sm mt-1">{course.caption}</div>
-                  </div>
-                  <div className="w-3/4 pl-4">
-                    {course.approved ? (
-                      <>
-                        <div className="font-bold mb-2">
-                          {course.courseName}{" "}
-                        </div>
-                        <div className="flex items-center">
-                          <span className="text-sm font-medium text-green-600">
-                            Approved
-                          </span>
-                          <FcApproval />
-                        </div>
-                      </>
-                    ) : (
-                      <div className="font-bold mb-2">{course.courseName}</div>
-                    )}{" "}
-                    {course.rejected ? (
-                      <>
-                        <div className="font-bold mb-2">
-                          {course.courseName}{" "}
-                        </div>
-                        <div className="flex items-center">
-                          <span className="text-sm font-medium text-red-600">
-                            Rejected
-                          </span>
-                          <IoMdCloseCircleOutline />
-                        </div>
-                      </>
-                    ) : (
-                      <div className="font-bold mb-2">{course.courseName}</div>
-                    )}
-                    <p>{course.description}</p>
-                  </div>
-                </div>
-                <div>
-                  <div className="font-bold mb-2">Course Details</div>
-                  <div className="text-base font-medium">
-                    {" "}
-                    <p className="font-bold text-blue-700">
-                      Instrutor:{course.tutorId.name.toUpperCase()}
-                    </p>
-                    <p className="text-green-600">
-                      Domain:{course.domain.domainName}
-                    </p>
-                    <p>Price: {course.price}</p>
-                    <p>
-                      Created On: {new Date(course.createdAt).toDateString()}
-                    </p>
-                  </div>
-                </div>
-
-                {course.approved === false && course.rejected === false && (
-                  <div className="bg-slate-100 text-lg font-semibold p-2 flex items-center justify-around">
-                    <button
-                      className="bg-green-600 text-white text-xs py-1 px-2 border-black rounded-sm hover:bg-amber-400 hover:text-black"
-                      onClick={(e) => handleApproveCourse(course._id)}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="bg-red-600 text-white text-xs py-1 px-2 border-black rounded-sm hover-bg-gray-900"
-                      onClick={(e) => handleRejectCourse(course._id)}
-                    >
-                      Reject
-                    </button>
-                  </div>
-                )}
-                {course.approved === true && course.rejected === false && (
-                  <div className="bg-slate-300 text-lg font-semibold p-2 flex items-center justify-around">
-                    <button
-                      className="bg-red-600 text-white text-xs py-1 px-2 border-black rounded-sm hover-bg-gray-900"
-                      onClick={(e) => handleRejectCourse(course._id)}
-                    >
-                      Reject
-                    </button>
-                  </div>
-                )}
-                {course.rejected === true && course.approved === false && (
-                  <div className="bg-slate-300 text-lg font-semibold p-2 flex items-center justify-around">
-                    <button
-                      className="bg-green-600 text-white text-xs py-1 px-2 border-black rounded-sm hover-bg-amber-400 hover-text-black"
-                      onClick={(e) => handleApproveCourse(course._id)}
-                    >
-                      Approve
-                    </button>
-                  </div>
-                )}
-                <div>
-                  <div className="font-bold mb-2">Course Videos</div>
-
-                  <div className="text-red-500 text-base mt-1">
-                    {err[course._id]}
-                  </div>
-                  <div className="mt-1">
-                    {course?.videos.map((video, index) => (
-                      <a
-                        href={video.videoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        key={index}
-                      >
-                        <div className="bg-white mt-1 p-4 rounded shadow-lg hover:translate-y-1 hover:translate-x-2 hover:bg-white flex justify-between items-center">
-                          {video.videoName}
-                          <div className="">
-                            <ImBin2
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleVideoDelete(
-                                  video.videoUniqueId,
-                                  course._id
-                                );
-                              }}
-                            />
+            {courseFilter.length > 0 &&
+              courseFilter.map((course, index) => (
+                <div key={index} className="bg-gray-50 p-4 rounded shadow-lg">
+                  <div className="flex mb-4">
+                    <div className="w-1/4 bg-slate-50 h-50">
+                      <img
+                        src={course.thumbnail}
+                        alt="thumbnail"
+                        className=""
+                      />
+                      <div className="text-sm mt-1">{course.caption}</div>
+                    </div>
+                    <div className="w-3/4 pl-4">
+                      {course.approved ? (
+                        <>
+                          <div className="font-bold mb-2">
+                            {course.courseName}{" "}
                           </div>
+                          <div className="flex items-center">
+                            <span className="text-sm font-medium text-green-600">
+                              Approved
+                            </span>
+                            <FcApproval />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="font-bold mb-2">
+                          {course.courseName}
                         </div>
-                      </a>
-                    ))}
+                      )}{" "}
+                      {course.rejected ? (
+                        <>
+                          <div className="font-bold mb-2">
+                            {course.courseName}{" "}
+                          </div>
+                          <div className="flex items-center">
+                            <span className="text-sm font-medium text-red-600">
+                              Rejected
+                            </span>
+                            <IoMdCloseCircleOutline />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="font-bold mb-2">
+                          {course.courseName}
+                        </div>
+                      )}
+                      <p>{course.description}</p>
+                    </div>
                   </div>
-                </div>
-                {/* <div className="flex justify-center mt-6">
+                  <div>
+                    <div className="font-bold mb-2">Course Details</div>
+                    <div className="text-base font-medium">
+                      {" "}
+                      <p className="font-bold text-blue-700">
+                        Instrutor:{course.tutorId.name.toUpperCase()}
+                      </p>
+                      <p className="text-green-600">
+                        Domain:{course.domain.domainName}
+                      </p>
+                      <p>Price: {course.price}</p>
+                      <p>
+                        Created On: {new Date(course.createdAt).toDateString()}
+                      </p>
+                    </div>
+                  </div>
+
+                  {course.approved === false && course.rejected === false && (
+                    <div className="bg-slate-100 text-lg font-semibold p-2 flex items-center justify-around">
+                      <button
+                        className="bg-green-600 text-white text-xs py-1 px-2 border-black rounded-sm hover:bg-amber-400 hover:text-black"
+                        onClick={(e) => handleApproveCourse(course._id)}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        className="bg-red-600 text-white text-xs py-1 px-2 border-black rounded-sm hover-bg-gray-900"
+                        onClick={(e) => handleRejectCourse(course._id)}
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  )}
+                  {course.approved === true && course.rejected === false && (
+                    <div className="bg-slate-300 text-lg font-semibold p-2 flex items-center justify-around">
+                      <button
+                        className="bg-red-600 text-white text-xs py-1 px-2 border-black rounded-sm hover-bg-gray-900"
+                        onClick={(e) => handleRejectCourse(course._id)}
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  )}
+                  {course.rejected === true && course.approved === false && (
+                    <div className="bg-slate-300 text-lg font-semibold p-2 flex items-center justify-around">
+                      <button
+                        className="bg-green-600 text-white text-xs py-1 px-2 border-black rounded-sm hover-bg-amber-400 hover-text-black"
+                        onClick={(e) => handleApproveCourse(course._id)}
+                      >
+                        Approve
+                      </button>
+                    </div>
+                  )}
+                  <div>
+                    <div className="font-bold mb-2">Course Videos</div>
+
+                    <div className="text-red-500 text-base mt-1">
+                      {err[course._id]}
+                    </div>
+                    <div className="mt-1">
+                      {course?.videos.map((video, index) => (
+                        <a
+                          href={video.videoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          key={index}
+                        >
+                          <div className="bg-white mt-1 p-4 rounded shadow-lg hover:translate-y-1 hover:translate-x-2 hover:bg-white flex justify-between items-center">
+                            {video.videoName}
+                            <div className="">
+                              <ImBin2
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleVideoDelete(
+                                    video.videoUniqueId,
+                                    course._id
+                                  );
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                  {/* <div className="flex justify-center mt-6">
                   <button
                     className="bg-red-600  text-white hover:bg-gray-900 hover:text-red-500  px-4 py-2  border-black"
                     onClick={(e) => handleDeleteCourse(course._id)}
@@ -245,8 +255,8 @@ const CourseList = () => {
                     Delete Course
                   </button>
                 </div> */}
-              </div>
-            ))}
+                </div>
+              ))}
           </div>
         </div>
       ) : (

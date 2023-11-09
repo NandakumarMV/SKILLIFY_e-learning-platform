@@ -50,6 +50,12 @@ const courseSchema = mongoose.Schema(
     thumbnail: {
       type: String,
     },
+    previewVideo: {
+      type: String,
+    },
+    previewVideoName: {
+      type: String,
+    },
     caption: {
       type: String,
     },

@@ -11,6 +11,7 @@ import AddVideoModal from "./AddVideoModal.jsx";
 import { FcApproval } from "react-icons/fc";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { BsClockHistory } from "react-icons/bs";
+import PaginationComponent from "../PaginationComponent.jsx";
 
 const AllCoursesPage = () => {
   const [courses, setCourses] = useState([]);
@@ -64,30 +65,33 @@ const AllCoursesPage = () => {
   return (
     <div>
       {courses.length > 0 ? (
-        <div className="ml-6">
+        <div className="ml-6 ">
           <div className="text-2xl font-bold mb-4">My Courses</div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 ">
             {courses.map((course, index) => (
-              <div key={index} className="bg-gray-50 p-4 rounded shadow-lg">
+              <div
+                key={index}
+                className="bg-gray-50 p-4 rounded shadow-lg relative"
+              >
+                <div className="w-3/4 pl-4">
+                  <div className="font-bold mb-2">{course.courseName}</div>
+                </div>
                 <div className="flex mb-4">
                   <div className="w-1/4 bg-slate-50 h-50">
                     <img src={course.thumbnail} alt="thumbnail" className="" />
-                    <div className="text-sm mt-1">{course.caption}</div>
+                    {/* <div className="text-sm mt-1">{course.caption}</div> */}
                   </div>
-                  <div className="w-3/4 pl-4">
-                    <div className="font-bold mb-2">{course.courseName}</div>
-                    <p>{course.description}</p>
-                  </div>
-                </div>
-                <div>
-                  <div className="font-bold mb-2">Course Details</div>
-                  <div className="text-base font-medium">
-                    <p>Price: {course.price}</p>
-                    <p>
-                      Created On: {new Date(course.createdAt).toDateString()}
-                    </p>
+                  <div className="ml-3">
+                    {/* <div className="font-bold mb-2">Course Details</div> */}
+                    <div className="text-base font-medium">
+                      <p>Price: {course.price}</p>
+                      <p>
+                        Created On: {new Date(course.createdAt).toDateString()}
+                      </p>
+                    </div>
                   </div>
                 </div>
+
                 {course.approved === true ? (
                   <div className="bg-green-400 text-lg font-semibold p-2 flex items-center justify-center">
                     Course Approved <FcApproval />
@@ -147,9 +151,9 @@ const AllCoursesPage = () => {
                     />
                   </div>
                 </div>
-                <div className="flex justify-center mt-6">
+                <div className="flex justify-center mt-10 ">
                   <button
-                    className="bg-red-600  text-white hover:bg-gray-900 hover:text-red-500 hover:font-bold px-4 py-2  border-black"
+                    className="absolute bottom-4 center transform translateX(-50%) bg-red-600  text-white hover:bg-gray-900 hover:text-red-500 hover:font-bold px-4 py-2  border-black"
                     onClick={(e) => handleDeleteCourse(course._id)}
                   >
                     Delete Course

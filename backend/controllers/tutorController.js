@@ -149,27 +149,53 @@ const updateTutorProfile = asyncHandler(async (req, res) => {
 const addCourse = asyncHandler(async (req, res) => {
   const tutorId = req.tutor._id;
   const domainName = req.body.domain;
-
   const domain = await Domain.findOne({ domainName });
 
   const { courseName, description, price, requiredSkill, caption } = req.body;
   const thumbnail = randomImgName();
-  const params = {
+  const previewVideoName = randomImgName();
+
+  // Upload image to S3
+  const imageParams = {
     Bucket: process.env.BUCKET_NAME,
     Key: thumbnail,
-    Body: req.file.buffer,
-    ContentType: req.file.mimetype,
+    Body: req.files.image[0].buffer,
+    ContentType: req.files.image[0].mimetype,
   };
+  const imageCommand = new PutObjectCommand(imageParams);
+  await s3.send(imageCommand);
 
-  const command = new PutObjectCommand(params);
-
-  await s3.send(command);
-  const getObjectParams = {
+  // Get signed URL for the uploaded image
+  const imageObjectParams = {
     Bucket: process.env.BUCKET_NAME,
     Key: thumbnail,
   };
-  const getCommand = new GetObjectCommand(getObjectParams);
-  const url = await getSignedUrl(s3, getCommand, { expiresIn: 604800 });
+  const imageGetCommand = new GetObjectCommand(imageObjectParams);
+  const imageUrl = await getSignedUrl(s3, imageGetCommand, {
+    expiresIn: 604800,
+  });
+
+  // Upload video to S3
+  const videoParams = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: previewVideoName,
+    Body: req.files.previewVideo[0].buffer,
+    ContentType: req.files.previewVideo[0].mimetype,
+  };
+  const videoCommand = new PutObjectCommand(videoParams);
+  await s3.send(videoCommand);
+
+  // Get signed URL for the uploaded video
+  const videoObjectParams = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: previewVideoName,
+  };
+  const videoGetCommand = new GetObjectCommand(videoObjectParams);
+  const videoUrl = await getSignedUrl(s3, videoGetCommand, {
+    expiresIn: 604800,
+  });
+
+  // Create course with image and video URLs
   const createdCourse = await Courses.create({
     domain: domain._id,
     tutorId: tutorId,
@@ -178,8 +204,11 @@ const addCourse = asyncHandler(async (req, res) => {
     requiredSkills: requiredSkill,
     caption,
     price,
-    thumbnail: url,
+    thumbnail: imageUrl,
+    previewVideo: videoUrl,
+    previewVideoName: previewVideoName,
   });
+
   res.status(201).json(createdCourse);
 });
 
@@ -275,7 +304,12 @@ const courseDelete = asyncHandler(async (req, res) => {
   const { courseId } = req.body;
 
   const course = await Courses.findById(courseId);
-
+  const params = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: course.previewVideoName,
+  };
+  const command = new DeleteObjectCommand(params);
+  const buk = await s3.send(command);
   if (course) {
     try {
       for (const video of course.videos) {

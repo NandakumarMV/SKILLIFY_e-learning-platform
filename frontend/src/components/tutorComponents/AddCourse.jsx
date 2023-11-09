@@ -20,6 +20,7 @@ const AddCourse = () => {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
   const [caption, setCaption] = useState("");
+  const [prevVideo, setPrevVideo] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -60,6 +61,7 @@ const AddCourse = () => {
       formData.append("requiredSkill", requiredSkill);
       formData.append("caption", caption);
       formData.append("image", image);
+      formData.append("previewVideo", prevVideo);
 
       const res = await addCourse(formData).unwrap();
       dispatch(
@@ -82,6 +84,10 @@ const AddCourse = () => {
     const file = e.target.files[0];
     setVideo(file);
   };
+  const handlePrevVideoChange=(e)=>{
+    const file=e.target.files[0]
+    setPrevVideo(file)
+  }
   const handleclick = () => {
     navigate("/tutor/courses");
     window.location.reload();
@@ -313,6 +319,31 @@ const AddCourse = () => {
                       />
                     </div>
                   )}
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="thumbnail image"
+                    className="block text-blue-900 font-semibold"
+                  >
+                    Preview Video
+                  </label>
+                  <div>
+                    <label
+                      htmlFor="PreviewVideo"
+                      className="text-black cursor-pointer text-sm"
+                    >
+                    
+                      <input
+                        type="file"
+                        id="previewVideo"
+                        accept="video/*"
+                        className="w-full border border-gray-600 px-3 py-2"
+                        name="previewVideo"
+                        onChange={handlePrevVideoChange}
+                      />
+                      Add Preview Video
+                    </label>
+                  </div>
                 </div>
                 <div className="mb-4">
                   <label

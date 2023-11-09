@@ -68,8 +68,8 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     deleteDomain: builder.mutation({
-      query: (domainName) => ({
-        url: `${ADMIN_URL}/domains/${domainName}`,
+      query: (domainId) => ({
+        url: `${ADMIN_URL}/domains/${domainId}`,
         method: "delete",
       }),
     }),

@@ -50,7 +50,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen ">
+    <div className="flex flex-col items-center justify-center min-h-screen overflow-hidden">
       <div className="mb-36">
         <div className="text-black text-center mb-4 text-2xl font-semibold">
           PROFILE

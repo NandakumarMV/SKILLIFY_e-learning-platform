@@ -37,6 +37,7 @@ const HomePage = () => {
     const res = await axios.get(getApprovedAllCouresesUrl, {
       withCredentials: true,
     });
+    console.log(res.data);
     dispatch(setCourses(res.data));
   };
 
@@ -54,7 +55,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="drop-shadow-2xl mb-8 mt-12">
+      <div className="drop-shadow-2xl mb-8 mt-12 w-screen overflow-hidden">
         <video width="100%" autoPlay muted loop>
           <source src={bannerVideo} type="video/mp4" />
         </video>

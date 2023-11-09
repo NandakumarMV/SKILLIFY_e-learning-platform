@@ -5,7 +5,7 @@ import { RiLightbulbFlashLine } from "react-icons/ri";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 py-6">
+    <footer className="bg-gray-800 py-6 w-screen overflow-hidden">
       <div className="container mx-auto flex flex-wrap items-center justify-between">
         <div className="flex">
           <RiLightbulbFlashLine className="text-white text-2xl mb-2" />

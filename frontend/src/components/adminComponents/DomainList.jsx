@@ -13,8 +13,8 @@ const DomainList = () => {
         withCredentials: true,
       });
       const domains = res.data;
-      const domainNames = domains.map((domain) => domain.domainName);
-      dispatch(setDomains(domainNames));
+      console.log(domains, "dmaaa");
+      dispatch(setDomains(domains));
     } catch (err) {
       console.error("Error fetching user data:", err);
     }

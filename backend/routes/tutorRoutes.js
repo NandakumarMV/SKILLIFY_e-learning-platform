@@ -29,7 +29,10 @@ router
 router.post(
   "/add-course",
   protect("tutor"),
-  multerImage.single("image"),
+  multerImage.fields([
+    { name: "image", maxCount: 1 },
+    { name: "previewVideo", maxCount: 1 },
+  ]),
   addCourse
 );
 router.post(

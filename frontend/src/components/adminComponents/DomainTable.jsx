@@ -10,11 +10,14 @@ const DomainTable = () => {
   const [domainName, setDomainName] = useState("");
   const [seletedDomain, setSelectedDomain] = useState({});
   const [deleteDomain, setDeleteDomain] = useState("");
+  const [err, setErr] = useState("");
+  const [domainErr, setDomainErr] = useState("");
   const [editdomain, setEditDomain] = useState();
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const [deleteDomainMutation] = useDeleteDomainMutation();
   const domains = useSelector((state) => state.domains.domains);
+
   const openModal = () => {
     setShowModal(true);
   };
@@ -25,18 +28,30 @@ const DomainTable = () => {
 
   const [addDomain] = useAddDomainMutation();
   const handleAddDomain = async () => {
-    const res = await addDomain({ domainName }).unwrap();
-
-    dispatch(setDomains([...domains, res.domain]));
-    closeModal();
+    if (domains.includes(domainName)) {
+      setErr("Domain must have to be unique");
+      return;
+    }
+    try {
+      const res = await addDomain({ domainName }).unwrap();
+      dispatch(setDomains([...domains, res.domain]));
+      closeModal();
+    } catch (error) {
+      setErr("Domain already exists");
+    }
   };
   const handleDeleteDomain = async (domainToDelete) => {
-    const res = await deleteDomainMutation(domainToDelete).unwrap();
+    try {
+      const res = await deleteDomainMutation(domainToDelete).unwrap();
 
-    const updatedDomains = domains.filter(
-      (domain) => domain !== domainToDelete
-    );
-    dispatch(setDomains(updatedDomains));
+      const updatedDomains = domains.filter(
+        (domain) => domain._id !== domainToDelete
+      );
+
+      dispatch(setDomains(updatedDomains));
+    } catch (error) {
+      setDomainErr("Domain have associated courses");
+    }
   };
   return (
     <>
@@ -63,11 +78,13 @@ const DomainTable = () => {
             {domains.map((domain, index) => (
               <tr key={index} className="hover:bg-slate-400">
                 <td className="border px-4 py-2 text-center">{index + 1}</td>
-                <td className="border px-4 py-2 text-center">{domain}</td>
+                <td className="border px-4 py-2 text-center">
+                  {domain.domainName}
+                </td>
                 <td className="border px-4 py-2 text-center">
                   <button
                     className="bg-red-600 w-16 rounded text-white ml-2"
-                    onClick={() => handleDeleteDomain(domain)}
+                    onClick={() => handleDeleteDomain(domain._id)}
                   >
                     Delete
                   </button>
@@ -88,11 +105,14 @@ const DomainTable = () => {
             <h2 className="text-xl mb-4">Add Domain</h2>
             <input
               type="text"
-              className="w-full border p-2 mb-4"
-              placeholder="Domain Name"
+              className={"w-full border p-2 mb-4 "}
+              placeholder={`Domain Name ${err ? "already exits " : ""}`}
               name="domainName"
-              value={domainName}
-              onChange={(e) => setDomainName(e.target.value.toUpperCase())}
+              value={err ? "" : domainName}
+              onChange={(e) => {
+                setErr("");
+                setDomainName(e.target.value.toUpperCase());
+              }}
             />
             <div className="text-right">
               <button
@@ -106,6 +126,22 @@ const DomainTable = () => {
                 onClick={closeModal}
               >
                 Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {domainErr && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded shadow-md w-1/3">
+            <h2 className="text-xl mb-4">Can't Delete</h2>
+            <p>{domainErr}</p>
+            <div className="text-right">
+              <button
+                className="bg-red-500 text-white py-2 px-4 rounded"
+                onClick={() => setDomainErr("")}
+              >
+                Close
               </button>
             </div>
           </div>
