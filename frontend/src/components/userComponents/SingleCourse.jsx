@@ -1,29 +1,30 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { setCourses } from "../../slices/courseDetailsSlice";
 import axios from "axios";
 import { getApprovedAllCouresesUrl } from "../../url";
 import { RiFolderVideoLine } from "react-icons/ri";
+import { useGetCourseMutation } from "../../slices/userApiSlice";
 
 const SingleCourse = () => {
   const { courseId } = useParams();
   const dispatch = useDispatch();
+  const [getcourse] = useGetCourseMutation();
   console.log(courseId);
-  const getCourses = async () => {
-    const res = await axios.get(getApprovedAllCouresesUrl, {
-      withCredentials: true,
-    });
-    dispatch(setCourses(res.data));
+
+  const CourseData = async () => {
+    const res = await getcourse(courseId).unwrap();
+    dispatch(setCourses(res));
+    console.log(res, "fffffffffff");
   };
 
   useEffect(() => {
-    getCourses();
+    CourseData();
   }, []);
   const courses = useSelector((state) => state.courses.courses);
-  console.log(courses);
-  const fliterCourse = courses.filter((course) => course._id === courseId);
-  const course = fliterCourse[0];
+  const course = courses?.course;
+  console.log(courses.purchased, "hhhhhhhhhhhhhh");
 
   return (
     <div className="mb-5 overflow-hidden">
@@ -101,13 +102,17 @@ const SingleCourse = () => {
           </p>{" "}
         </div>
       </div>
-      <div className=" flex justify-center items-center">
-        <button className="bg-green-600 text-white text-lg font-semibold p-2 hover:bg-green-700 w-44 drop-shadow-lg">
-          Purchase
-        </button>
-      </div>
+      {!courses.purchased && (
+        <div className=" flex justify-center items-center">
+          <Link to={`/order/${course?._id}`}>
+            <button className="bg-green-600 text-white text-lg font-semibold p-2 hover:bg-green-700 w-44 drop-shadow-lg">
+              Purchase
+            </button>
+          </Link>
+        </div>
+      )}
     </div>
   );
-};
+}; 
 
 export default SingleCourse;

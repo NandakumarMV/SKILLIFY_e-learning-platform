@@ -11,9 +11,10 @@ import {
 } from "@aws-sdk/client-s3";
 /////////////////////////////////
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-
+import instance from "../utils/razorpayInstance.js";
 import crypto from "crypto";
 import Courses from "../models/courseModel.js";
+import Orders from "../models/orderModel.js";
 const randomImgName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 const googleClient = new OAuth2Client(
   "646376613853-opi07m71f0glecaf3lhj5iet07c27aff.apps.googleusercontent.com"
@@ -202,6 +203,102 @@ const getApprovedCourses = asyncHandler(async (req, res) => {
     res.status(200).json({ message: "There is no approved course" });
   }
 });
+const getSingleCourse = asyncHandler(async (req, res) => {
+  const { courseId } = req.params;
+  const userId = req.user._id;
+  let purchased = false;
+  const order = await Orders.findOne({
+    userId: userId,
+    "purchasedCourses.courseId": courseId,
+  });
+
+  if (order) {
+    purchased = true;
+  }
+  const course = await Courses.findById(courseId)
+    .populate("tutorId", "name")
+    .populate("domain", "domainName");
+  if (course) {
+    res.status(200).json({ course, purchased });
+  } else {
+    res.status(400).json({ message: "course not found" });
+  }
+});
+const createOrder = asyncHandler(async (req, res) => {
+  var options = {
+    amount: Number(req.body.price * 100),
+    currency: "INR",
+    receipt: "order_rcptid_11" + Date.now(),
+  };
+
+  const order = await instance.orders.create(options);
+  if (order) {
+    res.status(200).json(order);
+  } else {
+    res.status(404);
+    throw new Error("order creation failed ");
+  }
+});
+const razorpayPayment = asyncHandler(async (req, res) => {
+  const {
+    razorpay_payment_id,
+    razorpay_order_id,
+    razorpay_signature,
+    courseId,
+    price,
+    userId,
+    tutorId,
+  } = req.body;
+
+  const generated_signature = crypto
+    .createHmac("sha256", process.env.RAZORPAY_SECRET_KEY)
+    .update(razorpay_order_id + "|" + razorpay_payment_id)
+    .digest("hex");
+
+  try {
+    if (generated_signature === razorpay_signature) {
+      const order = await Orders.findOne({ userId });
+
+      if (!order) {
+        order = await Orders.create({
+          tutorId,
+          userId,
+          purchasedCourses: [],
+        });
+      }
+
+      order.purchasedCourses.push({ tutorId, courseId, price });
+
+      await order.save();
+
+      res.status(200).json({ success: true, orderId: order._id });
+    } else {
+      res.status(400).json({ success: false, message: "Invalid signature" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+const getMyCourses = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const courses = await Orders.find({ userId: userId })
+    .populate({
+      path: "purchasedCourses.courseId",
+      populate: {
+        path: "tutorId",
+        model: "Tutor",
+      },
+    })
+    .exec();
+
+  if (courses) {
+    res.status(200).json(courses);
+  } else {
+    res.status(400).json({ message: "no courses purchased" });
+  }
+});
 export {
   authUser,
   registerUser,
@@ -209,5 +306,9 @@ export {
   getUserProfile,
   updateUserProfile,
   googleLogin,
+  razorpayPayment,
   getApprovedCourses,
+  getSingleCourse,
+  createOrder,
+  getMyCourses,
 };

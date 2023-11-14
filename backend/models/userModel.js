@@ -29,8 +29,13 @@ const userSchema = mongoose.Schema(
     },
     purchasedCourses: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Courses",
+        courseId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Courses",
+        },
+        price: {
+          type: Number,
+        },
       },
     ],
   },

@@ -27,6 +27,8 @@ import TutorProfile from "./components/tutorComponents/TutorProfile.jsx";
 import AddCourse from "./components/tutorComponents/AddCourse.jsx";
 import AllCoursesPage from "./components/tutorComponents/AllCoursesPage.jsx";
 import SingleCourse from "./components/userComponents/SingleCourse.jsx";
+import OrderPage from "./components/userComponents/OrderPage.jsx";
+import MyLearningPage from "./components/userComponents/MyLearningPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,6 +44,8 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/profile" element={<UserProfile />} />
       <Route path="/course/:courseId" element={<SingleCourse />} />
+      <Route path="/order/:courseId" element={<OrderPage />} />
+      <Route path="/my-learning" element={<MyLearningPage />} />
 
       {/************Admin side routes ***************/}
       <Route path="/admin/login" element={<AdminLoginPage />} />

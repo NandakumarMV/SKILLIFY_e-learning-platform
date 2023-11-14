@@ -28,8 +28,8 @@ const Header = ({ isLoginTutor }) => {
   };
 
   return (
-    <header className="relative w-screen overflow-hidden">
-      <div className="bg-white-500 p-4 sm:p-2 shadow-2xl ">
+    <header className="relative w-screen overflow-hidden drop-shadow-lg">
+      <div className="bg-white-500 p-4 sm:p-2  bg-slate-50">
         <div className="container mx-auto">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-0.5">
@@ -88,7 +88,7 @@ const Header = ({ isLoginTutor }) => {
                             <Link>Courses</Link>
                           </li>
                           <li className="text-sm sm:text-base">
-                            <a href="">My Courses</a>
+                            <Link to="/my-learning">My Courses</Link>
                           </li>
                           <li className="text-sm sm:text-base">
                             <a href="">

@@ -5,3 +5,5 @@ export const bannerVideo =
 export const getApprovedAllCouresesUrl =
   "http://localhost:5000/api/get-approvedCourses";
 export const getalldoamins = "http://localhost:5000/api/admin/domains";
+export const createOrderUrl = "http://localhost:5000/api/create-order";
+export const getMyCoursesUrl = "http://localhost:5000/api/my-courses";

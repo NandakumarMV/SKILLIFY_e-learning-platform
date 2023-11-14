@@ -9,7 +9,8 @@ import axios from "axios";
 import { setCourses } from "../../slices/courseDetailsSlice";
 import { setDomains } from "../../slices/domainSlice";
 import { Link } from "react-router-dom";
-import SingleCourse from "./SingleCourse";
+
+import { useGetCourseMutation } from "../../slices/userApiSlice";
 
 const HomePage = () => {
   const dispatch = useDispatch();

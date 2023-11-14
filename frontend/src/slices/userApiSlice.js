@@ -39,6 +39,19 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getCourse: builder.mutation({
+      query: (courseId) => ({
+        url: `${USERS_URL}/single-course/${courseId}`,
+        method: "get",
+      }),
+    }),
+    verifyPayment: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/verify-payment`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -48,4 +61,6 @@ export const {
   useRegisterMutation,
   useUpdateProfileMutation,
   useGoogleLoginMutation,
+  useGetCourseMutation,
+  useVerifyPaymentMutation,
 } = userApiSlice;
