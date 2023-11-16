@@ -52,6 +52,27 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    trackVideo: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/track-video`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    courseRating: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/course-rating`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    courseRevew: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/course-review`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -63,4 +84,7 @@ export const {
   useGoogleLoginMutation,
   useGetCourseMutation,
   useVerifyPaymentMutation,
+  useTrackVideoMutation,
+  useCourseRatingMutation,
+  useCourseRevewMutation,
 } = userApiSlice;

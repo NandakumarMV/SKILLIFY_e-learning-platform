@@ -76,7 +76,7 @@ const CourseList = () => {
   );
 
   return (
-    <div>
+    <div className="">
       {courseFilter.length > 0 ? (
         <div className="ml-6">
           <div className="flex ">

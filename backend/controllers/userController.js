@@ -216,8 +216,13 @@ const getSingleCourse = asyncHandler(async (req, res) => {
     purchased = true;
   }
   const course = await Courses.findById(courseId)
-    .populate("tutorId", "name")
-    .populate("domain", "domainName");
+    .populate({
+      path: "tutorId",
+      select: "-password",
+    })
+    .populate("domain", "domainName")
+    .populate("rating.userId", "name")
+    .populate("reviews.userId", "name");
   if (course) {
     res.status(200).json({ course, purchased });
   } else {
@@ -257,7 +262,7 @@ const razorpayPayment = asyncHandler(async (req, res) => {
 
   try {
     if (generated_signature === razorpay_signature) {
-      const order = await Orders.findOne({ userId });
+      let order = await Orders.findOne({ userId });
 
       if (!order) {
         order = await Orders.create({
@@ -299,6 +304,100 @@ const getMyCourses = asyncHandler(async (req, res) => {
     res.status(400).json({ message: "no courses purchased" });
   }
 });
+
+const trackVideos = asyncHandler(async (req, res) => {
+  const { videoId, courseId } = req.body;
+  const userId = req.user._id;
+
+  const course = await Courses.findOne({
+    _id: courseId,
+    "videos.videoUniqueId": videoId,
+  })
+    .populate({
+      path: "tutorId",
+      select: "-password",
+    })
+    .populate("domain", "domainName")
+    .populate("rating.userId", "name")
+    .populate("reviews.userId", "name");
+
+  if (course) {
+    const video = course.videos.find((v) => v.videoUniqueId === videoId);
+
+    if (!video.viewers.some((viewer) => viewer.userId.equals(userId))) {
+      video.viewers.push({ userId });
+      await course.save();
+    }
+
+    const purchased = true;
+    res.status(200).json({ course, purchased });
+  } else {
+    res.status(404).json({ message: "Course or video not found" });
+  }
+});
+
+const addCourseRating = asyncHandler(async (req, res) => {
+  const { courseId, clickedRating } = req.body;
+  console.log(clickedRating);
+  const userId = req.user._id;
+  const newRating = {
+    userId,
+    rate: clickedRating,
+  };
+
+  try {
+    const course = await Courses.findById(courseId)
+      .populate({
+        path: "tutorId",
+        select: "-password",
+      })
+      .populate("domain", "domainName")
+      .populate("rating.userId", "name")
+      .populate("reviews.userId", "name");
+    if (course) {
+      const purchased = true;
+      course.rating.push(newRating);
+      await course.save();
+      res.status(200).json({ course, purchased });
+    } else {
+      res.status(404).json({ message: "Course not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+const addCourseReview = asyncHandler(async (req, res) => {
+  const { courseId, feedback } = req.body;
+  console.log(feedback);
+  const userId = req.user._id;
+  const newReview = {
+    userId,
+    review: feedback,
+  };
+
+  try {
+    const course = await Courses.findById(courseId)
+      .populate({
+        path: "tutorId",
+        select: "-password",
+      })
+      .populate("domain", "domainName")
+      .populate("rating.userId", "name")
+      .populate("reviews.userId", "name");
+    if (course) {
+      const purchased = true;
+      course.reviews.push(newReview);
+      await course.save();
+      res.status(200).json({ course, purchased });
+    } else {
+      res.status(404).json({ message: "Course not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export {
   authUser,
   registerUser,
@@ -311,4 +410,7 @@ export {
   getSingleCourse,
   createOrder,
   getMyCourses,
+  trackVideos,
+  addCourseRating,
+  addCourseReview,
 };

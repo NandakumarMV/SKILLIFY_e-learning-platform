@@ -28,7 +28,7 @@ const Header = ({ isLoginTutor }) => {
   };
 
   return (
-    <header className="relative w-screen overflow-hidden drop-shadow-lg">
+    <header className="relative w-screen  drop-shadow-lg z-30">
       <div className="bg-white-500 p-4 sm:p-2  bg-slate-50">
         <div className="container mx-auto">
           <div className="flex justify-between items-center">
@@ -68,7 +68,7 @@ const Header = ({ isLoginTutor }) => {
                       <li className="text-sm sm:text-base">
                         <a href="">Dashboard</a>
                       </li>
-                      <li>
+                      <li className="">
                         <TutorDropdown />
                       </li>
                     </>

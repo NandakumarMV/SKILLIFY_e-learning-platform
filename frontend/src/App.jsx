@@ -11,7 +11,7 @@ const App = () => {
   const isLoginTutor = location.pathname.includes("tutor");
   return (
     <>
-      <div className="min-h-screen flex flex-col overflow-hidden ">
+      <div className="min-h-screen flex flex-col overflow-x-hidden ">
         {!isAdminlogin &&
           (isAdminRoute ? "" : <Header isLoginTutor={isLoginTutor} />)}
         <div className="flex-grow">

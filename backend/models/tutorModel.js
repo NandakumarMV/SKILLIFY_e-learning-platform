@@ -28,9 +28,17 @@ const tutorSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    rating: {
-      type: Number,
-    },
+    rating: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        rate: {
+          type: Number,
+        },
+      },
+    ],
     about: {
       type: String,
     },

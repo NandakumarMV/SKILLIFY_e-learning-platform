@@ -26,7 +26,7 @@ const Dropdown = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <button
         onClick={toggleDropdown}
         className="text-black hover:text-blue-600 cursor-pointer"
@@ -34,7 +34,7 @@ const Dropdown = () => {
         <FaUserCircle className="h-9 w-6 pb-2" />
       </button>
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-32 rounded-md hover:shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+        <div className="absolute right-0 mt-2 w-32 rounded-md hover:shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
           <div
             className="py-1"
             role="menu"

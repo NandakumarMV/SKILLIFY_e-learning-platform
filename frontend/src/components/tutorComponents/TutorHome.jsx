@@ -6,18 +6,21 @@ const TutorHome = () => {
 
   return (
     <div>
-      <div className="relative mt-1">
-        <img
-          src="https://s.udemycdn.com/teaching/billboard-desktop-v4.jpg"
-          alt="tutor-banner"
-          className="w-full"
-        />
+      <div className="flex items-center justify-center -z-10">
+        <div className="relative   ">
+          <img
+            src="https://s.udemycdn.com/teaching/billboard-desktop-v4.jpg"
+            alt="tutor-banner"
+            className="w-full z-0"
+          />
 
-        <div className="absolute top-1/2 left-32 transform -translate-y-1/2 text-white text-2xl">
-          <h1 className="font-bold text-black font-mono">Teach with Us</h1>
-          <p className="text-black text-base font-mono  whitespace-normal">
-            Become an instructor and <br></br>change lives — including your own
-          </p>
+          <div className="absolute top-1/2 left-32 transform -translate-y-1/2 text-white text-2xl">
+            <h1 className="font-bold text-black font-mono">Teach with Us</h1>
+            <p className="text-black text-base font-mono  whitespace-normal">
+              Become an instructor and <br></br>change lives — including your
+              own
+            </p>
+          </div>
         </div>
       </div>
 

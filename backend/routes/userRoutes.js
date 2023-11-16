@@ -14,6 +14,9 @@ import {
   getSingleCourse,
   createOrder,
   getMyCourses,
+  trackVideos,
+  addCourseRating,
+  addCourseReview,
 } from "../controllers/userController.js";
 import { multerImage } from "../config/multerConfig.js";
 
@@ -41,5 +44,11 @@ router.post("/create-order", protect("user"), createOrder);
 router.post("/verify-payment", protect("user"), razorpayPayment);
 
 router.get("/my-courses", protect("user"), getMyCourses);
+
+router.post("/track-video", protect("user"), trackVideos);
+
+router.post("/course-rating", protect("user"), addCourseRating);
+
+router.post("/course-review", protect("user"), addCourseReview);
 
 export default router;

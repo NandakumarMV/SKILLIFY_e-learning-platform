@@ -10,7 +10,7 @@ import { setCourses } from "../../slices/courseDetailsSlice";
 import { setDomains } from "../../slices/domainSlice";
 import { Link } from "react-router-dom";
 
-import { useGetCourseMutation } from "../../slices/userApiSlice";
+import "animate.css";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -50,16 +50,22 @@ const HomePage = () => {
   const domains = useSelector((state) => state.domains.domains);
 
   // Filter courses by the selected domain
-  const filteredCourses = selectedDomain
-    ? courses.filter((course) => course.domain.domainName === selectedDomain)
-    : [];
+  const filteredCourses =
+    selectedDomain && Array.isArray(courses)
+      ? courses.filter((course) => course.domain.domainName === selectedDomain)
+      : [];
+
+  // ...
 
   return (
-    <>
-      <div className="drop-shadow-2xl mb-8 mt-12 w-screen overflow-hidden">
-        <video width="100%" autoPlay muted loop>
-          <source src={bannerVideo} type="video/mp4" />
-        </video>
+    <div className="">
+      <div className="flex justify-center items-center">
+        <div className="drop-shadow-2xl mb-8 mt-12 w-[95%] flex flex-col justify-center items-center -z-10 bg-slate-50 h-80">
+          <div className="text-[11rem] font-mono  ">SKILLIFY</div>
+          <div className="text-2xl font-bold pb-3">
+            IGINITE YOUR SKILL, ELEVATE YOUR FUTURE
+          </div>
+        </div>
       </div>
       <div className="flex justify-center items-center mb-5 ">
         <div className="  bg-slate-700 h-16 w-1/2 m-2 flex items-center justify-evenly">
@@ -96,28 +102,28 @@ const HomePage = () => {
               Courses in {selectedDomain}
             </div>
           )}
-          {filteredCourses.length > 0 ? (
+          {filteredCourses?.length > 0 ? (
             <div className="flex flex-wrap  -mx-4">
-              {filteredCourses.map((course, index) => (
+              {filteredCourses?.map((course, index) => (
                 <div
                   key={index}
                   className="w-[31%] bg-slate-100 mx-4 drop-shadow-lg  h-fit  hover:bg-slate-200 hover:shadow-2xl "
                 >
-                  <Link to={`/course/${course._id}`}>
+                  <Link to={`/course/${course?._id}`}>
                     <div className=" p-3 h-full  flex w-full">
                       {" "}
                       <img
                         className="w-32 h-32"
-                        src={course.thumbnail}
+                        src={course?.thumbnail}
                         alt="thumbnail"
                       />
                       <div className="mx-2">
                         <div className="text-lg font-semibold">
-                          {course.courseName}
+                          {course?.courseName}
                         </div>
-                        <p className="pt-3">{course.caption}</p>
+                        <p className="pt-3">{course?.caption}</p>
                         <p className="pt-3 text-lg text-blue-600 font-semibold">
-                          Price: {course.price} ₹
+                          Price: {course?.price} ₹
                         </p>
                       </div>
                     </div>
@@ -132,7 +138,7 @@ const HomePage = () => {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
