@@ -13,7 +13,7 @@ const FeedbackModal = ({ isOpen, onRequestClose, onSubmit }) => {
     <div
       className={`fixed inset-0 ${
         isOpen ? "block" : "hidden"
-      } bg-black bg-opacity-50 flex items-center justify-center`}
+      } bg-slate-100 bg-opacity-50 flex items-center justify-center`}
     >
       <div className="bg-white p-5 ">
         <div className="text-xl font-bold mb-3">

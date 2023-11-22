@@ -11,6 +11,7 @@ import { setDomains } from "../../slices/domainSlice";
 import { Link } from "react-router-dom";
 
 import "animate.css";
+import HeartComponent from "./Heartcomponent";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -56,58 +57,156 @@ const HomePage = () => {
       : [];
 
   // ...
+  const getStartOfLast7Days = () => {
+    const now = new Date();
+    const startOfLast7Days = new Date(now);
+
+    // Set the date to 7 days ago
+    startOfLast7Days.setUTCDate(now.getUTCDate() - 7);
+
+    // Set the time to midnight
+    startOfLast7Days.setUTCHours(0, 0, 0, 0);
+
+    return startOfLast7Days.toISOString();
+  };
+
+  console.log(getStartOfLast7Days());
+  const latestCourses =
+    Array.isArray(courses) &&
+    courses?.filter((course) => {
+      const isAfterStartOfWeek = course.createdAt >= getStartOfLast7Days();
+      console.log(
+        course.createdAt >= getStartOfLast7Days(),
+        "course.createdAt >= getStartOfLast7Days()"
+      );
+      return isAfterStartOfWeek;
+    });
+
+  console.log(latestCourses, "lateszt");
 
   return (
-    <div className="">
-      <div className="flex justify-center items-center">
-        <div className="drop-shadow-2xl mb-8 mt-12 w-[95%] flex flex-col justify-center items-center -z-10 bg-slate-50 h-80">
-          <div className="text-[11rem] font-mono  ">SKILLIFY</div>
-          <div className="text-2xl font-bold pb-3">
-            IGINITE YOUR SKILL, ELEVATE YOUR FUTURE
+    <>
+      <div className="">
+        <div className="flex justify-center items-center">
+          <div className="drop-shadow-2xl mb-8 mt-12 w-[95%] flex flex-col justify-center items-center -z-10 bg-gray-50 h-80">
+            <div className="text-[11rem] font-mono  ">SKILLIFY</div>
+            <div className="text-2xl font-bold pb-3">
+              IGINITE YOUR SKILL, ELEVATE YOUR FUTURE
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-center items-center mb-5 ">
+          <div className="  bg-slate-700 h-16 w-1/2 m-2 flex items-center justify-evenly">
+            <p className="text-white tracking-wider text-lg">
+              Teach With Us,Earn With Us
+            </p>{" "}
+            <Link to="/tutor/login">
+              <button className="bg-white text-base p-2 hover:bg-black hover:text-white">
+                Become a tutor
+              </button>
+            </Link>
+          </div>
+        </div>
+        <div className="ml-6 ">
+          <div className="text-2xl font-medium text-black border-b-[2px] border-solid border-gray-900  w-1/4">
+            Courses
+          </div>
+          <div className="flex text-base items-start justify-between text-violet-400 font-semibold w-2/4 mt-3 mb-4">
+            {domains.map((domain, index) => (
+              <div
+                key={index}
+                onClick={() => setSelectedDomain(domain)}
+                className={`cursor-pointer ${
+                  domain === selectedDomain ? "text-blue-800 font-bold" : ""
+                }`}
+              >
+                {domain}
+              </div>
+            ))}
+          </div>
+          <div className="">
+            {selectedDomain && (
+              <div className="text-xl font-medium text-black mt-2 ">
+                Courses in {selectedDomain}
+              </div>
+            )}
+            {filteredCourses?.length > 0 ? (
+              <>
+                <div className="flex flex-wrap  -mx-4">
+                  {filteredCourses?.map((course, index) => (
+                    <div
+                      key={index}
+                      className="w-[31%] bg-slate-50 mx-4 drop-shadow-lg  h-fit  hover:bg-slate-100 hover:shadow-2xl "
+                    >
+                      <Link to={`/course/${course?._id}`}>
+                        <div className=" p-3 h-full  flex w-full">
+                          {" "}
+                          <img
+                            className="w-32 h-32"
+                            src={course?.thumbnail}
+                            alt="thumbnail"
+                          />
+                          <div className="mx-2">
+                            <div className="text-lg font-semibold">
+                              {course?.courseName}
+                            </div>
+                            <p className="pt-3 line-clamp-3">
+                              {course?.caption}
+                            </p>
+                            <p className="pt-3 text-lg text-blue-600 font-semibold">
+                              Price: {course?.price} ₹
+                            </p>
+
+                            <div className=" flex justify-between items-center">
+                              {course.averageRating > 0 && (
+                                <div className=" flex justify-center items-center">
+                                  <p className="  font-medium text-base text-black-800">
+                                    {course.averageRating}
+                                  </p>
+                                  <div className="text-lg text-amber-500">
+                                    {" "}
+                                    ★{" "}
+                                  </div>
+                                  <div className="text-base text-black">
+                                    rating
+                                  </div>
+                                </div>
+                              )}
+                              <div className="text-base font-medium text-blue-800">
+                                {course?.videos.length} videos
+                              </div>
+                              <div className="text-sm">
+                                {" "}
+                                <HeartComponent courseId={course._id} />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="text-gray-500 text-lg mt-2 h-32">
+                No courses available for {selectedDomain}
+              </div>
+            )}
           </div>
         </div>
       </div>
-      <div className="flex justify-center items-center mb-5 ">
-        <div className="  bg-slate-700 h-16 w-1/2 m-2 flex items-center justify-evenly">
-          <p className="text-white tracking-wider text-lg">
-            Teach With Us,Earn With Us
-          </p>{" "}
-          <Link to="/tutor/login">
-            <button className="bg-white text-base p-2 hover:bg-black hover:text-white">
-              Become a tutor
-            </button>
-          </Link>
-        </div>
+      <div className="h-16"></div>
+      <div className="font-serif text-2xl flex justify-center ">
+        Popular Courses
       </div>
-      <div className="ml-6 ">
-        <div className="text-2xl font-medium text-black border-b-[2px] border-solid border-gray-900  w-1/4">
-          Courses
-        </div>
-        <div className="flex text-base items-start justify-between text-violet-400 font-semibold w-2/4 mt-3 mb-4">
-          {domains.map((domain, index) => (
-            <div
-              key={index}
-              onClick={() => setSelectedDomain(domain)}
-              className={`cursor-pointer ${
-                domain === selectedDomain ? "text-blue-800 font-bold" : ""
-              }`}
-            >
-              {domain}
-            </div>
-          ))}
-        </div>
-        <div className="mb-4">
-          {selectedDomain && (
-            <div className="text-xl font-medium text-black mt-2 mb-3">
-              Courses in {selectedDomain}
-            </div>
-          )}
-          {filteredCourses?.length > 0 ? (
-            <div className="flex flex-wrap  -mx-4">
-              {filteredCourses?.map((course, index) => (
+      <div className="flex flex-wrap  justify-between ">
+        {Array.isArray(courses) &&
+          courses?.map(
+            (course, index) =>
+              course.averageRating > 3 && (
                 <div
                   key={index}
-                  className="w-[31%] bg-slate-100 mx-4 drop-shadow-lg  h-fit  hover:bg-slate-200 hover:shadow-2xl "
+                  className="w-[30%] bg-slate-50 mx-4 my-4 drop-shadow-lg  hover:bg-slate-100 hover:shadow-2xl "
                 >
                   <Link to={`/course/${course?._id}`}>
                     <div className=" p-3 h-full  flex w-full">
@@ -121,24 +220,95 @@ const HomePage = () => {
                         <div className="text-lg font-semibold">
                           {course?.courseName}
                         </div>
-                        <p className="pt-3">{course?.caption}</p>
+                        <p className="pt-3  max-w-full line-clamp-2">
+                          {course?.caption}
+                        </p>
                         <p className="pt-3 text-lg text-blue-600 font-semibold">
                           Price: {course?.price} ₹
                         </p>
+
+                        <div className=" flex justify-between items-center ">
+                          {course.averageRating > 0 && (
+                            <div className=" flex justify-center items-center">
+                              <p className="  font-medium text-base text-black-800">
+                                {course.averageRating}
+                              </p>
+                              <div className="text-lg text-amber-500"> ★ </div>
+                              <div className="text-base text-black">rating</div>
+                            </div>
+                          )}
+                          <div className="text-base font-medium  text-blue-800 ">
+                            {course?.videos.length} videos
+                          </div>
+                          <div className="text-sm">
+                            {" "}
+                            <HeartComponent courseId={course._id} />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </Link>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-gray-500 text-lg mt-2 h-32">
-              No courses available for {selectedDomain}
-            </div>
+              )
           )}
-        </div>
       </div>
-    </div>
+
+      {Array.isArray(latestCourses) && latestCourses?.length > 0 && (
+        <div className="font-serif text-2xl flex justify-center ">
+          Latest Courses
+        </div>
+      )}
+
+      <div className="flex flex-wrap justify-between">
+        {Array.isArray(latestCourses) &&
+          latestCourses?.map((course, index) => (
+            <div
+              key={index}
+              className="w-[30%] bg-slate-50 mx-4 my-4 drop-shadow-lg  hover:bg-slate-100 hover:shadow-2xl "
+            >
+              <Link to={`/course/${course?._id}`}>
+                <div className=" p-3 h-full  flex w-full">
+                  <img
+                    className="w-32 h-32"
+                    src={course?.thumbnail}
+                    alt="thumbnail"
+                  />
+                  <div className="mx-2">
+                    <div className="text-lg font-semibold">
+                      {course?.courseName}
+                    </div>
+                    <p className="pt-3  max-w-full line-clamp-2">
+                      {course?.caption}
+                    </p>
+                    <p className="pt-3 text-lg text-blue-600 font-semibold">
+                      Price: {course?.price} ₹
+                    </p>
+
+                    <div className="flex justify-between items-center">
+                      {course.averageRating > 0 && (
+                        <div className="flex justify-center items-center">
+                          <p className="font-medium text-base text-black-800">
+                            {course.averageRating}
+                          </p>
+                          <div className="text-lg text-amber-500"> ★ </div>
+                          <div className="text-base text-black">rating</div>
+                        </div>
+                      )}
+                      <div className="text-base font-medium text-blue-800">
+                        {course?.videos.length} videos
+                      </div>
+                      <div className="text-sm">
+                        {" "}
+                        <HeartComponent courseId={course._id} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          ))}
+      </div>
+    </>
   );
 };
 

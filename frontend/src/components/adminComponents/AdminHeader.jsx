@@ -52,7 +52,7 @@ const AdminHeader = () => {
         </div>
         <div className="flex  ">
           <div className="w-1/5 bg-gray-800 ">
-            <div className="p-4 text-white">
+            <div className="p-4 text-white h-screen">
               {/* Search Bar */}
 
               <ul className="mt-4">
@@ -105,7 +105,7 @@ const AdminHeader = () => {
               </ul>
             </div>
           </div>
-          <div className="w-4/5 bg-gray-200  h-screen ">
+          <div className="w-4/5 bg-gray-200 ">
             <div className="p-4">
               {content === "Dashboard" && <AdminHomePage />}
               {content === "users" && <UsersList />}
@@ -114,8 +114,10 @@ const AdminHeader = () => {
               {content === "courses" && <CourseList />}
             </div>
           </div>
-        </div>{" "}
-        <Footer />
+        </div>
+        {/* <div className="flex flex-col ">
+          <Footer />
+        </div>{" "} */}
       </div>
     </>
   );

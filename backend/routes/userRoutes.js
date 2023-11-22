@@ -17,6 +17,13 @@ import {
   trackVideos,
   addCourseRating,
   addCourseReview,
+  addWishlist,
+  getWishlist,
+  deleteFromWishlist,
+  getAllWishlist,
+  forgotPassword,
+  verifyOtp,
+  resetPassword,
 } from "../controllers/userController.js";
 import { multerImage } from "../config/multerConfig.js";
 
@@ -50,5 +57,19 @@ router.post("/track-video", protect("user"), trackVideos);
 router.post("/course-rating", protect("user"), addCourseRating);
 
 router.post("/course-review", protect("user"), addCourseReview);
+
+router.post("/add-wishlist", protect("user"), addWishlist);
+
+router.get("/get-wishlist", protect("user"), getWishlist);
+
+router.delete("/delete-wishlist", protect("user"), deleteFromWishlist);
+
+router.get("/get-all-wishList", protect("user"), getAllWishlist);
+
+router.post("/forgot-password", protect("user"), forgotPassword);
+
+router.post("/verify-otp", protect("user"), verifyOtp);
+
+router.post("/reset-password", protect("user"), resetPassword);
 
 export default router;

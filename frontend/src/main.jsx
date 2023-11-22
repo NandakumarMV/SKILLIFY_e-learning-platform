@@ -30,6 +30,12 @@ import SingleCourse from "./components/userComponents/SingleCourse.jsx";
 import OrderPage from "./components/userComponents/OrderPage.jsx";
 import MyLearningPage from "./components/userComponents/MyLearningPage.jsx";
 
+import CoursesViewPage from "./components/userComponents/CoursesViewPage.jsx";
+import WishList from "./components/userComponents/WishList.jsx";
+import EmailVerificationPage from "./components/userComponents/EmailVerificationPage.jsx";
+import OtpPage from "./components/userComponents/OtpPage.jsx";
+import ResetPasswordPage from "./components/userComponents/ResetPasswordPage.jsx";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
@@ -46,6 +52,11 @@ const router = createBrowserRouter(
       <Route path="/course/:courseId" element={<SingleCourse />} />
       <Route path="/order/:courseId" element={<OrderPage />} />
       <Route path="/my-learning" element={<MyLearningPage />} />
+      <Route path="/courses" element={<CoursesViewPage />} />
+      <Route path="/wishlist" element={<WishList />} />
+      <Route path="/enter-email" element={<EmailVerificationPage />} />
+      <Route path="/otp/:email" element={<OtpPage />} />
+      <Route path="/reset-password/:email" element={<ResetPasswordPage />} />
 
       {/************Admin side routes ***************/}
       <Route path="/admin/login" element={<AdminLoginPage />} />

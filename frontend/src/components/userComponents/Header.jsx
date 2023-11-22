@@ -85,15 +85,15 @@ const Header = ({ isLoginTutor }) => {
                             <Link to="/tutor/login">Teach with US</Link>
                           </li>
                           <li className="text-sm sm:text-base">
-                            <Link>Courses</Link>
+                            <Link to="/courses">Courses</Link>
                           </li>
                           <li className="text-sm sm:text-base">
                             <Link to="/my-learning">My Courses</Link>
                           </li>
                           <li className="text-sm sm:text-base">
-                            <a href="">
+                            <Link to="/wishlist">
                               <AiFillHeart className="h-9 w-6 pb-2" />
-                            </a>
+                            </Link>
                           </li>
                           <li className="text-sm sm:text-base">
                             <Dropdown />

@@ -15,5 +15,5 @@ const wishlistSchema = mongoose.Schema({
   ],
 });
 
-const Comments = mongoose.model("Comments", wishlistSchema);
-export default Comments;
+const Wishlist = mongoose.model("Wishlist", wishlistSchema);
+export default Wishlist;

@@ -96,9 +96,12 @@ const UserLoginPage = () => {
               placeholder="Enter your password"
             />
           </div>
+          <Link to="/enter-email">
+            <p className="text-blue-700 mb-2">Forgot Password ?</p>
+          </Link>
           <button
             type="submit"
-            className="bg-black text-white py-2 px-4  hover:bg-white hover:text-black hover:border-2 hover:border-black transition duration-300"
+            className="bg-black text-white py-2 px-4   hover:bg-white hover:text-black hover:border-2 hover:border-black transition duration-300"
           >
             Login
           </button>

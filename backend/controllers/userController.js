@@ -15,6 +15,10 @@ import instance from "../utils/razorpayInstance.js";
 import crypto from "crypto";
 import Courses from "../models/courseModel.js";
 import Orders from "../models/orderModel.js";
+import Wishlist from "../models/wishListModel.js";
+import { generateOtp, configureMailOptions } from "../utils/mailOptions.js";
+import transporter from "../utils/nodemailTransporter.js";
+import { error } from "console";
 const randomImgName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 const googleClient = new OAuth2Client(
   "646376613853-opi07m71f0glecaf3lhj5iet07c27aff.apps.googleusercontent.com"
@@ -194,15 +198,37 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 const getApprovedCourses = asyncHandler(async (req, res) => {
-  const courses = await Courses.find({ approved: true })
-    .populate("tutorId", "name")
-    .populate("domain", "domainName");
-  if (courses) {
-    res.status(200).json(courses);
-  } else {
-    res.status(200).json({ message: "There is no approved course" });
+  try {
+    const courses = await Courses.find({ approved: true })
+      .populate("tutorId", "name")
+      .populate("domain", "domainName")
+      .populate("rating.userId", "name")
+      .populate("reviews.userId", "name");
+
+    if (!courses || courses.length === 0) {
+      return res.status(200).json({ message: "There are no approved courses" });
+    }
+
+    const coursesWithAvgRating = courses.map((course) => {
+      const ratings = course.rating.map((r) => r.rate);
+      const averageRating =
+        ratings.length > 0
+          ? ratings.reduce((a, b) => a + b, 0) / ratings.length
+          : 0;
+
+      return {
+        ...course.toObject(),
+        averageRating,
+      };
+    });
+
+    res.status(200).json(coursesWithAvgRating);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 const getSingleCourse = asyncHandler(async (req, res) => {
   const { courseId } = req.params;
   const userId = req.user._id;
@@ -338,7 +364,6 @@ const trackVideos = asyncHandler(async (req, res) => {
 
 const addCourseRating = asyncHandler(async (req, res) => {
   const { courseId, clickedRating } = req.body;
-  console.log(clickedRating);
   const userId = req.user._id;
   const newRating = {
     userId,
@@ -369,7 +394,6 @@ const addCourseRating = asyncHandler(async (req, res) => {
 
 const addCourseReview = asyncHandler(async (req, res) => {
   const { courseId, feedback } = req.body;
-  console.log(feedback);
   const userId = req.user._id;
   const newReview = {
     userId,
@@ -398,6 +422,146 @@ const addCourseReview = asyncHandler(async (req, res) => {
   }
 });
 
+const addWishlist = asyncHandler(async (req, res) => {
+  const { courseId } = req.body;
+  const userId = req.user._id;
+
+  let wishlist = await Wishlist.findOne({ userId });
+
+  if (!wishlist) {
+    wishlist = await Wishlist.create({
+      userId,
+      wishlist: [{ course: courseId }],
+    });
+  } else {
+    const isCourseInWishlist = wishlist.wishlist.some(
+      (item) => String(item.course) === String(courseId)
+    );
+
+    if (!isCourseInWishlist) {
+      wishlist.wishlist.push({ course: courseId });
+      await wishlist.save();
+    }
+  }
+  res.status(201).json(wishlist.wishlist);
+});
+const getWishlist = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const wishlist = await Wishlist.findOne({ userId });
+
+  if (wishlist) {
+    res.status(200).json(wishlist.wishlist);
+  } else {
+    res.status(400).json({ message: "wishlist is empty" });
+  }
+});
+const getAllWishlist = asyncHandler(async (req, res) => {
+  try {
+    const userId = req.user._id;
+    // console.log(userId);
+    const wishlist = await Wishlist.findOne({ userId }).populate({
+      path: "wishlist.course",
+      populate: [{ path: "domain" }, { path: "tutorId" }],
+    });
+    // console.log(wishlist, "get all wishlist");
+    if (!wishlist) {
+      res.status(400).json({ message: "Wishlist not found for the user" });
+      return;
+    }
+
+    res.status(200).json(wishlist.wishlist);
+  } catch (error) {
+    console.error("Error checking wishlist:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+const deleteFromWishlist = asyncHandler(async (req, res) => {
+  const { courseId } = req.body;
+  const userId = req.user._id;
+  console.log(courseId, "enetred");
+  try {
+    // Find the user's wishlist
+    const wishlist = await Wishlist.findOne({ userId });
+
+    if (!wishlist) {
+      return res.status(404).json({ message: "Wishlist not found" });
+    }
+
+    // Remove the course from the wishlist
+    const deleted = (wishlist.wishlist = wishlist.wishlist.filter(
+      (item) => String(item.course) !== String(courseId)
+    ));
+    console.log(deleted);
+    await wishlist.save();
+    res.status(200).json(wishlist.wishlist);
+  } catch (error) {
+    console.error("Error removing course from wishlist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email: email });
+
+  if (user) {
+    const subject = " Resetting Password";
+    const otp = generateOtp(6);
+    const mailOptions = configureMailOptions(email, otp, subject);
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.error(error);
+        throw new Error("error sending otp");
+      } else {
+        const user = await User.findOneAndUpdate(
+          { email: email },
+          {
+            $set: {
+              otp: otp,
+            },
+          },
+          { new: true }
+        );
+      }
+
+      res.status(200).json({ message: "otp send successfully" });
+    });
+  } else {
+    res.status(400).json({ message: "invaild Email" });
+  }
+});
+const verifyOtp = asyncHandler(async (req, res) => {
+  const { otp } = req.body;
+  const email = req.body.email;
+  console.log(otp, email);
+  const user = await User.findOne({ email: email });
+  console.log(user, "user");
+
+  if (user) {
+    console.log("sussss");
+    if (user.otp === otp) {
+      console.log("dfsdf");
+      res.status(200).json({ message: "otp is Correct" });
+    } else {
+      res.status(400).json({ message: "otp is not matching" });
+    }
+  } else {
+    res.status(400).json({ message: "user not found" });
+  }
+});
+const resetPassword = asyncHandler(async (req, res) => {
+  const { password, email } = req.body;
+  console.log(password, email);
+  const user = await User.findOne({ email: email });
+  console.log(user);
+  if (!user) {
+    res.status(400).json({ message: "user not found" });
+  }
+  user.password = password;
+  await user.save();
+  res.status(200).json({ message: "Password Updated" });
+});
 export {
   authUser,
   registerUser,
@@ -413,4 +577,11 @@ export {
   trackVideos,
   addCourseRating,
   addCourseReview,
+  addWishlist,
+  getWishlist,
+  deleteFromWishlist,
+  getAllWishlist,
+  forgotPassword,
+  verifyOtp,
+  resetPassword,
 };

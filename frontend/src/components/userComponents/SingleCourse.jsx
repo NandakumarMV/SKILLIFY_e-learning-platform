@@ -57,11 +57,13 @@ const SingleCourse = () => {
       }
     }
   };
-
+  const isReviewed = course?.reviews.some(
+    (review) => review.userId._id === userId
+  );
   const isRated = course?.rating.some((rate) => rate.userId._id === userId);
   console.log(course?.rating);
   console.log(userId);
-  console.log(isRated, "sdhfsadjkfh");
+  console.log(isReviewed, "sdhfsadjkfh");
 
   const [coursefeedback] = useCourseRevewMutation();
 
@@ -100,7 +102,7 @@ const SingleCourse = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center relative">
           <div className="w-1/2">
             <div className=" p-2 border-2">
               <div className=" bg-slate-50">
@@ -149,7 +151,7 @@ const SingleCourse = () => {
                 </div>
               </div>
             </div>
-            {courses.purchased && (
+            {courses.purchased && !isReviewed && (
               <>
                 <div
                   onClick={() => setIsModalOpen(true)}
@@ -164,8 +166,28 @@ const SingleCourse = () => {
                 />
               </>
             )}
+            {course?.reviews.length > 0 && (
+              <div className="mt-10 pl-3">
+                <div>
+                  <div className="text-2xl font-serif font-medium flex justify-start p-2 items-start w-[50%] border-b-2 border-black">
+                    Course Reviews
+                  </div>
+                  <div className=" ">
+                    {course?.reviews.slice(0, 5).map((r, index) => (
+                      <div key={index} className="p-4 border-b-2 w-[75%]">
+                        <div className="font-medium text-base">{r.review}</div>
+                        <div className="font-normal text-xs mt-2">
+                          {r.userId.name}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="mt-5 ml-3">
+
+          <div className="mt-5 ml-3 absolute right-20 top-1">
             <div className=" border-[2px] p-3">
               <div className="flex justify-center items-center">
                 Preview Video
@@ -213,7 +235,7 @@ const SingleCourse = () => {
                             {video.videoName}
                           </div>
                         </a>
-                        <div className="ml-auto">
+                        <div className="ml-auto pl-1">
                           <RiFolderVideoLine />
                         </div>
                       </div>
@@ -251,21 +273,6 @@ const SingleCourse = () => {
             </div>
           </>
         )}
-        <div className="flex justify-center items-center  mt-10 bg-gray-300">
-          <div>
-            <div className="text-lg font-serif font-medium flex justify-center items-center ">
-              Course Reviews
-            </div>
-            <div className=" flex flex-wrap">
-              {course?.reviews.map((r, index) => (
-                <div key={index} className=" p-4 border-x-2">
-                  <div>{r.review}</div>
-                  <div className="font-medium text-xs">{r.userId.name}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
       </div>
       {courses.purchased && !isRated && (
         <div className="  bg-slate-100 flex  justify-center items-center text-lg">

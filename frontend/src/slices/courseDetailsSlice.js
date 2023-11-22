@@ -6,6 +6,7 @@ const initialState = {
   courses: [],
   allCourses: [],
   videos: [],
+  wishlist: [],
 };
 
 const coursesSlice = createSlice({
@@ -20,6 +21,13 @@ const coursesSlice = createSlice({
     },
     addVideoToCourse: (state, action) => {
       state.videos.push(action.payload.video);
+    },
+    addWishlist: (state, action) => {
+      state.wishlist = action.payload;
+    },
+    removeFromWishlist: (state, action) => {
+      const courseId = action.payload;
+      return state.filter((id) => id !== courseId);
     },
     removeVideoFromCourse: (state, action) => {
       const courseId = action.payload.courseId;
@@ -66,5 +74,6 @@ export const {
   setAllCourses,
   setApproveCourse,
   setRejectCourse,
+  addWishlist,
 } = coursesSlice.actions;
 export default coursesSlice.reducer;

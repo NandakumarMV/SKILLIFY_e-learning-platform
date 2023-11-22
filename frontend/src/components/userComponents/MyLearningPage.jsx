@@ -37,8 +37,8 @@ const MyLearningPage = () => {
                 <Link to={`/course/${myCourse.courseId._id}`}>
                   <div
                     key={myCourse.courseId._id}
-                    className=" mb-4"
-                    // onClick={(e) => navigateHandler(myCourse.courseId._id)}
+                    className=" mb-4 hover:shadow-xl
+                    "
                   >
                     <div className="p-4 shadow-md w-full">
                       <div className="flex flex-col justify-center items-center">

@@ -23,6 +23,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 const CourseList = () => {
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const coursesPerPage = 3;
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const dispatch = useDispatch();
 
@@ -74,10 +80,15 @@ const CourseList = () => {
       course.courseName.toUpperCase().includes(search.toUpperCase()) ||
       course.tutorId.name.toUpperCase().includes(search.toUpperCase())
   );
-
+  const indexOfLastCourse = currentPage * coursesPerPage;
+  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+  const currentCourses = courseFilter.slice(
+    indexOfFirstCourse,
+    indexOfLastCourse
+  );
   return (
     <div className="">
-      {courseFilter.length > 0 ? (
+      {currentCourses.length > 0 ? (
         <div className="ml-6">
           <div className="flex ">
             <div className="text-2xl font-bold mb-4">My Courses</div>
@@ -112,8 +123,8 @@ const CourseList = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-            {courseFilter.length > 0 &&
-              courseFilter.map((course, index) => (
+            {currentCourses.length > 0 &&
+              currentCourses.map((course, index) => (
                 <div key={index} className="bg-gray-50 p-4 rounded shadow-lg">
                   <div className="flex mb-4">
                     <div className="w-1/4 bg-slate-50 h-50">
@@ -257,6 +268,25 @@ const CourseList = () => {
                 </div> */}
                 </div>
               ))}
+          </div>
+          <div className="flex justify-center">
+            <div className="flex mt-4">
+              {[...Array(Math.ceil(courseFilter.length / coursesPerPage))].map(
+                (_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handlePageChange(index + 1)}
+                    className={`px-3 py-2 mx-1 ${
+                      currentPage === index + 1
+                        ? "bg-gray-800 text-white"
+                        : "bg-gray-200"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                )
+              )}
+            </div>
           </div>
         </div>
       ) : (

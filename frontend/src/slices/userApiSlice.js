@@ -73,6 +73,53 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    addWishlist: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/add-wishlist`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getWishlist: builder.mutation({
+      query: () => ({
+        url: `${USERS_URL}/get-wishlist`,
+        method: "get",
+      }),
+    }),
+    getAllWishlist: builder.mutation({
+      query: () => ({
+        url: `${USERS_URL}/get-all-wishlist`,
+        method: "get",
+      }),
+    }),
+    deleteFromWishlist: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/delete-wishlist`,
+        method: "delete",
+        body: data,
+      }),
+    }),
+    generateOtp: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/forgot-password`,
+        method: "Post",
+        body: data,
+      }),
+    }),
+    verifyOtp: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/verify-otp`,
+        method: "Post",
+        body: data,
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/reset-password`,
+        method: "Post",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -87,4 +134,11 @@ export const {
   useTrackVideoMutation,
   useCourseRatingMutation,
   useCourseRevewMutation,
+  useAddWishlistMutation,
+  useGetWishlistMutation,
+  useGetAllWishlistMutation,
+  useDeleteFromWishlistMutation,
+  useGenerateOtpMutation,
+  useVerifyOtpMutation,
+  useResetPasswordMutation,
 } = userApiSlice;
