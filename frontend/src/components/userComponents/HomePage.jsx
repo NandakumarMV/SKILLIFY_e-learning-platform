@@ -39,7 +39,6 @@ const HomePage = () => {
     const res = await axios.get(getApprovedAllCouresesUrl, {
       withCredentials: true,
     });
-    console.log(res.data);
     dispatch(setCourses(res.data));
   };
 
@@ -70,19 +69,14 @@ const HomePage = () => {
     return startOfLast7Days.toISOString();
   };
 
-  console.log(getStartOfLast7Days());
   const latestCourses =
     Array.isArray(courses) &&
     courses?.filter((course) => {
       const isAfterStartOfWeek = course.createdAt >= getStartOfLast7Days();
-      console.log(
-        course.createdAt >= getStartOfLast7Days(),
-        "course.createdAt >= getStartOfLast7Days()"
-      );
+
       return isAfterStartOfWeek;
     });
 
-  console.log(latestCourses, "lateszt");
 
   return (
     <>

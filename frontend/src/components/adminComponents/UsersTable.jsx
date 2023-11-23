@@ -27,7 +27,7 @@ const UsersTable = ({ users }) => {
   const handleBlockuser = async (userId) => {
     const response = await blockUser({ userId });
     if (response.status === 200) {
-      // Update the user's status in the local state
+      
       setUserList((prevUsers) =>
         prevUsers.map((user) =>
           user._id === userId ? { ...user, isBlocked: true } : user
@@ -40,9 +40,9 @@ const UsersTable = ({ users }) => {
   const handleUnBlockuser = async (userId) => {
     const response = await unblockUser({ userId });
     if (response.status === 200) {
-      // Update the user's status in the local state
+      
       setUserList(
-        (prevUsers) => console.log("entered"),
+        (prevUsers) => 
         prevUsers.map((user) =>
           user._id === userId ? { ...user, isBlocked: false } : user
         )

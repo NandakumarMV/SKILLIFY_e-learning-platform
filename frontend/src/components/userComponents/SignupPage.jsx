@@ -21,23 +21,10 @@ const SignupPage = () => {
 
   useEffect(() => {
     if (userInfo) {
-      navigate("/");
+      // navigate("/");
     }
   }, [navigate, userInfo]);
-  const googleSubmitHandler = async () => {
-    try {
-      const res = await register({ name, email, password }).unwrap();
 
-      dispatch(
-        setCredentials({
-          ...res,
-        })
-      );
-      navigate("/");
-    } catch (error) {
-      setError(error?.data?.message || error.error);
-    }
-  };
   const submitHandler = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -54,13 +41,13 @@ const SignupPage = () => {
       // } else {
       try {
         const res = await register({ name, email, password }).unwrap();
-
+        console.log("fucking entered this shit");
         dispatch(
           setCredentials({
             ...res,
           })
         );
-        navigate("/");
+        navigate(`/otp/${email}`, { state: { from: "/signup" } });
       } catch (error) {
         setError(error?.data?.message || error.error);
       }

@@ -26,7 +26,6 @@ const WishList = () => {
       acc[course.course._id] = true;
       return acc;
     }, {});
-    console.log(res, "hafsdjkhsadkhf");
     setCourseInclusion(inclusionStatus);
     await dispatch(addWishlist(res));
   };

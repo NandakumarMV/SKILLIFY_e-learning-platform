@@ -40,7 +40,7 @@ router
   .get(protect, getUserProfile)
   .put(protect("user"), multerImage.single("image"), updateUserProfile);
 
-router.get("/get-approvedCourses", protect("user"), getApprovedCourses);
+router.get("/get-approvedCourses", getApprovedCourses);
 
 router.get("/single-course/:courseId", protect("user"), getSingleCourse);
 

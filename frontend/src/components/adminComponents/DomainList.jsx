@@ -13,7 +13,6 @@ const DomainList = () => {
         withCredentials: true,
       });
       const domains = res.data;
-      console.log(domains, "dmaaa");
       dispatch(setDomains(domains));
     } catch (err) {
       console.error("Error fetching user data:", err);

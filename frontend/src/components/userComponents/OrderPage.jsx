@@ -41,8 +41,6 @@ const OrderPage = () => {
       { withCredentials: true }
     );
 
-    console.log(data.id);
-
     const options = {
       key: "rzp_test_bfnSH6XKHJdHG9",
       amount: price * 100,
@@ -87,7 +85,6 @@ const OrderPage = () => {
   }, []);
 
   const course = useSelector((state) => state.courses.courses.course);
-  console.log(course);
   return (
     <div className="flex justify-around w-11/12 mt-10">
       {/* Purchase Courses Section */}

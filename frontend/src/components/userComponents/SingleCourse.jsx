@@ -19,14 +19,11 @@ const SingleCourse = () => {
   const dispatch = useDispatch();
   const [getcourse] = useGetCourseMutation();
   const [courseRating] = useCourseRatingMutation();
-  console.log(courseId);
   const [rating, setRating] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleStarClick = async (clickedRating) => {
-    console.log(clickedRating, "click rating");
     setRating(clickedRating);
-    console.log(rating, "rating");
     const res = await courseRating({ courseId, clickedRating }).unwrap();
     dispatch(setCourses(res));
   };
@@ -34,7 +31,6 @@ const SingleCourse = () => {
   const CourseData = async () => {
     const res = await getcourse(courseId).unwrap();
     dispatch(setCourses(res));
-    console.log(res, "fffffffffff");
   };
 
   useEffect(() => {
@@ -61,14 +57,10 @@ const SingleCourse = () => {
     (review) => review.userId._id === userId
   );
   const isRated = course?.rating.some((rate) => rate.userId._id === userId);
-  console.log(course?.rating);
-  console.log(userId);
-  console.log(isReviewed, "sdhfsadjkfh");
 
   const [coursefeedback] = useCourseRevewMutation();
 
   const handleFeedbackSubmit = async (feedback) => {
-    console.log("Feedback submitted:", feedback);
 
     const res = await coursefeedback({ feedback, courseId }).unwrap();
     dispatch(setCourses(res));

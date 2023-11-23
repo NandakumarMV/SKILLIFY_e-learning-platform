@@ -27,7 +27,6 @@ const googleClient = new OAuth2Client(
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-
   if (user && !user.isBlocked && (await user.matchPassword(password))) {
     generateToken(res, user._id, "user");
     res.status(201).json({
@@ -48,7 +47,10 @@ const authUser = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
   const userExists = await User.findOne({ email: email });
-
+  const subject = " Resetting Password";
+  const otp = generateOtp(6);
+  const mailOptions = configureMailOptions(email, otp, subject);
+  transporter.sendMail(mailOptions);
   if (userExists) {
     res.status(400);
     throw new Error("user email already exists");
@@ -58,6 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
+    otp,
   });
 
   if (user) {
@@ -72,7 +75,9 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("invalid user data");
   }
 });
+// const verifyUser=asyncHandler(async(req,res)=>{
 
+// })
 const logOutUser = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
@@ -479,7 +484,6 @@ const getAllWishlist = asyncHandler(async (req, res) => {
 const deleteFromWishlist = asyncHandler(async (req, res) => {
   const { courseId } = req.body;
   const userId = req.user._id;
-  console.log(courseId, "enetred");
   try {
     // Find the user's wishlist
     const wishlist = await Wishlist.findOne({ userId });
@@ -492,7 +496,6 @@ const deleteFromWishlist = asyncHandler(async (req, res) => {
     const deleted = (wishlist.wishlist = wishlist.wishlist.filter(
       (item) => String(item.course) !== String(courseId)
     ));
-    console.log(deleted);
     await wishlist.save();
     res.status(200).json(wishlist.wishlist);
   } catch (error) {
@@ -534,14 +537,11 @@ const forgotPassword = asyncHandler(async (req, res) => {
 const verifyOtp = asyncHandler(async (req, res) => {
   const { otp } = req.body;
   const email = req.body.email;
-  console.log(otp, email);
   const user = await User.findOne({ email: email });
-  console.log(user, "user");
 
   if (user) {
-    console.log("sussss");
     if (user.otp === otp) {
-      console.log("dfsdf");
+      await User.updateOne({ email: email }, { $set: { isVerified: true } });
       res.status(200).json({ message: "otp is Correct" });
     } else {
       res.status(400).json({ message: "otp is not matching" });
@@ -552,9 +552,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
 });
 const resetPassword = asyncHandler(async (req, res) => {
   const { password, email } = req.body;
-  console.log(password, email);
   const user = await User.findOne({ email: email });
-  console.log(user);
   if (!user) {
     res.status(400).json({ message: "user not found" });
   }

@@ -49,7 +49,6 @@ const CoursesViewPage = () => {
     const res = await axios.get(getApprovedAllCouresesUrl, {
       withCredentials: true,
     });
-    console.log(res.data);
     dispatch(setCourses(res.data));
   };
 
@@ -58,14 +57,12 @@ const CoursesViewPage = () => {
   }, []);
   const courses = useSelector((state) => state.courses.courses);
   const domains = useSelector((state) => state.domains.domains);
-  console.log(courses);
-  console.log(domains, "dhfkjsadh");
+
   const filterCourse = Array.isArray(courses)
     ? courses.filter((course) => {
         const domainFilter = domains.map(
           (domain) => course.domain.domainName === domain
         );
-        console.log(domainFilter, "ddsfsdf");
         const priceFilter =
           selectedPriceRange === "all" ||
           (course.price >= Number(selectedPriceRange.split("-")[0]) &&
@@ -89,7 +86,6 @@ const CoursesViewPage = () => {
       })
     : [];
 
-  console.log("filterCourse", filterCourse);
   const filteredDomains = domains.filter((domain) =>
     domain.toLowerCase().includes(search.toLowerCase())
   );

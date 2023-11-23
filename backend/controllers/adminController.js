@@ -124,7 +124,7 @@ const getDomains = asyncHandler(async (req, res) => {
 const addDomain = asyncHandler(async (req, res) => {
   const domainName = req.body.domainName;
   const domainExists = await Domain.find({ domainName: domainName });
-  console.log(domainExists);
+
   if (domainExists.length > 0) {
     res.status(400).json({ message: "domain already exits" });
   } else {
@@ -140,16 +140,12 @@ const addDomain = asyncHandler(async (req, res) => {
 });
 const deleteDomain = asyncHandler(async (req, res) => {
   const domainId = req.params.domainId;
-  console.log(domainId);
 
   const coursesWithDomain = await Courses.find({ domain: domainId });
-  console.log(coursesWithDomain, "coursesssssssss");
   if (coursesWithDomain.length > 0) {
-    console.log("ttttttttttttttttt");
     return res.status(404).json({ message: "Domain has associated courses" });
   }
   const deleteDomain = await Domain.findByIdAndDelete(domainId);
-  console.log(deleteDomain, "sdelhndf");
   if (deleteDomain) {
     res.status(200).json({ message: "domain deleted Successfully" });
   } else {

@@ -22,13 +22,20 @@ const protect = (role = "user") => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (role === "admin") {
           req.admin = await Admin.findById(decoded.id).select("-password");
-          // req.admin = await Admin.findById(decoded.adminId).select("-password");
         } else if (role === "tutor") {
           req.tutor = await Tutor.findById(decoded.id).select("-password");
-          // req.tutor = await Tutor.findById(decoded.tutorId).select("-password");
         } else {
-          req.user = await User.findById(decoded.id).select("-password");
-          // req.user = await User.findById(decoded.userId).select("-password");
+          const user = await User.findById(decoded.id).select("-password");
+          // console.log(user, "user info");
+          if (!user.isBlocked) {
+            console.log("user not blocked");
+            req.user = user;
+          } else {
+            console.log("blocked");
+            res.clearCookie("userJwt");
+            res.redirect("/login");
+            return;
+          }
         }
         next();
       } catch (error) {
