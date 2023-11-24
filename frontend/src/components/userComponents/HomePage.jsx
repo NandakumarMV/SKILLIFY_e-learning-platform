@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   bannerVideo,
   getApprovedAllCouresesUrl,
+  getPopularCoursesUrl,
   getalldoamins,
 } from "../../url";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,9 +42,13 @@ const HomePage = () => {
     });
     dispatch(setCourses(res.data));
   };
-
+  const getPopularCourses = async () => {
+    const res = await axios.get(getPopularCoursesUrl, {
+      withCredentials: true,
+    });
+  };
   useEffect(() => {
-    getCourses();
+    getCourses(), getPopularCourses();
   }, []);
 
   const courses = useSelector((state) => state.courses.courses);
@@ -76,7 +81,6 @@ const HomePage = () => {
 
       return isAfterStartOfWeek;
     });
-
 
   return (
     <>
@@ -191,7 +195,7 @@ const HomePage = () => {
       </div>
       <div className="h-16"></div>
       <div className="font-serif text-2xl flex justify-center ">
-        Popular Courses
+        Most Rated Courses
       </div>
       <div className="flex flex-wrap  justify-between ">
         {Array.isArray(courses) &&

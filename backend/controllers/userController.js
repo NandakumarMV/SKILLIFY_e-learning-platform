@@ -370,6 +370,7 @@ const trackVideos = asyncHandler(async (req, res) => {
 const addCourseRating = asyncHandler(async (req, res) => {
   const { courseId, clickedRating } = req.body;
   const userId = req.user._id;
+  console.log(userId, "user");
   const newRating = {
     userId,
     rate: clickedRating,
@@ -384,10 +385,21 @@ const addCourseRating = asyncHandler(async (req, res) => {
       .populate("domain", "domainName")
       .populate("rating.userId", "name")
       .populate("reviews.userId", "name");
+
     if (course) {
-      const purchased = true;
-      course.rating.push(newRating);
+      const userRatingIndex = course.rating.findIndex(
+        (r) => String(r.userId._id) === String(userId)
+      );
+      console.log(userRatingIndex);
+      if (userRatingIndex !== -1) {
+        console.log("true ano");
+        course.rating[userRatingIndex].rate = clickedRating;
+      } else {
+        course.rating.push(newRating);
+      }
+
       await course.save();
+      const purchased = true;
       res.status(200).json({ course, purchased });
     } else {
       res.status(404).json({ message: "Course not found" });
@@ -560,6 +572,28 @@ const resetPassword = asyncHandler(async (req, res) => {
   await user.save();
   res.status(200).json({ message: "Password Updated" });
 });
+const getSuggestions = asyncHandler(async (req, res) => {
+  const uniqueCourseNames = await Courses.distinct("courseName");
+  const suggestions = uniqueCourseNames.map((courseName) => courseName);
+  console.log(suggestions);
+  res.status(200).json({ suggestions });
+});
+const popularCourses = asyncHandler(async (req, res) => {
+  const purchaseCounts = await Orders.aggregate([
+    {
+      $unwind: "$purchasedCourses",
+    },
+    {
+      $group: {
+        _id: "$purchasedCourses.courseId",
+        purchaseCount: { $sum: 1 },
+      },
+    },
+  ]);
+  const courses = Orders.find().populate("courseId");
+  console.log(purchaseCounts);
+  console.log(courses);
+});
 export {
   authUser,
   registerUser,
@@ -582,4 +616,6 @@ export {
   forgotPassword,
   verifyOtp,
   resetPassword,
+  getSuggestions,
+  popularCourses,
 };

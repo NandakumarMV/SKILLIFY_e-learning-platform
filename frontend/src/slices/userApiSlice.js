@@ -120,6 +120,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getSuggestion: builder.mutation({
+      query: () => ({
+        url: `${USERS_URL}/get-suggestions`,
+        method: "get",
+      }),
+    }),
   }),
 });
 
@@ -141,4 +147,5 @@ export const {
   useGenerateOtpMutation,
   useVerifyOtpMutation,
   useResetPasswordMutation,
+  useGetSuggestionMutation,
 } = userApiSlice;

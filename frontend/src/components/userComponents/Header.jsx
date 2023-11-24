@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AiFillHeart } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "./DropDown";
-
+import SearchBarComponent from "./SearchBarComponent";
 import { useTutorlogoutMutation } from "../../slices/tutorApiSlice";
 import { tutorLogout } from "../../slices/tutorAuthSlice";
 import TutorDropdown from "../tutorComponents/TutorDropdown";
@@ -54,6 +54,12 @@ const Header = ({ isLoginTutor }) => {
                 ) : null}
               </div>
             </div>
+            {userInfo && (
+              <div>
+                <SearchBarComponent />
+              </div>
+            )}
+
             <ul className="flex space-x-2 sm:space-x-10">
               {isLoginTutor ? (
                 <>

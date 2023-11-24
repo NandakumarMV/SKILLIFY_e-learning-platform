@@ -28,7 +28,7 @@ const protect = (role = "user") => {
           const user = await User.findById(decoded.id).select("-password");
           // console.log(user, "user info");
           if (!user.isBlocked) {
-            console.log("user not blocked");
+            // console.log("user not blocked");
             req.user = user;
           } else {
             console.log("blocked");

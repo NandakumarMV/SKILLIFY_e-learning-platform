@@ -24,6 +24,8 @@ import {
   forgotPassword,
   verifyOtp,
   resetPassword,
+  getSuggestions,
+  popularCourses,
 } from "../controllers/userController.js";
 import { multerImage } from "../config/multerConfig.js";
 
@@ -64,12 +66,16 @@ router.get("/get-wishlist", protect("user"), getWishlist);
 
 router.delete("/delete-wishlist", protect("user"), deleteFromWishlist);
 
-router.get("/get-all-wishList", protect("user"), getAllWishlist);
+router.get("/get-all-wishList", getAllWishlist);
 
 router.post("/forgot-password", protect("user"), forgotPassword);
 
 router.post("/verify-otp", protect("user"), verifyOtp);
 
 router.post("/reset-password", protect("user"), resetPassword);
+
+router.get("/get-suggestions", getSuggestions);
+
+router.get("/popular-courses", popularCourses);
 
 export default router;

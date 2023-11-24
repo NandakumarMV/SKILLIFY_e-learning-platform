@@ -22,6 +22,21 @@ const SingleCourse = () => {
   const [rating, setRating] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const courses = useSelector((state) => state.courses.courses);
+  const userId = useSelector((state) => state.auth.userInfo._id);
+  const course = courses?.course;
+  console.log(course);
+  useEffect(() => {
+    if (course) {
+      const userR = course.rating.find(
+        (r) => (console.log(r.userId._id, "gujhjhj"), r.userId._id === userId)
+      );
+      console.log(userR.rate, "userReview");
+      setRating(userR.rate);
+    }
+  }, [course]);
+  console.log(rating, "rating");
+
   const handleStarClick = async (clickedRating) => {
     setRating(clickedRating);
     const res = await courseRating({ courseId, clickedRating }).unwrap();
@@ -36,9 +51,6 @@ const SingleCourse = () => {
   useEffect(() => {
     CourseData();
   }, []);
-  const courses = useSelector((state) => state.courses.courses);
-  const userId = useSelector((state) => state.auth.userInfo._id);
-  const course = courses?.course;
 
   const [viewedVideos, setViewedVideos] = useState([]);
   const [videoTrack] = useTrackVideoMutation();
@@ -56,12 +68,10 @@ const SingleCourse = () => {
   const isReviewed = course?.reviews.some(
     (review) => review.userId._id === userId
   );
-  const isRated = course?.rating.some((rate) => rate.userId._id === userId);
 
   const [coursefeedback] = useCourseRevewMutation();
 
   const handleFeedbackSubmit = async (feedback) => {
-
     const res = await coursefeedback({ feedback, courseId }).unwrap();
     dispatch(setCourses(res));
   };
@@ -266,7 +276,7 @@ const SingleCourse = () => {
           </>
         )}
       </div>
-      {courses.purchased && !isRated && (
+      {courses.purchased && (
         <div className="  bg-slate-100 flex  justify-center items-center text-lg">
           {" "}
           <div className="pr-3">Rate The Course</div>

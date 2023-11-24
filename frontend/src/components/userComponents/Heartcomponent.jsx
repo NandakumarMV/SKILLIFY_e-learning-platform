@@ -16,7 +16,7 @@ const HeartComponent = ({ courseId }) => {
   const [deleteFromWishlist] = useDeleteFromWishlistMutation();
   const [getAllWishlist] = useGetWishlistMutation();
   const dispatch = useDispatch();
-
+  const { userInfo } = useSelector((state) => state.auth);
   const getWishlist = async () => {
     const res = await getAllWishlist().unwrap();
     if (res) {
@@ -24,7 +24,9 @@ const HeartComponent = ({ courseId }) => {
     }
   };
   useEffect(() => {
-    getWishlist();
+    if (userInfo) {
+      getWishlist();
+    }
   }, [courseId]);
 
   const wishlistCourses = useSelector((state) => state.courses.wishlist);

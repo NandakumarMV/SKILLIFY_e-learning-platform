@@ -7,6 +7,7 @@ const initialState = {
   allCourses: [],
   videos: [],
   wishlist: [],
+  searchQuery: [],
 };
 
 const coursesSlice = createSlice({
@@ -64,6 +65,9 @@ const coursesSlice = createSlice({
         (course.approved = false), (course.rejected = true);
       }
     },
+    addToSeacrhQuery: (state, action) => {
+      state.searchQuery = action.payload;
+    },
   },
 });
 
@@ -75,5 +79,6 @@ export const {
   setApproveCourse,
   setRejectCourse,
   addWishlist,
+  addToSeacrhQuery,
 } = coursesSlice.actions;
 export default coursesSlice.reducer;

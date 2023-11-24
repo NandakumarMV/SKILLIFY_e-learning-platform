@@ -23,10 +23,10 @@ const CoursesViewPage = () => {
     setSelectedRatingRange(ratingRange);
   };
 
-  const handleSearch = (event) => {
-    const searchTerm = event.target.value;
-    setSearch(searchTerm);
-  };
+  // const handleSearch = (event) => {
+  //   const searchTerm = event.target.value;
+  //   setSearch(searchTerm);
+  // };
 
   const getDomain = async () => {
     try {
@@ -57,7 +57,15 @@ const CoursesViewPage = () => {
   }, []);
   const courses = useSelector((state) => state.courses.courses);
   const domains = useSelector((state) => state.domains.domains);
+  const searchquery = useSelector((state) => state.courses.searchQuery);
+  console.log(searchquery, "search aurefrf");
 
+  useEffect(() => {
+    if (searchquery.length > 0) {
+      setSearch(searchquery);
+    }
+  }, [searchquery]);
+  console.log(search, "value of search");
   const filterCourse = Array.isArray(courses)
     ? courses.filter((course) => {
         const domainFilter = domains.map(
@@ -99,7 +107,7 @@ const CoursesViewPage = () => {
         <div className=" text-2xl font-serif flex justify-start w-1/2 p-1">
           Courses
         </div>
-        <div className="flex ">
+        {/* <div className="flex ">
           <div className=" mx-auto ">
             <div className="relative text-gray-600 focus-within:text-gray-400 w-full flex items-center">
               <div className="absolute left-2 text-lg">
@@ -116,7 +124,7 @@ const CoursesViewPage = () => {
               />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="flex justify-center  ">
         <div className="w-full ">
