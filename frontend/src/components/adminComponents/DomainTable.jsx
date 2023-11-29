@@ -103,6 +103,9 @@ const DomainTable = () => {
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-white p-4 rounded shadow-md w-1/3">
             <h2 className="text-xl mb-4">Add Domain</h2>
+            {err && (
+              <p className="text-sm text-red-600">Domain Name Already Exits </p>
+            )}
             <input
               type="text"
               className={"w-full border p-2 mb-4 "}

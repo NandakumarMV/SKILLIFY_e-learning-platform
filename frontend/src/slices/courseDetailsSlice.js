@@ -8,6 +8,7 @@ const initialState = {
   videos: [],
   wishlist: [],
   searchQuery: [],
+  tutor: [],
 };
 
 const coursesSlice = createSlice({
@@ -68,6 +69,9 @@ const coursesSlice = createSlice({
     addToSeacrhQuery: (state, action) => {
       state.searchQuery = action.payload;
     },
+    addtoTutor: (state, action) => {
+      state.tutor = action.payload;
+    },
   },
 });
 
@@ -80,5 +84,6 @@ export const {
   setRejectCourse,
   addWishlist,
   addToSeacrhQuery,
+  addtoTutor,
 } = coursesSlice.actions;
 export default coursesSlice.reducer;

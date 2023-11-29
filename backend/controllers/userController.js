@@ -19,6 +19,8 @@ import Wishlist from "../models/wishListModel.js";
 import { generateOtp, configureMailOptions } from "../utils/mailOptions.js";
 import transporter from "../utils/nodemailTransporter.js";
 import { error } from "console";
+import Tutor from "../models/tutorModel.js";
+import generateUrl from "../utils/generateS3Url.js";
 const randomImgName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 const googleClient = new OAuth2Client(
   "646376613853-opi07m71f0glecaf3lhj5iet07c27aff.apps.googleusercontent.com"
@@ -36,7 +38,7 @@ const authUser = asyncHandler(async (req, res) => {
       image: user.userImageUrl,
     });
   } else if (user.isBlocked) {
-    res.status(400);
+    res.status(403);
     throw new Error("You have been blocked");
   } else {
     res.status(400);
@@ -220,7 +222,7 @@ const getApprovedCourses = asyncHandler(async (req, res) => {
         ratings.length > 0
           ? ratings.reduce((a, b) => a + b, 0) / ratings.length
           : 0;
-
+      const thumbnailUrl = courses.th;
       return {
         ...course.toObject(),
         averageRating,
@@ -306,6 +308,10 @@ const razorpayPayment = asyncHandler(async (req, res) => {
       order.purchasedCourses.push({ tutorId, courseId, price });
 
       await order.save();
+      await Courses.updateOne(
+        { _id: courseId },
+        { $inc: { purchaseCount: 1 } }
+      );
 
       res.status(200).json({ success: true, orderId: order._id });
     } else {
@@ -578,22 +584,19 @@ const getSuggestions = asyncHandler(async (req, res) => {
   console.log(suggestions);
   res.status(200).json({ suggestions });
 });
-const popularCourses = asyncHandler(async (req, res) => {
-  const purchaseCounts = await Orders.aggregate([
-    {
-      $unwind: "$purchasedCourses",
-    },
-    {
-      $group: {
-        _id: "$purchasedCourses.courseId",
-        purchaseCount: { $sum: 1 },
-      },
-    },
-  ]);
-  const courses = Orders.find().populate("courseId");
-  console.log(purchaseCounts);
-  console.log(courses);
+const getTutorDetails = asyncHandler(async (req, res) => {
+  const { tutorId } = req.params;
+  console.log(tutorId);
+
+  const tutor = await Tutor.findById(tutorId);
+
+  const signedUrl = await generateUrl(tutor.tutorImageName);
+  const tutorDetails = tutor.toObject();
+  tutorDetails.signedUrl = signedUrl;
+
+  res.status(200).json([tutorDetails]);
 });
+
 export {
   authUser,
   registerUser,
@@ -617,5 +620,5 @@ export {
   verifyOtp,
   resetPassword,
   getSuggestions,
-  popularCourses,
+  getTutorDetails,
 };

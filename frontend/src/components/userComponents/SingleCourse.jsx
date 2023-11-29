@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { setCourses } from "../../slices/courseDetailsSlice";
-import axios from "axios";
-import { getApprovedAllCouresesUrl } from "../../url";
-import { IoMdChatboxes } from "react-icons/io";
+
 import { RiFolderVideoLine } from "react-icons/ri";
 import {
   useCourseRatingMutation,
   useCourseRevewMutation,
   useGetCourseMutation,
+  useLogoutMutation,
   useTrackVideoMutation,
 } from "../../slices/userApiSlice";
 import FeedbackModal from "./FeedbackModal";
+import { logout } from "../../slices/userAuthSlice";
 
 const SingleCourse = () => {
   const { courseId } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [getcourse] = useGetCourseMutation();
   const [courseRating] = useCourseRatingMutation();
@@ -25,14 +26,14 @@ const SingleCourse = () => {
   const courses = useSelector((state) => state.courses.courses);
   const userId = useSelector((state) => state.auth.userInfo._id);
   const course = courses?.course;
-  console.log(course);
+  console.log(course?.rating);
   useEffect(() => {
-    if (course) {
-      const userR = course.rating.find(
-        (r) => (console.log(r.userId._id, "gujhjhj"), r.userId._id === userId)
-      );
-      console.log(userR.rate, "userReview");
-      setRating(userR.rate);
+    if (course && course?.rating?.length > 0) {
+      const userR = course.rating.find((r) => r.userId._id === userId);
+      console.log(userR, "trueeee");
+      if (userR) {
+        setRating(userR.rate);
+      }
     }
   }, [course]);
   console.log(rating, "rating");
@@ -42,10 +43,19 @@ const SingleCourse = () => {
     const res = await courseRating({ courseId, clickedRating }).unwrap();
     dispatch(setCourses(res));
   };
-
+  const [logoutApi] = useLogoutMutation();
   const CourseData = async () => {
-    const res = await getcourse(courseId).unwrap();
-    dispatch(setCourses(res));
+    try {
+      const res = await getcourse(courseId).unwrap();
+      dispatch(setCourses(res));
+    } catch (error) {
+      if (error.status === 403) {
+      
+        
+        dispatch(logout());
+        navigate("/login");
+      }
+    }
   };
 
   useEffect(() => {
@@ -128,30 +138,32 @@ const SingleCourse = () => {
             <div className=" bg-slate-50  p-3 w-auto mt-5">
               {" "}
               <div className="text-lg ">Instructor </div>
-              <div className="flex">
-                <img
-                  className="w-24 h-24"
-                  src={course?.tutorId.tutorImageUrl}
-                  alt={course?.tutorId.name}
-                />
+              <Link to={`/tutor-profile/${course?.tutorId._id}`}>
+                <div className="flex">
+                  <img
+                    className="w-24 h-24"
+                    src={course?.tutorId.tutorImageUrl}
+                    alt={course?.tutorId.name}
+                  />
 
-                <div className="p-2">
-                  <p className="text-lg font-medium">
-                    {course?.tutorId && course?.tutorId?.name?.toUpperCase()}
-                  </p>
-                  <p className="font-bold">{course?.tutorId.email}</p>
-                  <p className="text-base font-normal">
-                    {course?.tutorId.about}
-                  </p>
-                  {courses?.purchased && (
-                    <div className="flex text-base font-medium items-end justify-start pt-1 ">
-                      <div className="text-2xl">
-                        <IoMdChatboxes />
+                  <div className="p-2">
+                    <p className="text-lg font-medium">
+                      {course?.tutorId && course?.tutorId?.name?.toUpperCase()}
+                    </p>
+                    <p className="font-bold">{course?.tutorId.email}</p>
+                    <p className="text-base font-normal">
+                      {course?.tutorId.about}
+                    </p>
+                    {/* {courses?.purchased && (
+                      <div className="flex text-base font-medium items-end justify-start pt-1 ">
+                        <div className="text-2xl">
+                          <IoMdChatboxes />
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )} */}
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
             {courses.purchased && !isReviewed && (
               <>

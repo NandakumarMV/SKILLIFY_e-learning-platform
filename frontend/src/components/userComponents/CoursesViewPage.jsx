@@ -63,9 +63,17 @@ const CoursesViewPage = () => {
   useEffect(() => {
     if (searchquery.length > 0) {
       setSearch(searchquery);
+    } else {
+      setSearch("");
     }
   }, [searchquery]);
   console.log(search, "value of search");
+  const filteredDomains = domains.filter((domain) => {
+    const firstWordOfSearch = search.split(" ")[0].toLowerCase();
+    return domain.toLowerCase().includes(firstWordOfSearch);
+  });
+
+  console.log(filteredDomains, "filters domaina");
   const filterCourse = Array.isArray(courses)
     ? courses.filter((course) => {
         const domainFilter = domains.map(
@@ -84,7 +92,10 @@ const CoursesViewPage = () => {
         const searchFilter =
           search === "" ||
           course.courseName.toLowerCase().includes(search.toLowerCase());
+        console.log(course.courseName, "course name");
+        console.log(search, "searchbbb");
 
+        console.log(searchFilter, "searchFilter");
         return (
           domainFilter.includes(true) &&
           priceFilter &&
@@ -93,10 +104,9 @@ const CoursesViewPage = () => {
         );
       })
     : [];
+  console.log(filterCourse, "filter course");
+  console.log(filterCourse.length, "filterCourse.lengtgggggggggh");
 
-  const filteredDomains = domains.filter((domain) =>
-    domain.toLowerCase().includes(search.toLowerCase())
-  );
   return (
     <div className="left-4 relative">
       <div className="h-8 "></div>
@@ -107,24 +117,6 @@ const CoursesViewPage = () => {
         <div className=" text-2xl font-serif flex justify-start w-1/2 p-1">
           Courses
         </div>
-        {/* <div className="flex ">
-          <div className=" mx-auto ">
-            <div className="relative text-gray-600 focus-within:text-gray-400 w-full flex items-center">
-              <div className="absolute left-2 text-lg">
-                <IoSearchSharp />
-              </div>
-              <input
-                type="search"
-                name="search"
-                value={search}
-                onChange={handleSearch}
-                className="py-2 text-sm text-black border-b border-gray-300 pl-10 focus:outline-none focus:border-b focus:border-black w-full"
-                placeholder="Search..."
-                autoComplete="off"
-              />
-            </div>
-          </div>
-        </div> */}
       </div>
       <div className="flex justify-center  ">
         <div className="w-full ">
@@ -132,8 +124,10 @@ const CoursesViewPage = () => {
             <div key={index} className=" ">
               <div className="mt-4  p-4   flex flex-col justify-start">
                 <h2 className="text-lg text-green-700 font-medium">{domain}</h2>
+                {console.log(filterCourse.length, "filterCourse.length")}
                 {filterCourse.length > 0 ? (
                   filterCourse?.map((course) => {
+                    console.log(course, "course details");
                     if (course.domain.domainName === domain) {
                       return (
                         <>

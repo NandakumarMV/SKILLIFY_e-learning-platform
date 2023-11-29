@@ -84,6 +84,10 @@ const courseSchema = mongoose.Schema(
     previewVideoName: {
       type: String,
     },
+    purchaseCount: {
+      type: Number,
+      default: 0,
+    },
     caption: {
       type: String,
     },

@@ -4,7 +4,6 @@ const initialState = {
   tutorInfo: localStorage.getItem("tutorInfo")
     ? JSON.parse(localStorage.getItem("tutorInfo"))
     : null,
-  courses: [],
 };
 
 const tutorAuthSlice = createSlice({

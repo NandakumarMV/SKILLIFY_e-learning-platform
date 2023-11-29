@@ -52,7 +52,11 @@ const UserLoginPage = () => {
       );
       navigate("/");
     } catch (err) {
-      setError("Invalid email or password");
+      if (err.status === 403) {
+        setError("You have Been Blocked");
+      } else {
+        setError("Invalid email or password");
+      }
     }
   };
   return (

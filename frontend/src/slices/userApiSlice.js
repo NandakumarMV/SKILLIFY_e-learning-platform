@@ -126,6 +126,38 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "get",
       }),
     }),
+    getTutorDetails: builder.mutation({
+      query: (tutorId) => ({
+        url: `${USERS_URL}/get-tutor-details/${tutorId}`,
+        method: "get",
+      }),
+    }),
+    getIndividualRoom: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/get-or-createroom`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getRooms: builder.mutation({
+      query: (userId) => ({
+        url: `${USERS_URL}/getrooms/${userId}`,
+        method: "GET",
+      }),
+    }),
+    getMessages: builder.mutation({
+      query: (roomId) => ({
+        url: `${USERS_URL}/get-room-messages/${roomId}`,
+        method: "GET",
+      }),
+    }),
+    sendMessage: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/send-message`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -148,4 +180,9 @@ export const {
   useVerifyOtpMutation,
   useResetPasswordMutation,
   useGetSuggestionMutation,
+  useGetTutorDetailsMutation,
+  useGetIndividualRoomMutation,
+  useGetRoomsMutation,
+  useGetMessagesMutation,
+  useSendMessageMutation,
 } = userApiSlice;

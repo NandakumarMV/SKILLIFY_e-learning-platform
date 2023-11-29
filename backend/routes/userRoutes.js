@@ -25,9 +25,15 @@ import {
   verifyOtp,
   resetPassword,
   getSuggestions,
-  popularCourses,
+  getTutorDetails,
 } from "../controllers/userController.js";
 import { multerImage } from "../config/multerConfig.js";
+import {
+  chatSend,
+  createRoom,
+  getMessages,
+  getRooms,
+} from "../controllers/chatController.js";
 
 router.post("/login", authUser);
 
@@ -66,7 +72,7 @@ router.get("/get-wishlist", protect("user"), getWishlist);
 
 router.delete("/delete-wishlist", protect("user"), deleteFromWishlist);
 
-router.get("/get-all-wishList", getAllWishlist);
+router.get("/get-all-wishList", protect("user"), getAllWishlist);
 
 router.post("/forgot-password", protect("user"), forgotPassword);
 
@@ -76,6 +82,16 @@ router.post("/reset-password", protect("user"), resetPassword);
 
 router.get("/get-suggestions", getSuggestions);
 
-router.get("/popular-courses", popularCourses);
+router.get("/get-tutor-details/:tutorId", getTutorDetails);
+
+//chat routes
+
+router.post("/get-or-createroom", createRoom);
+
+router.get("/getrooms/:userId", getRooms);
+
+router.post("/send-message", chatSend);
+
+router.get("/get-room-messages/:roomid", getMessages);
 
 export default router;

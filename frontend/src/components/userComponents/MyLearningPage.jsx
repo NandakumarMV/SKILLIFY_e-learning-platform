@@ -1,11 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { getMyCoursesUrl } from "../../url";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../../slices/userAuthSlice";
 
 const MyLearningPage = () => {
   const [courses, setcourses] = useState([]);
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const fetchdata = async () => {
     try {
       const { data } = await axios.get(getMyCoursesUrl, {
@@ -14,10 +17,13 @@ const MyLearningPage = () => {
 
       setcourses(data);
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      console.log("error", error);
+      if (error) {
+        dispatch(logout());
+        navigate("/login");
+      }
     }
   };
-
   useEffect(() => {
     fetchdata();
   }, []);

@@ -28,4 +28,58 @@ app.use("/api/tutor", tutorRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`server started on port ${port}`));
+const server = app.listen(port, () =>
+  console.log(`server started on port ${port}`)
+);
+
+import { Server } from "socket.io";
+
+const io = new Server(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+io.on("connection", (socket) => {
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+    socket.emit("connected");
+    console.log("user joined", userData._id);
+  });
+
+  socket.on("join chat", (room) => {
+    socket.join(room);
+    console.log("userjoined room", room);
+  });
+
+  socket.on("typing", (room) => socket.in(room).emit("typing"));
+  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
+  // socket.on("uservideoCall", ({ to, offer }) => {
+  //   io.to(to).emit("incoming:call", { from: socket.id, offer });
+  // });
+
+  // socket.on('videoCall',(roomId)=>{
+  //    const room=roomId;
+
+  // })
+
+  socket.on("new message", (newMessageReceived) => {
+    var chat = newMessageReceived.room;
+    if (!chat.user || !chat.tutor) {
+      return console.log("chat.users not defined");
+    }
+
+    if (chat.user._id === newMessageReceived.sender._id) {
+      socket.to(chat.tutor._id).emit("message received", newMessageReceived);
+    }
+
+    if (chat.tutor._id === newMessageReceived.sender._id) {
+      socket.to(chat.user._id).emit("message received", newMessageReceived);
+    }
+  });
+  socket.off("setup", () => {
+    console.log("USER DISCONNECTED");
+    socket.leave(userData._id);
+  });
+});

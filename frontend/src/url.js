@@ -9,4 +9,3 @@ export const createOrderUrl = "http://localhost:5000/api/create-order";
 export const getMyCoursesUrl = "http://localhost:5000/api/my-courses";
 export const getWishlistUrl = "http://localhost:5000/api/get-wishlist";
 export const getSuggestionUrl = "http://localhost:5000/api/get-suggestions";
-export const getPopularCoursesUrl = "http://localhost:5000/api/popular-courses";

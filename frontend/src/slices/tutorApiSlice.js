@@ -30,6 +30,13 @@ export const tutorApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    editVideo: builder.mutation({
+      query: (data) => ({
+        url: `${TUTOR_URL}/edit-video`,
+        method: "put",
+        body: data,
+      }),
+    }),
     addCourse: builder.mutation({
       query: (data) => ({
         url: `${TUTOR_URL}/add-course`,
@@ -58,6 +65,38 @@ export const tutorApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getTutorIndividualRoom: builder.mutation({
+      query: (data) => ({
+        url: `${TUTOR_URL}/get-or-create-tutor-room`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getTutorRooms: builder.mutation({
+      query: (tutorId) => ({
+        url: `${TUTOR_URL}/get-tutor-rooms/${tutorId}`,
+        method: "GET",
+      }),
+    }),
+    getTutorMessages: builder.mutation({
+      query: (roomId) => ({
+        url: `${TUTOR_URL}/get-room-messages/${roomId}`,
+        method: "GET",
+      }),
+    }),
+    sendTutorMessage: builder.mutation({
+      query: (data) => ({
+        url: `${TUTOR_URL}/send-message`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getAllUsers: builder.mutation({
+      query: () => ({
+        url: `${TUTOR_URL}/get-users/`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -68,5 +107,12 @@ export const {
   useUpdateTutorProfileMutation,
   useAddCourseMutation,
   useDeleteCourseVideoMutation,
-  useAddVideoMutation,useDeleteCourseMutation
+  useAddVideoMutation,
+  useDeleteCourseMutation,
+  useEditVideoMutation,
+  useGetTutorIndividualRoomMutation,
+  useGetTutorMessagesMutation,
+  useSendTutorMessageMutation,
+  useGetTutorRoomsMutation,
+  useGetAllUsersMutation,
 } = tutorApiSlice;

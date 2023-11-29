@@ -15,7 +15,14 @@ import {
   getAllCourses,
   videoDelete,
   courseDelete,
+  editVideo,
 } from "../controllers/tutorController.js";
+import {
+  chatSend,
+  createTutorRoom,
+  getMessages,
+  getTutorRooms,
+} from "../controllers/chatController.js";
 
 router.post("/login", authTutor);
 router.post("/register", registerTutor);
@@ -42,7 +49,24 @@ router.post(
   addVideo
 );
 router.get("/get-courses", protect("tutor"), getAllCourses);
+
 router.delete("/delete-video", protect("tutor"), videoDelete);
+
 router.delete("/delete-course", protect("tutor"), courseDelete);
+
+router.put(
+  "/edit-video",
+  protect("tutor"),
+  multerImage.single("video"),
+  editVideo
+);
+
+router.post("/get-or-create-tutor-room", protect("tutor"), createTutorRoom);
+
+router.get("/get-tutor-rooms/:tutor", getTutorRooms);
+
+router.post("/send-message", chatSend);
+
+router.get("/get-room-messages/:roomid", getMessages);
 
 export default router;

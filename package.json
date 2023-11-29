@@ -30,7 +30,8 @@
     "nodemailer": "^6.9.7",
     "otp-generator": "^4.0.1",
     "razorpay": "^2.9.2",
-    "sharp": "^0.32.6"
+    "sharp": "^0.32.6",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "concurrently": "^8.2.1",

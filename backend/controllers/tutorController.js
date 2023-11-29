@@ -342,7 +342,59 @@ const logoutTutor = asyncHandler(async (req, res) => {
   });
   res.status(200).json({ message: " tutor logout" });
 });
+const editVideo = asyncHandler(async (req, res) => {
+  const { courseId, videoId, videoName } = req.body;
 
+  const course = await Courses.findById(courseId);
+  if (course) {
+    const videoIndex = course.videos.findIndex(
+      (video) => String(video._id) === videoId
+    );
+    if (videoIndex === -1) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Video not found in the course" });
+    }
+
+    if (req.file) {
+      const videoUniqueId = course.videos[videoIndex].videoUniqueId;
+      const deleteParams = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: videoUniqueId,
+      };
+      const deleteCommand = new DeleteObjectCommand(deleteParams);
+      const buk = await s3.send(deleteCommand);
+
+      const randomVideo = randomImgName();
+      const params = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: randomVideo,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+      };
+      const command = new PutObjectCommand(params);
+
+      await s3.send(command);
+      const getObjectParams = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: randomVideo,
+      };
+      const getCommand = new GetObjectCommand(getObjectParams);
+      const url = await getSignedUrl(s3, getCommand, { expiresIn: 604800 });
+      course.videos[videoIndex].videoUrl = url;
+      course.videos[videoIndex].videoUniqueId = randomVideo;
+    }
+    if (videoName) {
+      course.videos[videoIndex].videoName = videoName;
+    }
+    await course.save();
+    res.status(200).json({ message: "Video edited successfully" });
+  } else {
+    return res
+      .status(404)
+      .json({ success: false, message: "Course not found" });
+  }
+});
 export {
   registerTutor,
   getTutorProfile,
@@ -354,4 +406,5 @@ export {
   getAllCourses,
   videoDelete,
   courseDelete,
+  editVideo,
 };

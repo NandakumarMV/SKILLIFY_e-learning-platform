@@ -33,18 +33,18 @@ const protect = (role = "user") => {
           } else {
             console.log("blocked");
             res.clearCookie("userJwt");
-            res.redirect("/login");
-            return;
+            res.status(403);
+            throw new Error("User  have been blocked");
           }
         }
         next();
       } catch (error) {
-        res.status(401);
+        res.status(403);
         throw new Error("Invalid token");
       }
     } else {
-      res.status(401);
-      throw new Error("Not authorized");
+      res.status(403);
+      throw new Error("User  have been blocked");
     }
   });
 };

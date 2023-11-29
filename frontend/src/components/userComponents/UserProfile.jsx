@@ -45,7 +45,12 @@ const UserProfile = () => {
 
       setSuccess("Profile Updated");
     } catch (error) {
-      setError(error?.data?.message || error.error);
+      if (error.status === 403) {
+        dispatch(logout());
+        navigate("/login");
+      } else {
+        setError(error?.data?.message || error.error);
+      }
     }
   };
 

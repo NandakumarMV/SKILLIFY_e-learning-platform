@@ -4,8 +4,16 @@ import {
   useUnblockUserMutation,
 } from "../../slices/adminApiSlice";
 import Modal from "./Modal";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToUsers,
+  setBlocked,
+  setUnBlocked,
+} from "../../slices/userAuthSlice";
 
 const UsersTable = ({ users }) => {
+  console.log(users, "users");
+  const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState({
@@ -18,43 +26,39 @@ const UsersTable = ({ users }) => {
   const [userList, setUserList] = useState(users);
 
   useEffect(() => {
-    setUserList(users);
+    dispatch(addToUsers(users));
   }, [users]);
+  const allUsers = useSelector((state) => state.auth.users);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
   };
   const handleBlockuser = async (userId) => {
     const response = await blockUser({ userId });
-    if (response.status === 200) {
-      
-      setUserList((prevUsers) =>
-        prevUsers.map((user) =>
-          user._id === userId ? { ...user, isBlocked: true } : user
-        )
-      );
-      setShowModal(true);
-    }
+    // if (response.data.message) {
+    //   setUserList((prevUsers) => {
+    //     const updatedUsers = prevUsers.map((user) =>
+    //       user._id === userId ? { ...user, isBlocked: true } : user
+    //     );
+    //     return updatedUsers;
+    //   });
+    // }
+    dispatch(setBlocked(userId));
   };
 
   const handleUnBlockuser = async (userId) => {
     const response = await unblockUser({ userId });
-    if (response.status === 200) {
-      
-      setUserList(
-        (prevUsers) => 
-        prevUsers.map((user) =>
-          user._id === userId ? { ...user, isBlocked: false } : user
-        )
-      );
-      setShowModal(true);
-    }
+    // if (response.data.message) {
+    //   setUserList((prevUsers) => {
+    //     const updatedUsers = prevUsers.map((user) =>
+    //       user._id === userId ? { ...user, isBlocked: false } : user
+    //     );
+    //     return updatedUsers;
+    //   });
+    // }
+    dispatch(setUnBlocked(userId));
   };
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
-  const userfilter = users.filter(
+  const userfilter = allUsers.filter(
     (user) =>
       user.name.toLowerCase().includes(search.toLowerCase()) ||
       user.email.toLowerCase().includes(search.toLowerCase())

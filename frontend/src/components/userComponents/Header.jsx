@@ -54,7 +54,7 @@ const Header = ({ isLoginTutor }) => {
                 ) : null}
               </div>
             </div>
-            {userInfo && (
+            {userInfo && !isLoginTutor && (
               <div>
                 <SearchBarComponent />
               </div>
@@ -70,6 +70,9 @@ const Header = ({ isLoginTutor }) => {
                       </li>
                       <li className="text-sm sm:text-base">
                         <Link to="/tutor/courses">My Courses</Link>
+                      </li>{" "}
+                      <li className="text-sm sm:text-base">
+                        <Link to="/tutor/messages">Messages</Link>
                       </li>
                       <li className="text-sm sm:text-base">
                         <a href="">Dashboard</a>
@@ -88,7 +91,7 @@ const Header = ({ isLoginTutor }) => {
                       {!isLoginTutor && (
                         <>
                           <li className="text-sm sm:text-base">
-                            <Link to="/tutor/login">Teach with US</Link>
+                            <Link to={`/user-messages/allChats`}>Messages</Link>
                           </li>
                           <li className="text-sm sm:text-base">
                             <Link to="/courses">Courses</Link>

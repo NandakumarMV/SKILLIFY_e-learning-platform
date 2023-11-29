@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   bannerVideo,
   getApprovedAllCouresesUrl,
-  getPopularCoursesUrl,
   getalldoamins,
 } from "../../url";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,17 +41,14 @@ const HomePage = () => {
     });
     dispatch(setCourses(res.data));
   };
-  const getPopularCourses = async () => {
-    const res = await axios.get(getPopularCoursesUrl, {
-      withCredentials: true,
-    });
-  };
+
   useEffect(() => {
-    getCourses(), getPopularCourses();
+    getCourses();
   }, []);
 
   const courses = useSelector((state) => state.courses.courses);
   const domains = useSelector((state) => state.domains.domains);
+  const { userInfo } = useSelector((state) => state.auth);
 
   // Filter courses by the selected domain
   const filteredCourses =
@@ -173,10 +169,12 @@ const HomePage = () => {
                               <div className="text-base font-medium text-blue-800">
                                 {course?.videos.length} videos
                               </div>
-                              <div className="text-sm">
-                                {" "}
-                                <HeartComponent courseId={course._id} />
-                              </div>
+                              {userInfo && (
+                                <div className="text-sm">
+                                  {" "}
+                                  <HeartComponent courseId={course._id} />
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -186,7 +184,7 @@ const HomePage = () => {
                 </div>
               </>
             ) : (
-              <div className="text-gray-500 text-lg mt-2 h-32">
+              <div className="text-gray-500 text-lg mt-2 h-40">
                 No courses available for {selectedDomain}
               </div>
             )}
@@ -238,10 +236,12 @@ const HomePage = () => {
                           <div className="text-base font-medium  text-blue-800 ">
                             {course?.videos.length} videos
                           </div>
-                          <div className="text-sm">
-                            {" "}
-                            <HeartComponent courseId={course._id} />
-                          </div>
+                          {userInfo && (
+                            <div className="text-sm">
+                              {" "}
+                              <HeartComponent courseId={course._id} />
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -250,7 +250,65 @@ const HomePage = () => {
               )
           )}
       </div>
+      <div className="h-16"></div>
+      <div className="font-serif text-2xl flex justify-center ">
+        Popular Courses
+      </div>
+      <div className="flex flex-wrap  justify-between ">
+        {Array.isArray(courses) &&
+          courses?.map(
+            (course, index) =>
+              course?.purchaseCount >= 1 && (
+                <div
+                  key={index}
+                  className="w-[30%] bg-slate-50 mx-4 my-4 drop-shadow-lg  hover:bg-slate-100 hover:shadow-2xl "
+                >
+                  <Link to={`/course/${course?._id}`}>
+                    <div className=" p-3 h-full  flex w-full">
+                      {" "}
+                      <img
+                        className="w-32 h-32"
+                        src={course?.thumbnail}
+                        alt="thumbnail"
+                      />
+                      <div className="mx-2">
+                        <div className="text-lg font-semibold">
+                          {course?.courseName}
+                        </div>
+                        <p className="pt-3  max-w-full line-clamp-2">
+                          {course?.caption}
+                        </p>
+                        <p className="pt-3 text-lg text-blue-600 font-semibold">
+                          Price: {course?.price} ₹
+                        </p>
 
+                        <div className=" flex justify-between items-center ">
+                          {course.averageRating > 0 && (
+                            <div className=" flex justify-center items-center">
+                              <p className="  font-medium text-base text-black-800">
+                                {course.averageRating}
+                              </p>
+                              <div className="text-lg text-amber-500"> ★ </div>
+                              <div className="text-base text-black">rating</div>
+                            </div>
+                          )}
+                          <div className="text-base font-medium  text-blue-800 ">
+                            {course?.videos.length} videos
+                          </div>
+                          {userInfo && (
+                            <div className="text-sm">
+                              {" "}
+                              <HeartComponent courseId={course._id} />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              )
+          )}
+      </div>
       {Array.isArray(latestCourses) && latestCourses?.length > 0 && (
         <div className="font-serif text-2xl flex justify-center ">
           Latest Courses
@@ -295,10 +353,12 @@ const HomePage = () => {
                       <div className="text-base font-medium text-blue-800">
                         {course?.videos.length} videos
                       </div>
-                      <div className="text-sm">
-                        {" "}
-                        <HeartComponent courseId={course._id} />
-                      </div>
+                      {userInfo && (
+                        <div className="text-sm">
+                          {" "}
+                          <HeartComponent courseId={course._id} />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

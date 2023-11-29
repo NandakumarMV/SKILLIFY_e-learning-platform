@@ -35,6 +35,9 @@ import WishList from "./components/userComponents/WishList.jsx";
 import EmailVerificationPage from "./components/userComponents/EmailVerificationPage.jsx";
 import OtpPage from "./components/userComponents/OtpPage.jsx";
 import ResetPasswordPage from "./components/userComponents/ResetPasswordPage.jsx";
+import TutorView from "./components/userComponents/TutorView.jsx";
+import Messages from "./components/userComponents/Messages.jsx";
+import TutorMessages from "./components/tutorComponents/TutorMessages.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -57,7 +60,8 @@ const router = createBrowserRouter(
       <Route path="/enter-email" element={<EmailVerificationPage />} />
       <Route path="/otp/:email" element={<OtpPage />} />
       <Route path="/reset-password/:email" element={<ResetPasswordPage />} />
-
+      <Route path="/tutor-profile/:tutorId" element={<TutorView />} />
+      <Route path="/user-messages/:chatId" element={<Messages />} />
       {/************Admin side routes ***************/}
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="" element={<AdminPrivateRoute />}>
@@ -72,6 +76,7 @@ const router = createBrowserRouter(
       <Route path="/tutor/add-course" element={<AddCourse />} />
       <Route path="/tutor/profile" element={<TutorProfile />} />
       <Route path="/tutor/courses" element={<AllCoursesPage />} />
+      <Route path="/tutor/messages" element={<TutorMessages />} />
     </Route>
   )
 );
