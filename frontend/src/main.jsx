@@ -38,6 +38,7 @@ import ResetPasswordPage from "./components/userComponents/ResetPasswordPage.jsx
 import TutorView from "./components/userComponents/TutorView.jsx";
 import Messages from "./components/userComponents/Messages.jsx";
 import TutorMessages from "./components/tutorComponents/TutorMessages.jsx";
+import LiveStream from "./components/LiveStream.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -62,6 +63,7 @@ const router = createBrowserRouter(
       <Route path="/reset-password/:email" element={<ResetPasswordPage />} />
       <Route path="/tutor-profile/:tutorId" element={<TutorView />} />
       <Route path="/user-messages/:chatId" element={<Messages />} />
+      <Route path="/get-live/:randomId" element={<LiveStream />} />
       {/************Admin side routes ***************/}
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="" element={<AdminPrivateRoute />}>

@@ -16,6 +16,7 @@ import {
   videoDelete,
   courseDelete,
   editVideo,
+  createLive,
 } from "../controllers/tutorController.js";
 import {
   chatSend,
@@ -68,5 +69,7 @@ router.get("/get-tutor-rooms/:tutor", getTutorRooms);
 router.post("/send-message", chatSend);
 
 router.get("/get-room-messages/:roomid", getMessages);
+
+router.post("/create-live", protect("tutor"), createLive);
 
 export default router;

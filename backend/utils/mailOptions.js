@@ -34,7 +34,7 @@ export const configureMailOptions = (email, otp, subject) => {
       <body>
         <div class="header">Skillify E-learning</div>
         <div class="content">
-          Your OTP for ${subject} is: ${otp}
+          ${subject} is: ${otp}
         </div>
       </body>
     </html>

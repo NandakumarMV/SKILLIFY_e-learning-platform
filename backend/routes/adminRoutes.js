@@ -17,6 +17,7 @@ import {
   allCourses,
   approveCourse,
   rejectCourse,
+  totalRevenue,
 } from "../controllers/adminController.js";
 
 router.post("/", authAdmin);
@@ -36,5 +37,7 @@ router.get("/get-courses", protect("admin"), allCourses);
 
 router.post("/approve-course", protect("admin"), approveCourse);
 router.post("/reject-course", protect("admin"), rejectCourse);
+
+router.get("/total-revenue", totalRevenue);
 
 export default router;

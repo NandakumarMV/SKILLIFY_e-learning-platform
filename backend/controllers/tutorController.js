@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Tutor from "../models/tutorModel.js";
+import User from "../models/userModel.js";
 import generateToken from "../utils/genJwtToken.js";
 import { s3 } from "../config/s3BucketConfig.js";
 import {
@@ -12,6 +13,10 @@ import crypto from "crypto";
 import Domain from "../models/domainModel.js";
 import Courses from "../models/courseModel.js";
 import { log } from "console";
+import Live from "../models/liveModel.js";
+import { configureMailOptions, generateOtp } from "../utils/mailOptions.js";
+import Orders from "../models/orderModel.js";
+import transporter from "../utils/nodemailTransporter.js";
 const randomImgName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
 
 const authTutor = asyncHandler(async (req, res) => {
@@ -395,6 +400,71 @@ const editVideo = asyncHandler(async (req, res) => {
       .json({ success: false, message: "Course not found" });
   }
 });
+
+const createLive = asyncHandler(async (req, res) => {
+  const { courseId, tutorId, liveName } = req.body;
+
+  try {
+    const tutor = await Tutor.findById(tutorId);
+    let lives = await Live.findOne({ tutor: tutorId });
+
+    if (!lives) {
+      // If no live session exists for the tutor, create a new Live document
+      lives = new Live({
+        tutor: tutorId,
+        lives: [],
+      });
+    }
+
+    const randomId = generateOtp(6);
+
+    const newLive = {
+      course: courseId,
+      title: liveName,
+      randomId,
+      date: new Date(),
+    };
+
+    // Add the newLive to the lives array
+    lives.lives.push(newLive);
+
+    // Save the updated or newly created lives document
+    const liveCreated = await lives.save();
+    if (liveCreated) {
+      const orders = await Orders.find({
+        "purchasedCourses.courseId": courseId,
+      });
+
+      // Extract user IDs from the orders
+      const userIds = orders.map((order) => order.userId);
+
+      // Find user documents with the extracted user IDs
+      const users = await User.find({ _id: { $in: userIds } });
+
+      // Extract email addresses from user documents
+      const emails = users.map((user) => user.email);
+      console.log(emails);
+      const subject = `Click on the Link to join the Live Class of ${tutor?.name.toUpperCase()} in ${liveName}`;
+      const otp = `http://localhost:3000/get-live/${randomId}`;
+      for (const email of emails) {
+        const mailOptions = configureMailOptions(email, otp, subject);
+        transporter.sendMail(mailOptions, async (error, info) => {
+          if (error) {
+            console.error(error);
+            throw new Error("error sending otp");
+          }
+        });
+      }
+    }
+
+    res.status(201).json({ success: true, data: newLive });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+export default createLive;
+
 export {
   registerTutor,
   getTutorProfile,
@@ -407,4 +477,5 @@ export {
   videoDelete,
   courseDelete,
   editVideo,
+  createLive,
 };

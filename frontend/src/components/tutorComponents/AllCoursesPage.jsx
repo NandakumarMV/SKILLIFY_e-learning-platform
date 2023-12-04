@@ -15,6 +15,8 @@ import { BsClockHistory } from "react-icons/bs";
 import PaginationComponent from "../PaginationComponent.jsx";
 import EditVideoModal from "./EditVideoModal.jsx";
 import { IoSearchSharp } from "react-icons/io5";
+import { useSelector } from "react-redux";
+import AddLiveModal from "./AddLiveModal.jsx";
 
 const AllCoursesPage = () => {
   const [courses, setCourses] = useState([]);
@@ -63,6 +65,7 @@ const AllCoursesPage = () => {
     setIsModalOpen(true);
   };
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isLiveModalOpen, setIsLiveModalOpen] = useState(false);
   const [currentVideoId, setCurrentVideoId] = useState(null);
   const [videoName, setVideoName] = useState(null);
 
@@ -72,6 +75,14 @@ const AllCoursesPage = () => {
     setCurrentCourseId(courseId);
     setIsEditModalOpen(true);
   };
+
+  const { tutorInfo } = useSelector((state) => state.tutorAuth);
+  console.log(tutorInfo, "yyyyyyyyyyy");
+  const openLiveModal = (courseId) => {
+    setCurrentCourseId(courseId);
+    setIsLiveModalOpen(true);
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -219,6 +230,17 @@ const AllCoursesPage = () => {
                       isOpen={isModalOpen}
                       onClose={closeModal}
                       courseId={currentCourseId}
+                    />
+                    <button
+                      className="bg-blue-300 p-1 text-sm font-medium"
+                      onClick={() => openLiveModal(course._id)}
+                    >
+                      Go Live !
+                    </button>
+                    <AddLiveModal
+                      isOpen={isLiveModalOpen}
+                      courseId={currentCourseId}
+                      tutorId={tutorInfo._id}
                     />
                   </div>
 

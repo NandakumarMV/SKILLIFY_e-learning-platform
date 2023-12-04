@@ -527,7 +527,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: email });
 
   if (user) {
-    const subject = " Resetting Password";
+    const subject = " Your OTP for Verification";
     const otp = generateOtp(6);
     const mailOptions = configureMailOptions(email, otp, subject);
     transporter.sendMail(mailOptions, async (error, info) => {

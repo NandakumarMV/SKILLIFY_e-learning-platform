@@ -97,6 +97,13 @@ export const tutorApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    createLive: builder.mutation({
+      query: (data) => ({
+        url: `${TUTOR_URL}/create-live`,
+        method: "post",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -115,4 +122,5 @@ export const {
   useSendTutorMessageMutation,
   useGetTutorRoomsMutation,
   useGetAllUsersMutation,
+  useCreateLiveMutation,
 } = tutorApiSlice;

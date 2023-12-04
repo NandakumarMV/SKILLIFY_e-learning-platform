@@ -25,12 +25,13 @@ const WishList = () => {
   const wishlistgetting = async () => {
     try {
       const res = await getAllWishlist().unwrap();
+      console.log(res, "gjhgjjhg");
+      await dispatch(addWishlist(res));
       const inclusionStatus = res.reduce((acc, course) => {
         acc[course.course._id] = true;
         return acc;
       }, {});
       setCourseInclusion(inclusionStatus);
-      await dispatch(addWishlist(res));
     } catch (error) {
       if (error.status === 403) {
         dispatch(logout());
@@ -43,6 +44,7 @@ const WishList = () => {
     wishlistgetting();
   }, []);
   const wishlistCourses = useSelector((state) => state.courses.wishlist);
+  console.log(wishlistCourses);
   const [currentPage, setCurrentPage] = useState(1);
   const coursesPerPage = 3;
 
@@ -71,8 +73,8 @@ const WishList = () => {
         {wishlistCourses && wishlistCourses?.length > 0 ? (
           <>
             <div className="flex flex-wrap justify-evenly items-center">
-              {currentCourses.map((course) => (
-                <div key={course.course._id}>
+              {currentCourses.map((course, index) => (
+                <div key={course.course._id || index}>
                   <Link to={`/course/${course.course._id}`}>
                     <div className=" mb-4 hover:shadow-2xl">
                       <div className="p-4 shadow-md w-full">

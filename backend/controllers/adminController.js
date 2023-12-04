@@ -5,6 +5,7 @@ import User from "../models/userModel.js";
 import Tutor from "../models/tutorModel.js";
 import Domain from "../models/domainModel.js";
 import Courses from "../models/courseModel.js";
+import Orders from "../models/orderModel.js";
 
 const authAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -178,6 +179,48 @@ const rejectCourse = asyncHandler(async (req, res) => {
     res.status(404).json({ Error: "Course not found" });
   }
 });
+const totalRevenue = asyncHandler(async (req, res) => {
+  try {
+    // Calculate total revenue
+    const result = await Orders.aggregate([
+      {
+        $unwind: "$purchasedCourses", // Deconstruct the array
+      },
+      {
+        $group: {
+          _id: null,
+          totalPrice: { $sum: "$purchasedCourses.price" }, // Calculate the sum
+        },
+      },
+    ]);
+
+    // The result will be an array with one element containing the total price
+    const total = result.length > 0 ? result[0].totalPrice : 0;
+
+    // Calculate tutor share and site share
+    const tutorShare = 0.7 * total;
+    const siteShare = 0.3 * total;
+
+    // Send the shares and status in the response
+    res.status(200).json({
+      success: true,
+      data: {
+        total,
+        tutorShare,
+        siteShare,
+      },
+      message: "Total revenue and shares calculated successfully.",
+    });
+  } catch (error) {
+    // Handle any errors that occurred during the calculation
+    console.error("Error calculating total revenue:", error);
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+    });
+  }
+});
+
 export {
   authAdmin,
   logoutAdmin,
@@ -194,4 +237,5 @@ export {
   allCourses,
   approveCourse,
   rejectCourse,
+  totalRevenue,
 };

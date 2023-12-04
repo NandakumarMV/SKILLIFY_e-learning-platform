@@ -10,9 +10,10 @@ const SearchBarComponent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const courses = useSelector((state) => state.courses.courses);
-  if (courses?.length > 0) {
+  let courseNames = [];
+  if (Array.isArray(courses)) {
+    courseNames = courses?.map((course) => course.courseName) || [];
   }
-  // const courseNames = courses?.map((course) => course.courseName) || [];
 
   const domains = useSelector((state) => state.domains.domains);
 
@@ -20,7 +21,7 @@ const SearchBarComponent = () => {
   console.log(courses);
 
   useEffect(() => {
-    const suggest = [...domains];
+    const suggest = [...domains, ...courseNames];
     console.log(suggest, "suggest");
     if (searchTerm && searchTerm.trim() !== "") {
       const filteredSuggestions = suggest.filter((courseName) =>

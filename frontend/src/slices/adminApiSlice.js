@@ -73,6 +73,12 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: "delete",
       }),
     }),
+    getRevenue: builder.mutation({
+      query: () => ({
+        url: `${ADMIN_URL}/total-revenue`,
+        method: "get",
+      }),
+    }),
   }),
 });
 
@@ -87,4 +93,5 @@ export const {
   useDeleteDomainMutation,
   useApproveCourseMutation,
   useRejectCourseMutation,
+  useGetRevenueMutation,
 } = adminApiSlice;

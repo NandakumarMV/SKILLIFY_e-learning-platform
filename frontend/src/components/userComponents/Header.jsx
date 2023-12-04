@@ -8,6 +8,7 @@ import SearchBarComponent from "./SearchBarComponent";
 import { useTutorlogoutMutation } from "../../slices/tutorApiSlice";
 import { tutorLogout } from "../../slices/tutorAuthSlice";
 import TutorDropdown from "../tutorComponents/TutorDropdown";
+import { useLocation } from "react-router-dom";
 
 const Header = ({ isLoginTutor }) => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -26,7 +27,8 @@ const Header = ({ isLoginTutor }) => {
       console.log(error);
     }
   };
-
+  const location = useLocation();
+  const isWishlistRoute = location.pathname === "/wishlist";
   return (
     <header className="relative w-screen  drop-shadow-lg z-30">
       <div className="bg-white-500 p-4 sm:p-2  bg-slate-50">
@@ -54,7 +56,7 @@ const Header = ({ isLoginTutor }) => {
                 ) : null}
               </div>
             </div>
-            {userInfo && !isLoginTutor && (
+            {userInfo && !isLoginTutor && !isWishlistRoute && (
               <div>
                 <SearchBarComponent />
               </div>
