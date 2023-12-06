@@ -13,8 +13,8 @@ import Footer from "../userComponents/Footer";
 import DashBoard from "./DashBoard";
 
 const AdminHeader = () => {
-  const [content, setContent] = useState("domain");
-  const [activeMenuItem, setActiveMenuItem] = useState("domain");
+  const [content, setContent] = useState("Dashboard");
+  const [activeMenuItem, setActiveMenuItem] = useState("Dashboard");
 
   const [logout] = useAdminLogoutMutation();
 
@@ -103,25 +103,16 @@ const AdminHeader = () => {
                 >
                   Logout
                 </li>{" "}
-                <li
-                  className={`py-2 hover:bg-gray-700 block pl-4  ${
-                    activeMenuItem === "dashboard2" ? "bg-gray-700" : ""
-                  }`}
-                  onClick={() => changeContent("dashboard2")}
-                >
-                  dashboard2
-                </li>
               </ul>
             </div>
           </div>
           <div className="w-4/5 bg-gray-200 ">
             <div className="p-4">
-              {content === "Dashboard" && <AdminHomePage content={content} />}
+              {content === "Dashboard" && <DashBoard />}
               {content === "users" && <UsersList />}
               {content === "tutors" && <TutorList />}
               {content === "domain" && <DomainList />}
               {content === "courses" && <CourseList />}
-              {content === "dashboard2" && <DashBoard />}
             </div>
           </div>
         </div>

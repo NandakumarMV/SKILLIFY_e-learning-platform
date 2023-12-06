@@ -39,6 +39,7 @@ import TutorView from "./components/userComponents/TutorView.jsx";
 import Messages from "./components/userComponents/Messages.jsx";
 import TutorMessages from "./components/tutorComponents/TutorMessages.jsx";
 import LiveStream from "./components/LiveStream.jsx";
+import TutorDashboard from "./components/tutorComponents/TutorDashboard.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -79,6 +80,7 @@ const router = createBrowserRouter(
       <Route path="/tutor/profile" element={<TutorProfile />} />
       <Route path="/tutor/courses" element={<AllCoursesPage />} />
       <Route path="/tutor/messages" element={<TutorMessages />} />
+      <Route path="/tutor/dashboard" element={<TutorDashboard />} />
     </Route>
   )
 );

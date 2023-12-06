@@ -18,6 +18,11 @@ import {
   approveCourse,
   rejectCourse,
   totalRevenue,
+  getCounts,
+  getCourseCountPerDomain,
+  getCoursePurchaseData,
+  getTotalSalesPerMonth,
+  getTotalSalesPerWeek,
 } from "../controllers/adminController.js";
 
 router.post("/", authAdmin);
@@ -39,5 +44,15 @@ router.post("/approve-course", protect("admin"), approveCourse);
 router.post("/reject-course", protect("admin"), rejectCourse);
 
 router.get("/total-revenue", totalRevenue);
+
+router.get("/total-counts", getCounts);
+
+router.get("/domains-per-courses", getCourseCountPerDomain);
+
+router.get("/purchase-counts", getCoursePurchaseData);
+
+router.get("/yearly-sales", getTotalSalesPerMonth);
+
+router.get("/weekly-sales", getTotalSalesPerWeek);
 
 export default router;

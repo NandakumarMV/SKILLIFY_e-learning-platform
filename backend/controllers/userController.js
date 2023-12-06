@@ -305,7 +305,13 @@ const razorpayPayment = asyncHandler(async (req, res) => {
         });
       }
 
-      order.purchasedCourses.push({ tutorId, courseId, price });
+      const currentDate = new Date();
+      order.purchasedCourses.push({
+        tutorId,
+        courseId,
+        price,
+        date: currentDate,
+      });
 
       await order.save();
       await Courses.updateOne(
@@ -322,6 +328,7 @@ const razorpayPayment = asyncHandler(async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
 const getMyCourses = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 

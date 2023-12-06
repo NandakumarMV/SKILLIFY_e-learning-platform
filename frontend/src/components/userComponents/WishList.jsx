@@ -42,8 +42,18 @@ const WishList = () => {
 
   useEffect(() => {
     wishlistgetting();
-  }, []);
+  }, []); // Add an empty dependency array to make sure it runs only once after initial render
   const wishlistCourses = useSelector((state) => state.courses.wishlist);
+
+  useEffect(() => {
+    // Update the courseInclusion state whenever wishlistCourses changes
+    const inclusionStatus = wishlistCourses.reduce((acc, course) => {
+      acc[course.course._id] = true;
+      return acc;
+    }, {});
+    setCourseInclusion(inclusionStatus);
+  }, [wishlistCourses]);
+
   console.log(wishlistCourses);
   const [currentPage, setCurrentPage] = useState(1);
   const coursesPerPage = 3;

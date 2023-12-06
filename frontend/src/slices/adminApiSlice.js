@@ -79,6 +79,36 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: "get",
       }),
     }),
+    getCounts: builder.mutation({
+      query: () => ({
+        url: `${ADMIN_URL}/total-counts`,
+        method: "get",
+      }),
+    }),
+    getcoursesPerDomain: builder.mutation({
+      query: () => ({
+        url: `${ADMIN_URL}/domains-per-courses`,
+        method: "get",
+      }),
+    }),
+    getCoursePurchaseData: builder.mutation({
+      query: () => ({
+        url: `${ADMIN_URL}/purchase-counts`,
+        method: "get",
+      }),
+    }),
+    getYearlysales: builder.mutation({
+      query: () => ({
+        url: `${ADMIN_URL}/yearly-sales`,
+        method: "get",
+      }),
+    }),
+    getWeeklysales: builder.mutation({
+      query: () => ({
+        url: `${ADMIN_URL}/weekly-sales`,
+        method: "get",
+      }),
+    }),
   }),
 });
 
@@ -94,4 +124,9 @@ export const {
   useApproveCourseMutation,
   useRejectCourseMutation,
   useGetRevenueMutation,
+  useGetCountsMutation,
+  useGetcoursesPerDomainMutation,
+  useGetCoursePurchaseDataMutation,
+  useGetYearlysalesMutation,
+  useGetWeeklysalesMutation,
 } = adminApiSlice;

@@ -104,6 +104,18 @@ export const tutorApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getTutorCounts: builder.mutation({
+      query: () => ({
+        url: `${TUTOR_URL}/course-user-counts`,
+        method: "get",
+      }),
+    }),
+    getTutorSalesCounts: builder.mutation({
+      query: () => ({
+        url: `${TUTOR_URL}/course-sales-counts`,
+        method: "get",
+      }),
+    }),
   }),
 });
 
@@ -123,4 +135,6 @@ export const {
   useGetTutorRoomsMutation,
   useGetAllUsersMutation,
   useCreateLiveMutation,
+  useGetTutorCountsMutation,
+  useGetTutorSalesCountsMutation,
 } = tutorApiSlice;

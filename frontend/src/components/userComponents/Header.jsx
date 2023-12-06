@@ -77,7 +77,7 @@ const Header = ({ isLoginTutor }) => {
                         <Link to="/tutor/messages">Messages</Link>
                       </li>
                       <li className="text-sm sm:text-base">
-                        <a href="">Dashboard</a>
+                        <Link to="/tutor/dashboard">Dashboard</Link>
                       </li>
                       <li className="">
                         <TutorDropdown />

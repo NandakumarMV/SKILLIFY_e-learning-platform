@@ -462,8 +462,151 @@ const createLive = asyncHandler(async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+const tutorCounts = asyncHandler(async (req, res) => {
+  try {
+    const tutor = req.tutor._id;
 
-export default createLive;
+    // Find all courses by the tutor
+    const tutorCourses = await Courses.find({ tutorId: tutor });
+
+    // Get the course IDs for the tutor
+    const courseIds = tutorCourses.map((course) => course._id);
+
+    // Use aggregation to count the number of purchases and calculate total revenue for each course
+    const coursePurchaseCounts = await Orders.aggregate([
+      {
+        $match: {
+          "purchasedCourses.courseId": { $in: courseIds },
+        },
+      },
+      {
+        $unwind: "$purchasedCourses",
+      },
+      {
+        $match: {
+          "purchasedCourses.courseId": { $in: courseIds },
+        },
+      },
+      {
+        $group: {
+          _id: "$purchasedCourses.courseId",
+          purchaseCount: { $sum: 1 },
+          totalRevenue: { $sum: "$purchasedCourses.price" },
+          uniqueUsers: { $addToSet: "$userId" },
+        },
+      },
+    ]);
+
+    const totalCourses = tutorCourses.length;
+    const totalUniqueUsers = coursePurchaseCounts.reduce(
+      (acc, course) => acc.concat(course.uniqueUsers),
+      []
+    );
+
+    const totalRevenue = coursePurchaseCounts.reduce(
+      (total, course) => total + course.totalRevenue,
+      0
+    );
+
+    // Calculate tutor's revenue (70% of total revenue)
+    const tutorRevenue = 0.7 * totalRevenue;
+    const siteShare = totalRevenue - tutorRevenue;
+    const result = {
+      totalCourses,
+      totalUniqueUsers: totalUniqueUsers.length,
+      totalRevenue,
+      tutorRevenue,
+      siteShare,
+      coursePurchaseCounts,
+    };
+
+    res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    console.error("Error fetching tutor counts:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+const tutorCouresCounts = asyncHandler(async (req, res) => {
+  try {
+    const tutor = req.tutor._id;
+
+    // Find all courses by the tutor
+    const tutorCourses = await Courses.find({ tutorId: tutor });
+
+    // Get the course IDs for the tutor
+    const courseIds = tutorCourses.map((course) => course._id);
+
+    // Use aggregation to count the number of purchases and calculate total revenue for each course
+    const coursePurchaseCounts = await Orders.aggregate([
+      {
+        $match: {
+          "purchasedCourses.courseId": { $in: courseIds },
+        },
+      },
+      {
+        $unwind: "$purchasedCourses",
+      },
+      {
+        $match: {
+          "purchasedCourses.courseId": { $in: courseIds },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            courseId: "$purchasedCourses.courseId",
+          },
+          purchaseCount: { $sum: 1 },
+          totalSales: { $sum: "$purchasedCourses.price" },
+          uniqueUsers: { $addToSet: "$userId" },
+        },
+      },
+    ]);
+
+    // Map the results to each course
+    const courseSales = {};
+    coursePurchaseCounts.forEach((result) => {
+      const courseId = result._id.courseId.toString();
+      courseSales[courseId] = {
+        purchaseCount: result.purchaseCount,
+        totalSales: result.totalSales,
+        uniqueUsers: result.uniqueUsers.length,
+      };
+    });
+
+    // Iterate through each tutor course to include all courses in the response
+    const allCourses = tutorCourses.map((course) => {
+      const courseIdString = course._id.toString();
+      const salesData = courseSales[courseIdString] || {
+        purchaseCount: 0,
+        totalSales: 0,
+        uniqueUsers: 0,
+      };
+      return {
+        courseId: courseIdString,
+        courseName: course.courseName,
+        purchaseCount: salesData.purchaseCount,
+        totalSales: salesData.totalSales,
+        uniqueUsers: salesData.uniqueUsers,
+      };
+    });
+
+    const result = {
+      totalCourses: tutorCourses.length,
+      totalUniqueUsers: coursePurchaseCounts.reduce(
+        (acc, course) => acc.concat(course.uniqueUsers),
+        []
+      ).length,
+      courseSales: allCourses,
+    };
+
+    console.log(result, "result of counts");
+    res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    console.error("Error fetching tutor counts:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
 
 export {
   registerTutor,
@@ -478,4 +621,6 @@ export {
   courseDelete,
   editVideo,
   createLive,
+  tutorCounts,
+  tutorCouresCounts,
 };
