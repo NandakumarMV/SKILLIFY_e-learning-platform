@@ -6,12 +6,10 @@ import generateUrl from "../utils/generateS3Url.js";
 const createRoom = asyncHandler(async (req, res) => {
   try {
     const { userId, tutorId } = req.body;
-    // console.log(userId, tutorId);
     let chatRoom = await ChatRoom.findOne({
       user: userId,
       tutor: tutorId,
     });
-    // console.log(chatRoom, "chate room");
     if (!chatRoom) {
       chatRoom = new ChatRoom({
         user: userId,
@@ -25,11 +23,9 @@ const createRoom = asyncHandler(async (req, res) => {
       path: "tutor",
       select: "_id name email tutorImageName",
     });
-    // console.log(roomDetails, "llllllllllllllll");
     const signedUrl = await generateUrl(roomDetails.tutor.tutorImageName);
     const roomDetail = roomDetails.toObject();
     roomDetail.tutor.signedUrl = signedUrl;
-    // console.log(roomDetail, "roomdetailsssssssssss");
     res.status(200).json(roomDetail);
   } catch (error) {
     console.log(error);
@@ -39,7 +35,6 @@ const createRoom = asyncHandler(async (req, res) => {
 const createTutorRoom = asyncHandler(async (req, res) => {
   try {
     const { userId, tutorId } = req.body;
-    // console.log(userId, tutorId, "create Tutor Room");
     let chatRoom = await ChatRoom.findOne({
       user: userId,
       tutor: tutorId,
@@ -57,13 +52,11 @@ const createTutorRoom = asyncHandler(async (req, res) => {
       path: "user",
       select: "_id name email userImageName",
     });
-    console.log(roomDetails, "roomDetails");
     let signedUrl;
 
     if (roomDetails.user && roomDetails.user.userImageName) {
       signedUrl = await generateUrl(roomDetails.user.userImageName);
     }
-    console.log(signedUrl, "signed url");
     // Assign the result of toObject() back to roomDetails
     const roomDetail = roomDetails.toObject();
 
@@ -71,7 +64,6 @@ const createTutorRoom = asyncHandler(async (req, res) => {
     if (signedUrl) {
       roomDetail.user.signedUrl = signedUrl;
     }
-    console.log(roomDetail, "from create tutor room");
     res.status(200).json(roomDetail);
   } catch (error) {
     console.log(error);
@@ -80,7 +72,6 @@ const createTutorRoom = asyncHandler(async (req, res) => {
 });
 const getRooms = asyncHandler(async (req, res) => {
   const { userId } = req.params;
-  console.log(userId, "get rooms from ");
   const rooms = await ChatRoom.find({ user: userId }).populate({
     path: "tutor",
     select: "_id name email  tutorImageName",
@@ -91,7 +82,6 @@ const getRooms = asyncHandler(async (req, res) => {
       rooms.map(async (room) => {
         if (room.tutor && room.tutor.tutorImageName) {
           const url = await generateUrl(room.tutor.tutorImageName);
-          console.log(room, "from the map");
           return {
             ...room.toObject(),
 
@@ -105,7 +95,6 @@ const getRooms = asyncHandler(async (req, res) => {
         }
       })
     );
-    console.log(roomsWithUrls, "with url rooms");
     res.status(200).json(roomsWithUrls);
   } else {
     res.status(400).json({ message: "Failed to fetch rooms" });
@@ -114,7 +103,6 @@ const getRooms = asyncHandler(async (req, res) => {
 
 const chatSend = asyncHandler(async (req, res) => {
   const { content, chatid, sender, type } = req.body;
-  // console.log(content, chatid, sender, type, "from chat send");
   // Create a new chat message
   const newMessage = new ChatMessage({
     room: chatid,
@@ -145,18 +133,15 @@ const chatSend = asyncHandler(async (req, res) => {
       ],
     },
   ]);
-  // console.log(newMessage, "new msg from chat send");
   res.json(newMessage);
 });
 
 const getMessages = asyncHandler(async (req, res) => {
   const { roomid } = req.params;
-  // console.log(roomid, "from geet messahes");
   try {
     const messages = await ChatMessage.find({ room: roomid }).sort({
       createdAt: 1,
     });
-    // console.log(messages, "get messages");
     if (messages) {
       res.status(200).json(messages);
     } else {
@@ -171,7 +156,6 @@ const getMessages = asyncHandler(async (req, res) => {
 
 const getTutorRooms = asyncHandler(async (req, res) => {
   const { tutor } = req.params;
-  // console.log(tutor, "get tutor rooms");
   const rooms = await ChatRoom.find({ tutor: tutor }).populate({
     path: "user",
     select: "_id name email userImageName",
@@ -194,7 +178,6 @@ const getTutorRooms = asyncHandler(async (req, res) => {
         }
       })
     );
-    // console.log(roomsWithUrls, "room urls in get tutor rooms");
     res.status(200).json(roomsWithUrls);
   } else {
     res.status(400).json({ message: "Failed to fetch rooms" });

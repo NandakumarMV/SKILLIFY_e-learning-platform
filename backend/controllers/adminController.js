@@ -326,7 +326,7 @@ const getTotalSalesPerMonth = asyncHandler(async (req, res) => {
         },
       },
     ]);
-    console.log(result);
+
     res.status(200).json({
       success: true,
       data: result,
@@ -388,7 +388,6 @@ const getTotalSalesPerWeek = asyncHandler(async (req, res) => {
         },
       },
     ]);
-    console.log(result, "result of weekly sales");
     res.status(200).json({
       success: true,
       data: result,

@@ -125,7 +125,6 @@ const TutorMessages = () => {
     } else {
     }
   };
-  console.log(messages, "set megasdfsdfsdf");
   const getTrainerRoom = async (tutorId, userId) => {
     try {
       const res = await getIndividualRoom({ tutorId, userId }).unwrap();
@@ -134,7 +133,6 @@ const TutorMessages = () => {
       console.log(err);
     }
   };
-  console.log(individual, "individual");
   const typingHandler = (e) => {
     setContent(e.target.value);
     if (!socketConnected) return;

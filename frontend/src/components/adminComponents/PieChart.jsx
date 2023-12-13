@@ -6,7 +6,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChart = ({ data }) => {
   const { total, tutorShare, siteShare } = data;
-  console.log(total, tutorShare, siteShare);
   const chartData = {
     labels: ["Tutor Share", "Site Share"],
     datasets: [

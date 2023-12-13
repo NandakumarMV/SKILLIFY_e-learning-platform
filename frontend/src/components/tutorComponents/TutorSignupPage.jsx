@@ -24,46 +24,40 @@ const TutorSignupPage = () => {
       navigate("/tutor/home");
     }
   }, [navigate, tutorInfo]);
-  // const handleFileChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     // console.log(file, "kkkkkkkkkkkkkkkk");
-  //     setQualificationsPdf(file);
-  //   }
-  // };
+
   const sumbmitHandler = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setError("Password not matching");
     } else {
-      // if (
-      //   !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
-      //     password
-      //   )
-      // ) {
-      //   setPasswordError(
-      //     "Password must contain at least 8 characters,  one number, and one special character"
-      //   );
-      // } else {
-      try {
-        const res = await tutorRegister({
-          name,
-          email,
-          password,
-          // qualificationsPdf,
-          qualifications,
-          experience,
-        }).unwrap();
-        dispatch(
-          setTutorCredentials({
-            ...res,
-          })
+      if (
+        !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+          password
+        )
+      ) {
+        setPasswordError(
+          "Password must contain at least 8 characters,  one number, and one special character"
         );
-        navigate("/tutor/home");
-      } catch (error) {
-        setError(err?.data?.message || err.error);
+      } else {
+        try {
+          const res = await tutorRegister({
+            name,
+            email,
+            password,
+
+            qualifications,
+            experience,
+          }).unwrap();
+          dispatch(
+            setTutorCredentials({
+              ...res,
+            })
+          );
+          navigate("/tutor/home");
+        } catch (error) {
+          setError(err?.data?.message || err.error);
+        }
       }
-      // }
     }
   };
   return (

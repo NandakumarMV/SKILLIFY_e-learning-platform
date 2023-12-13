@@ -79,15 +79,35 @@ const AddCourse = () => {
   const courseinfo = course.courses;
 
   const [addVideos, { isLoading }] = useAddVideoMutation();
+  const [priceError, setPriceError] = useState("");
 
+  const handlePrice = (e) => {
+    const inputPrice = e.target.value;
+    setPrice(inputPrice);
+
+    // Validate price
+    validatePrice(inputPrice);
+  };
+
+  const validatePrice = (value) => {
+    const parsedPrice = parseFloat(value);
+
+    if (isNaN(parsedPrice)) {
+      setPriceError("Please enter a valid number");
+    } else if (parsedPrice < 1000 || parsedPrice > 3000) {
+      setPriceError("Price must be between 1000 and 3000");
+    } else {
+      setPriceError("");
+    }
+  };
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
     setVideo(file);
   };
-  const handlePrevVideoChange=(e)=>{
-    const file=e.target.files[0]
-    setPrevVideo(file)
-  }
+  const handlePrevVideoChange = (e) => {
+    const file = e.target.files[0];
+    setPrevVideo(file);
+  };
   const handleclick = () => {
     navigate("/tutor/courses");
     window.location.reload();
@@ -332,7 +352,6 @@ const AddCourse = () => {
                       htmlFor="PreviewVideo"
                       className="text-black cursor-pointer text-sm"
                     >
-                    
                       <input
                         type="file"
                         id="previewVideo"
@@ -356,11 +375,16 @@ const AddCourse = () => {
                     type="number"
                     id="price"
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    onChange={handlePrice}
                     name="courseName"
                     className="w-full border border-gray-600 px-3 py-2"
-                    placeholder="Price"
+                    placeholder="Price between 1000 and 3000"
                   />
+                  {priceError && (
+                    <div className="text-red-500 text-right mt-2">
+                      {priceError}
+                    </div>
+                  )}
                 </div>
                 <div className="flex justify-center">
                   <button

@@ -43,7 +43,7 @@ export const configureMailOptions = (email, otp, subject) => {
   return {
     from: process.env.USER_EMAIL,
     to: email,
-    subject: "OTP Verification",
+    subject: "Email From SKILLIFY ",
     html: htmlContent,
   };
 };

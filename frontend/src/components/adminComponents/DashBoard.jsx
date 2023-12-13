@@ -39,7 +39,6 @@ const DashBoard = () => {
   };
   const getWeeklysales = async () => {
     const res = await weeklySales().unwrap();
-    console.log(res);
   };
   const TotalCount = async () => {
     const res = await getCounts().unwrap();

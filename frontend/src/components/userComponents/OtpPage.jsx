@@ -21,9 +21,6 @@ const OtpPage = () => {
     e.preventDefault();
     try {
       const res = await verifyOtp({ email, otp }).unwrap();
-      console.log(res, "resssssss");
-      console.log(location.state, "location.state");
-      console.log(location.state?.from, "location.state.from");
       if (location.state && location.state.from === "/signup") {
         setShowModal(true); // Show modal if previous route is /signup
       } else {

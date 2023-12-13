@@ -26,17 +26,15 @@ const SingleCourse = () => {
   const courses = useSelector((state) => state.courses.courses);
   const userId = useSelector((state) => state.auth.userInfo._id);
   const course = courses?.course;
-  console.log(course?.rating);
+
   useEffect(() => {
     if (course && course?.rating?.length > 0) {
       const userR = course.rating.find((r) => r.userId._id === userId);
-      console.log(userR, "trueeee");
       if (userR) {
         setRating(userR.rate);
       }
     }
   }, [course]);
-  console.log(rating, "rating");
 
   const handleStarClick = async (clickedRating) => {
     setRating(clickedRating);
@@ -50,8 +48,6 @@ const SingleCourse = () => {
       dispatch(setCourses(res));
     } catch (error) {
       if (error.status === 403) {
-      
-        
         dispatch(logout());
         navigate("/login");
       }

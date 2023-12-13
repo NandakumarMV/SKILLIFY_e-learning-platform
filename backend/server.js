@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
 dotenv.config();
 import cors from "cors";
 import connectDB from "./config/db.js";
@@ -15,8 +16,6 @@ const app = express();
 
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-app.use(express.static("backend/public"));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -25,8 +24,15 @@ app.use("/api", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/tutor", tutorRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
+if (process.env.NODE_ENV === "production") {
+  const __dirname = path.resolve();
+
+  app.use(express.static(path.join(__dirname, "frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  });
+}
 
 const server = app.listen(port, () =>
   console.log(`server started on port ${port}`)
@@ -44,12 +50,10 @@ io.on("connection", (socket) => {
   socket.on("setup", (userData) => {
     socket.join(userData._id);
     socket.emit("connected");
-    console.log("user joined", userData._id);
   });
 
   socket.on("join chat", (room) => {
     socket.join(room);
-    console.log("userjoined room", room);
   });
 
   socket.on("typing", (room) => socket.in(room).emit("typing"));
@@ -79,7 +83,9 @@ io.on("connection", (socket) => {
     }
   });
   socket.off("setup", () => {
-    console.log("USER DISCONNECTED");
     socket.leave(userData._id);
   });
 });
+
+app.use(errorHandler);
+app.use(notFound);

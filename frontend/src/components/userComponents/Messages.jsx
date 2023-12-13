@@ -85,7 +85,7 @@ const Messages = () => {
   const fetchRooms = async (userId) => {
     try {
       const res = await getRooms(userId).unwrap();
-      console.log(res, "res of rroommm");
+      res, "res of rroommm";
       setRooms(res);
     } catch (err) {
       if (err.status === 401) {
@@ -156,7 +156,6 @@ const Messages = () => {
       console.log(err);
     }
   };
-  console.log(rooms, "rooms");
   const VideoCallHandler = () => {
     navigate(`/user-roompage/${individual._id + "videocall"}`);
   };
@@ -180,38 +179,33 @@ const Messages = () => {
 
         <div className="text-blue-900 text-xl m-3">Messages</div>
         <div className="mx-8 h-full">
-          {rooms.map(
-            (room, index) => (
-              console.log(room, "mappinggg"),
-              (
-                <div
-                  onClick={() => getRoom(room.tutor?._id, userInfo._id)}
-                  key={index}
-                  className="flex items-center py-2 border-b-[1px] bg-slate-50  cursor-pointer "
-                >
-                  {room.tutor && room.tutor.imageUrl && (
-                    <img
-                      src={room.tutor.imageUrl}
-                      className="rounded-full w-16 h-16"
-                      width={60}
-                      height={60}
-                      alt="User Avatar"
-                    />
-                  )}
-                  <div className="ml-4 text-black">
-                    {room.tutor && room.tutor.imageUrl && (
-                      <>
-                        <h3 className="text-xl">{room.tutor.name}</h3>
-                        <p className="text-sm font-light text-gray-800">
-                          {room.tutor.email}
-                        </p>
-                      </>
-                    )}
-                  </div>
-                </div>
-              )
-            )
-          )}
+          {rooms.map((room, index) => (
+            <div
+              onClick={() => getRoom(room.tutor?._id, userInfo._id)}
+              key={index}
+              className="flex items-center py-2 border-b-[1px] bg-slate-50  cursor-pointer "
+            >
+              {room.tutor && room.tutor.imageUrl && (
+                <img
+                  src={room.tutor.imageUrl}
+                  className="rounded-full w-16 h-16"
+                  width={60}
+                  height={60}
+                  alt="User Avatar"
+                />
+              )}
+              <div className="ml-4 text-black">
+                {room.tutor && room.tutor.imageUrl && (
+                  <>
+                    <h3 className="text-xl">{room.tutor.name}</h3>
+                    <p className="text-sm font-light text-gray-800">
+                      {room.tutor.email}
+                    </p>
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -236,23 +230,18 @@ const Messages = () => {
               ref={messagesContainerRef}
             >
               <div className="h-[100px] px-10 py-14">
-                {messages?.map(
-                  (message, index) => (
-                    console.log(message.senderType),
-                    (
-                      <div
-                        key={index}
-                        className={`max-w-[45%] p-3 mb-6 rounded-b-xl bg-slate-300 rounded-tr-lg ${
-                          message.senderType === "User"
-                            ? "ml-auto bg-slate-300"
-                            : "bg-emerald-200"
-                        }`}
-                      >
-                        {message.content}
-                      </div>
-                    )
-                  )
-                )}
+                {messages?.map((message, index) => (
+                  <div
+                    key={index}
+                    className={`max-w-[45%] p-3 mb-6 rounded-b-xl bg-slate-300 rounded-tr-lg ${
+                      message.senderType === "User"
+                        ? "ml-auto bg-slate-300"
+                        : "bg-emerald-200"
+                    }`}
+                  >
+                    {message.content}
+                  </div>
+                ))}
                 {isTyping && (
                   <button className="text-white bg-slate-400 rounded-full w-20 mr-auto p-1">
                     typing...

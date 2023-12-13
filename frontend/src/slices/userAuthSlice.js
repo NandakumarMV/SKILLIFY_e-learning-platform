@@ -24,16 +24,13 @@ const authSlice = createSlice({
     },
     setBlocked: (state, action) => {
       const userId = action.payload;
-      console.log(userId, "from payload set lll block");
 
       state.users = state.users.map((user) =>
         user._id === userId ? { ...user, isBlocked: true } : user
       );
     },
     setUnBlocked: (state, action) => {
-      console.log(action.payload);
       const userId = action.payload;
-      console.log(userId, "from payload set un block");
       state.users = state.users.map((user) =>
         user._id === userId ? { ...user, isBlocked: false } : user
       );

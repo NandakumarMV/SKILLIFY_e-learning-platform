@@ -32,14 +32,12 @@ const TutorDashboard = () => {
     setTutorShare(res.data.tutorRevenue);
   };
 
-  console.log(pieData, siteShare, totalRevenue, tutorShare, "pie data is this");
   useEffect(() => {
     getTutorCounts();
     getCourseSales();
   }, []);
   useEffect(() => {
     setPieData({ totalRevenue, siteShare, tutorShare });
-    console.log(pieData, "pie data inside ");
   }, [totalRevenue, siteShare, tutorShare]);
   return (
     <div>

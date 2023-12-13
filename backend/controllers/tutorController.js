@@ -443,7 +443,6 @@ const createLive = asyncHandler(async (req, res) => {
 
       // Extract email addresses from user documents
       const emails = users.map((user) => user.email);
-      console.log(emails);
       const subject = `Click on the Link to join the Live Class of ${tutor?.name.toUpperCase()} in ${liveName}`;
       const otp = `http://localhost:3000/get-live/${randomId}`;
       for (const email of emails) {
@@ -600,7 +599,6 @@ const tutorCouresCounts = asyncHandler(async (req, res) => {
       courseSales: allCourses,
     };
 
-    console.log(result, "result of counts");
     res.status(200).json({ success: true, data: result });
   } catch (error) {
     console.error("Error fetching tutor counts:", error);

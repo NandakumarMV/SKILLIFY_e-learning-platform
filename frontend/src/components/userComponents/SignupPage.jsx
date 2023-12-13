@@ -30,28 +30,27 @@ const SignupPage = () => {
     if (password !== confirmPassword) {
       setError("Password not matching");
     } else {
-      // if (
-      //   !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
-      //     password
-      //   )
-      // ) {
-      //   setPasswordError(
-      //     "Password must contain at least 8 characters,  one number, and one special character"
-      //   );
-      // } else {
-      try {
-        const res = await register({ name, email, password }).unwrap();
-        console.log("fucking entered this shit");
-        dispatch(
-          setCredentials({
-            ...res,
-          })
+      if (
+        !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(
+          password
+        )
+      ) {
+        setPasswordError(
+          "Password must contain at least 8 characters,  one number, and one special character"
         );
-        navigate(`/otp/${email}`, { state: { from: "/signup" } });
-      } catch (error) {
-        setError(error?.data?.message || error.error);
+      } else {
+        try {
+          const res = await register({ name, email, password }).unwrap();
+          dispatch(
+            setCredentials({
+              ...res,
+            })
+          );
+          navigate(`/otp/${email}`, { state: { from: "/signup" } });
+        } catch (error) {
+          setError(error?.data?.message || error.error);
+        }
       }
-      // }
     }
   };
 
@@ -77,6 +76,7 @@ const SignupPage = () => {
               name="name"
               className="w-full border border-gray-600  px-3 py-2"
               placeholder="Enter your name"
+              required
             />
           </div>
           <div className="mb-4">
@@ -94,6 +94,7 @@ const SignupPage = () => {
               name="email"
               className="w-full border border-gray-600  px-3 py-2"
               placeholder="Enter your email"
+              required
             />
           </div>
           <div className="mb-4">
@@ -111,6 +112,7 @@ const SignupPage = () => {
               name="password"
               className="w-full border border-gray-600  px-3 py-2"
               placeholder="Enter your password"
+              required
             />
           </div>
           {passwordError && (
@@ -135,6 +137,7 @@ const SignupPage = () => {
               onChange={(e) => setConfrimPassword(e.target.value)}
               className="w-full border border-gray-600  px-3 py-2"
               placeholder="Confrim your password"
+              required
             />
           </div>
           <button

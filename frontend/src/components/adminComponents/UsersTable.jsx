@@ -12,7 +12,6 @@ import {
 } from "../../slices/userAuthSlice";
 
 const UsersTable = ({ users }) => {
-  console.log(users, "users");
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);

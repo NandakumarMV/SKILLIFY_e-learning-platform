@@ -383,7 +383,6 @@ const trackVideos = asyncHandler(async (req, res) => {
 const addCourseRating = asyncHandler(async (req, res) => {
   const { courseId, clickedRating } = req.body;
   const userId = req.user._id;
-  console.log(userId, "user");
   const newRating = {
     userId,
     rate: clickedRating,
@@ -403,9 +402,7 @@ const addCourseRating = asyncHandler(async (req, res) => {
       const userRatingIndex = course.rating.findIndex(
         (r) => String(r.userId._id) === String(userId)
       );
-      console.log(userRatingIndex);
       if (userRatingIndex !== -1) {
-        console.log("true ano");
         course.rating[userRatingIndex].rate = clickedRating;
       } else {
         course.rating.push(newRating);
@@ -479,21 +476,19 @@ const getWishlist = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const wishlist = await Wishlist.findOne({ userId });
 
-  if (wishlist) {
-    res.status(200).json(wishlist.wishlist);
+  if (wishlist && wishlist.length > 0) {
+    res.status(200).json(wishlist);
   } else {
-    res.status(400).json({ message: "wishlist is empty" });
+    res.status(204).end(); // Use 204 No Content when wishlist is empty
   }
 });
 const getAllWishlist = asyncHandler(async (req, res) => {
   try {
     const userId = req.user._id;
-    // console.log(userId);
     const wishlist = await Wishlist.findOne({ userId }).populate({
       path: "wishlist.course",
       populate: [{ path: "domain" }, { path: "tutorId" }],
     });
-    // console.log(wishlist, "get all wishlist");
     if (!wishlist) {
       res.status(400).json({ message: "Wishlist not found for the user" });
       return;
@@ -588,12 +583,10 @@ const resetPassword = asyncHandler(async (req, res) => {
 const getSuggestions = asyncHandler(async (req, res) => {
   const uniqueCourseNames = await Courses.distinct("courseName");
   const suggestions = uniqueCourseNames.map((courseName) => courseName);
-  console.log(suggestions);
   res.status(200).json({ suggestions });
 });
 const getTutorDetails = asyncHandler(async (req, res) => {
   const { tutorId } = req.params;
-  console.log(tutorId);
 
   const tutor = await Tutor.findById(tutorId);
 

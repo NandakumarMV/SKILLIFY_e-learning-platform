@@ -25,7 +25,6 @@ const WishList = () => {
   const wishlistgetting = async () => {
     try {
       const res = await getAllWishlist().unwrap();
-      console.log(res, "gjhgjjhg");
       await dispatch(addWishlist(res));
       const inclusionStatus = res.reduce((acc, course) => {
         acc[course.course._id] = true;
@@ -54,7 +53,6 @@ const WishList = () => {
     setCourseInclusion(inclusionStatus);
   }, [wishlistCourses]);
 
-  console.log(wishlistCourses);
   const [currentPage, setCurrentPage] = useState(1);
   const coursesPerPage = 3;
 

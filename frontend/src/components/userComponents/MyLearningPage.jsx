@@ -31,14 +31,17 @@ const MyLearningPage = () => {
   // const navigateHandler = async (courseId) => {};
 
   return (
-    <>
+    <div className="flex  flex-col  ">
       <div className="text-2xl font-semibold font-serif text-slate-800 mt-10 flex justify-center">
         My Courses
       </div>
       {courses.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 mb-10 mt-10">
+        <div className=" mb-10 mt-10">
           {courses.map((order) => (
-            <div key={order._id} className="flex justify-evenly ">
+            <div
+              key={order._id}
+              className="grid grid-cols-4 justify-center items-center gap-x-2 gap-y-2"
+            >
               {order.purchasedCourses.map((myCourse) => (
                 <Link to={`/course/${myCourse.courseId._id}`}>
                   <div
@@ -96,7 +99,7 @@ const MyLearningPage = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -26,12 +26,9 @@ const protect = (role = "user") => {
           req.tutor = await Tutor.findById(decoded.id).select("-password");
         } else {
           const user = await User.findById(decoded.id).select("-password");
-          // console.log(user, "user info");
           if (!user.isBlocked) {
-            // console.log("user not blocked");
             req.user = user;
           } else {
-            console.log("blocked");
             res.clearCookie("userJwt");
             res.status(403);
             throw new Error("User  have been blocked");

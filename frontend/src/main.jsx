@@ -40,6 +40,9 @@ import Messages from "./components/userComponents/Messages.jsx";
 import TutorMessages from "./components/tutorComponents/TutorMessages.jsx";
 import LiveStream from "./components/LiveStream.jsx";
 import TutorDashboard from "./components/tutorComponents/TutorDashboard.jsx";
+import UserPrivateRoute from "./components/userComponents/userPrivateRoute.jsx";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
+import ErrorPage from "./components/ErrorPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -53,18 +56,20 @@ const router = createBrowserRouter(
         errorElement={<UserLoginPage />}
       />
       <Route path="/signup" element={<SignupPage />} />
-      <Route path="/profile" element={<UserProfile />} />
-      <Route path="/course/:courseId" element={<SingleCourse />} />
-      <Route path="/order/:courseId" element={<OrderPage />} />
-      <Route path="/my-learning" element={<MyLearningPage />} />
       <Route path="/courses" element={<CoursesViewPage />} />
-      <Route path="/wishlist" element={<WishList />} />
-      <Route path="/enter-email" element={<EmailVerificationPage />} />
-      <Route path="/otp/:email" element={<OtpPage />} />
-      <Route path="/reset-password/:email" element={<ResetPasswordPage />} />
-      <Route path="/tutor-profile/:tutorId" element={<TutorView />} />
-      <Route path="/user-messages/:chatId" element={<Messages />} />
-      <Route path="/get-live/:randomId" element={<LiveStream />} />
+      <Route path="" element={<UserPrivateRoute />}>
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/course/:courseId" element={<SingleCourse />} />
+        <Route path="/order/:courseId" element={<OrderPage />} />
+        <Route path="/my-learning" element={<MyLearningPage />} />
+        <Route path="/wishlist" element={<WishList />} />
+        <Route path="/enter-email" element={<EmailVerificationPage />} />
+        <Route path="/otp/:email" element={<OtpPage />} />
+        <Route path="/reset-password/:email" element={<ResetPasswordPage />} />
+        <Route path="/tutor-profile/:tutorId" element={<TutorView />} />
+        <Route path="/user-messages/:chatId" element={<Messages />} />
+        <Route path="/get-live/:randomId" element={<LiveStream />} />
+      </Route>
       {/************Admin side routes ***************/}
       <Route path="/admin/login" element={<AdminLoginPage />} />
       <Route path="" element={<AdminPrivateRoute />}>
@@ -81,6 +86,7 @@ const router = createBrowserRouter(
       <Route path="/tutor/courses" element={<AllCoursesPage />} />
       <Route path="/tutor/messages" element={<TutorMessages />} />
       <Route path="/tutor/dashboard" element={<TutorDashboard />} />
+      <Route path="*" element={<ErrorPage />} />
     </Route>
   )
 );

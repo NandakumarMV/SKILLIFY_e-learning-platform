@@ -81,6 +81,7 @@ const UserLoginPage = () => {
               name="email"
               className="w-full border border-gray-600  px-3 py-2"
               placeholder="Enter your email"
+              required
             />
           </div>
           <div className="mb-4">
@@ -98,6 +99,7 @@ const UserLoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full border border-gray-600  px-3 py-2"
               placeholder="Enter your password"
+              required
             />
           </div>
           <Link to="/enter-email">

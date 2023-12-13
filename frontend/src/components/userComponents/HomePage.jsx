@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  bannerVideo,
-  getApprovedAllCouresesUrl,
-  getalldoamins,
-} from "../../url";
+import { getApprovedAllCouresesUrl, getalldoamins } from "../../url";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setCourses } from "../../slices/courseDetailsSlice";
@@ -82,30 +78,34 @@ const HomePage = () => {
     <>
       <div className="">
         <div className="flex justify-center items-center">
-          <div className="drop-shadow-2xl mb-8 mt-12 w-[95%] flex flex-col justify-center items-center -z-10 bg-gray-50 h-80">
-            <div className="text-[11rem] font-mono  ">SKILLIFY</div>
-            <div className="text-2xl font-bold pb-3">
-              IGINITE YOUR SKILL, ELEVATE YOUR FUTURE
+          <div className="drop-shadow-2xl mb-8 mt-12 w-[90%] sm:w-[95%] md:w-[80%] lg:w-[70%] flex flex-col justify-center items-center bg-gray-50 h-80">
+            <div className="text-6xl sm:text-5xl md:text-6xl lg:text-[11rem] font-mono font-semibold">
+              SKILLIFY
+            </div>
+            <div className="text-base md:text-lg lg:text-xl font-bold pb-3">
+              IGNITE YOUR SKILL, ELEVATE YOUR FUTURE
             </div>
           </div>
         </div>
-        <div className="flex justify-center items-center mb-5 ">
-          <div className="  bg-slate-700 h-16 w-1/2 m-2 flex items-center justify-evenly">
-            <p className="text-white tracking-wider text-lg">
-              Teach With Us,Earn With Us
+
+        <div className="flex justify-center items-center mb-5">
+          <div className="bg-slate-700 h-16 w-full md:w-1/2 m-2 flex items-center justify-evenly">
+            <p className="text-white tracking-wider text-base md:text-lg lg:text-xl">
+              Teach With Us, Earn With Us
             </p>{" "}
             <Link to="/tutor/login">
-              <button className="bg-white text-base p-2 hover:bg-black hover:text-white">
-                Become a tutor
+              <button className="bg-white text-base md:text-lg p-2 hover:bg-black hover:text-white">
+                Become a Tutor
               </button>
             </Link>
           </div>
         </div>
+
         <div className="ml-6 ">
-          <div className="text-2xl font-medium text-black border-b-[2px] border-solid border-gray-900  w-1/4">
+          <div className="text-2xl font-medium text-black border-b-[2px] border-solid border-gray-900  lg:w-1/4 md:[50%]">
             Courses
           </div>
-          <div className="flex text-base items-start justify-between text-violet-400 font-semibold w-2/4 mt-3 mb-4">
+          <div className="flex text-base items-start justify-between text-violet-400 font-semibold lg:w-2/4 md:[80%] mt-3 mb-4">
             {domains.map((domain, index) => (
               <div
                 key={index}
@@ -130,7 +130,7 @@ const HomePage = () => {
                   {filteredCourses?.map((course, index) => (
                     <div
                       key={index}
-                      className="w-[31%] bg-slate-50 mx-4 drop-shadow-lg  h-fit  hover:bg-slate-100 hover:shadow-2xl "
+                      className="lg:w-[31%] mt-2 md:[50%] bg-slate-50 mx-4 drop-shadow-lg  h-fit  hover:bg-slate-100 hover:shadow-2xl "
                     >
                       <Link to={`/course/${course?._id}`}>
                         <div className=" p-3 h-full  flex w-full">
@@ -202,7 +202,7 @@ const HomePage = () => {
               course.averageRating > 3 && (
                 <div
                   key={index}
-                  className="w-[30%] bg-slate-50 mx-4 my-4 drop-shadow-lg  hover:bg-slate-100 hover:shadow-2xl "
+                  className="lg:w-[30%] md:w-[50%] bg-slate-50 mx-4 my-4 drop-shadow-lg  hover:bg-slate-100 hover:shadow-2xl "
                 >
                   <Link to={`/course/${course?._id}`}>
                     <div className=" p-3 h-full  flex w-full">
@@ -261,7 +261,7 @@ const HomePage = () => {
               course?.purchaseCount >= 1 && (
                 <div
                   key={index}
-                  className="w-[30%] bg-slate-50 mx-4 my-4 drop-shadow-lg  hover:bg-slate-100 hover:shadow-2xl "
+                  className="lg:w-[30%] md:w-[50%] bg-slate-50 mx-4 my-4 drop-shadow-lg  hover:bg-slate-100 hover:shadow-2xl "
                 >
                   <Link to={`/course/${course?._id}`}>
                     <div className=" p-3 h-full  flex w-full">
@@ -320,7 +320,7 @@ const HomePage = () => {
           latestCourses?.map((course, index) => (
             <div
               key={index}
-              className="w-[30%] bg-slate-50 mx-4 my-4 drop-shadow-lg  hover:bg-slate-100 hover:shadow-2xl "
+              className="lg:w-[30%] md:w-[50%] bg-slate-50 mx-4 my-4 drop-shadow-lg  hover:bg-slate-100 hover:shadow-2xl "
             >
               <Link to={`/course/${course?._id}`}>
                 <div className=" p-3 h-full  flex w-full">

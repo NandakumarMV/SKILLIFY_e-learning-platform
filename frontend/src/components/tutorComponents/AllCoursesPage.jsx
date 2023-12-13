@@ -32,7 +32,6 @@ const AllCoursesPage = () => {
       console.error("Error fetching courses:", error);
     }
   };
-  console.log(courses);
   useEffect(() => {
     getCourse();
   }, []);
@@ -77,7 +76,6 @@ const AllCoursesPage = () => {
   };
 
   const { tutorInfo } = useSelector((state) => state.tutorAuth);
-  console.log(tutorInfo, "yyyyyyyyyyy");
   const openLiveModal = (courseId) => {
     setCurrentCourseId(courseId);
     setIsLiveModalOpen(true);

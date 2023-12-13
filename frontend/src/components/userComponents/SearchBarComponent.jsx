@@ -17,12 +17,8 @@ const SearchBarComponent = () => {
 
   const domains = useSelector((state) => state.domains.domains);
 
-  console.log(domains, "doamins");
-  console.log(courses);
-
   useEffect(() => {
     const suggest = [...domains, ...courseNames];
-    console.log(suggest, "suggest");
     if (searchTerm && searchTerm.trim() !== "") {
       const filteredSuggestions = suggest.filter((courseName) =>
         courseName.toLowerCase().includes(searchTerm.toLowerCase())

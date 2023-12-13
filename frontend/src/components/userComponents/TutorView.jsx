@@ -10,7 +10,6 @@ import { IoMdChatboxes } from "react-icons/io";
 
 const TutorView = () => {
   const { tutorId } = useParams();
-  console.log(tutorId);
   const [getTutorDetails] = useGetTutorDetailsMutation();
   const [getIndividualRoom] = useGetIndividualRoomMutation();
   const dispatch = useDispatch();
@@ -36,7 +35,6 @@ const TutorView = () => {
   const chatHandler = async (trainerId) => {
     const chatId = trainerId;
     const userId = userInfo._id;
-    console.log(chatId, userId);
     if (chatId) {
       const room = await getIndividualRoom({ userId, tutorId });
       if (room.data) {

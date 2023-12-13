@@ -58,7 +58,7 @@ const CoursesViewPage = () => {
   const courses = useSelector((state) => state.courses.courses);
   const domains = useSelector((state) => state.domains.domains);
   const searchquery = useSelector((state) => state.courses.searchQuery);
-  console.log(searchquery, "search aurefrf");
+  searchquery, "search aurefrf";
 
   useEffect(() => {
     if (searchquery.length > 0) {
@@ -67,13 +67,11 @@ const CoursesViewPage = () => {
       setSearch("");
     }
   }, [searchquery]);
-  console.log(search, "value of search");
   const filteredDomains = domains.filter((domain) => {
     const firstWordOfSearch = search.split(" ")[0].toLowerCase();
     return domain.toLowerCase().includes(firstWordOfSearch);
   });
 
-  console.log(filteredDomains, "filters domaina");
   const filterCourse = Array.isArray(courses)
     ? courses.filter((course) => {
         const domainFilter = domains.map(
@@ -92,10 +90,7 @@ const CoursesViewPage = () => {
         const searchFilter =
           search === "" ||
           course.courseName.toLowerCase().includes(search.toLowerCase());
-        console.log(course.courseName, "course name");
-        console.log(search, "searchbbb");
 
-        console.log(searchFilter, "searchFilter");
         return (
           domainFilter.includes(true) &&
           priceFilter &&
@@ -104,8 +99,6 @@ const CoursesViewPage = () => {
         );
       })
     : [];
-  console.log(filterCourse, "filter course");
-  console.log(filterCourse.length, "filterCourse.lengtgggggggggh");
 
   return (
     <div className="left-4 relative">
@@ -124,10 +117,8 @@ const CoursesViewPage = () => {
             <div key={index} className=" ">
               <div className="mt-4  p-4   flex flex-col justify-start">
                 <h2 className="text-lg text-green-700 font-medium">{domain}</h2>
-                {console.log(filterCourse.length, "filterCourse.length")}
                 {filterCourse.length > 0 ? (
                   filterCourse?.map((course) => {
-                    console.log(course, "course details");
                     if (course.domain.domainName === domain) {
                       return (
                         <>
