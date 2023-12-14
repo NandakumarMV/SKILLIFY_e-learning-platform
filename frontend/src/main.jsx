@@ -13,8 +13,8 @@ import "./index.css";
 import UserLoginPage from "./components/userComponents/UserLoginPage.jsx";
 import SignupPage from "./components/userComponents/SignupPage.jsx";
 import HomePage from "./components/userComponents/HomePage.jsx";
-0;
-import AdminLoginPage from "./components/adminComponents/adminLoginPage.jsx";
+
+import AdminLoginPage from "./components/adminComponents/AdminLoginPage.jsx";
 
 import TutorLoginPage from "./components/tutorComponents/TutorLoginPage.jsx";
 import TutorHome from "./components/tutorComponents/TutorHome.jsx";
