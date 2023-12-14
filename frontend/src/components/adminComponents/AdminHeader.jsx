@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RiLightbulbFlashLine } from "react-icons/ri";
-import AdminHomePage from "./adminHomePage";
+
 import UsersList from "./UsersList";
 import TutorList from "./TutorList";
 import { useAdminLogoutMutation } from "../../slices/adminApiSlice";
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { adminLogout } from "../../slices/adminAuthSlice";
 import DomainList from "./DomainList";
 import CourseList from "./CourseList";
-import Footer from "../userComponents/Footer";
+
 import DashBoard from "./DashBoard";
 
 const AdminHeader = () => {
@@ -116,9 +116,6 @@ const AdminHeader = () => {
             </div>
           </div>
         </div>
-        {/* <div className="flex flex-col ">
-          <Footer />
-        </div>{" "} */}
       </div>
     </>
   );
