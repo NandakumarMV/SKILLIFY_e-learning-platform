@@ -10,6 +10,7 @@ import store from "./store.js";
 import { Provider } from "react-redux";
 import App from "./App.jsx";
 import "./index.css";
+
 import UserLoginPage from "./components/userComponents/UserLoginPage.jsx";
 import SignupPage from "./components/userComponents/SignupPage.jsx";
 import HomePage from "./components/userComponents/HomePage.jsx";
@@ -40,7 +41,7 @@ import Messages from "./components/userComponents/Messages.jsx";
 import TutorMessages from "./components/tutorComponents/TutorMessages.jsx";
 import LiveStream from "./components/LiveStream.jsx";
 import TutorDashboard from "./components/tutorComponents/TutorDashboard.jsx";
-import UserPrivateRoute from "./components/userComponents/userPrivateRoute.jsx";
+import UserPrivateRoute from "./components/userComponents/UserPrivateRoute.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 
