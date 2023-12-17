@@ -110,8 +110,8 @@ const SingleCourse = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-center relative">
-          <div className="w-1/2">
+        <div className="flex items-center justify-center lg:relative sm:relative ">
+          <div className="lg:w-1/2 md:w-2/3 ">
             <div className=" p-2 border-2">
               <div className=" bg-slate-50">
                 <h4 className="text-blue-800 text-lg font-semibold">
@@ -131,11 +131,11 @@ const SingleCourse = () => {
               </div>
               {/* */}
             </div>
-            <div className=" bg-slate-50  p-3 w-auto mt-5">
+            <div className=" bg-slate-50  p-3 w-auto mt-5 md:w-full sm:w-full">
               {" "}
               <div className="text-lg ">Instructor </div>
               <Link to={`/tutor-profile/${course?.tutorId._id}`}>
-                <div className="flex">
+                <div className="flex ">
                   <img
                     className="w-24 h-24"
                     src={course?.tutorId.tutorImageUrl}
@@ -179,12 +179,15 @@ const SingleCourse = () => {
             {course?.reviews.length > 0 && (
               <div className="mt-10 pl-3">
                 <div>
-                  <div className="text-2xl font-serif font-medium flex justify-start p-2 items-start w-[50%] border-b-2 border-black">
+                  <div className="text-2xl font-serif font-medium flex justify-start p-2 items-start lg:w-[50%] md:w-3/4 sm:w-full border-b-2 border-black">
                     Course Reviews
                   </div>
                   <div className=" ">
                     {course?.reviews.slice(0, 5).map((r, index) => (
-                      <div key={index} className="p-4 border-b-2 w-[75%]">
+                      <div
+                        key={index}
+                        className="p-4 border-b-2 lg:w-[75%] md:w-full sm:w-full"
+                      >
                         <div className="font-medium text-base">{r.review}</div>
                         <div className="font-normal text-xs mt-2">
                           {r.userId.name}
@@ -197,7 +200,7 @@ const SingleCourse = () => {
             )}
           </div>
 
-          <div className="mt-5 ml-3 absolute right-20 top-1">
+          <div className="mt-5 ml-3 lg:absolute lg:right-20 lg:top-1 ">
             <div className=" border-[2px] p-3">
               <div className="flex justify-center items-center">
                 Preview Video
